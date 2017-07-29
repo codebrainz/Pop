@@ -22,6 +22,9 @@ class Node:
   @property
   def child_fields(self):
     return [ field for field in self.fields if field.child ]
+  @property
+  def construct_fields(self):
+    return [ field for field in self.fields if field.construct ]
 
 class Field:
   def __init__(self, name, type, construct, child, default):

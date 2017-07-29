@@ -6,6 +6,16 @@ DATAFILE = ../data.xml
 NODEGEN = python3 $(NODEGEN_SCRIPT)
 NODEGEN_DEPS = $(NODEGEN_SCRIPT) $(DATAFILE)
 
+ifeq ($(V),1)
+	vCXX     = $(CXX) -c -MMD
+	vCXXLD   = $(CXX)
+	vNODEGEN = $(NODEGEN)
+else
+	vCXX     = @echo "  [CXX]   $@" && $(CXX) -c -MMD
+	vCXXLD   = @echo "  [CXXLD] $@" && $(CXX)
+	vNODEGEN = @echo "  [GEN]   $@" && $(NODEGEN)
+endif
+
 GEN_SOURCES = \
 	AST.cpp \
 	Operators.cpp \
@@ -28,34 +38,34 @@ deps-clean: clean
 	$(RM) *.d
 
 pop: $(GEN_FILES) $(OBJECTS)
-	$(CXX) $(strip $(CXXFLAGS_) -o $@ $(OBJECTS) $(LDFLAGS_))
+	$(vCXXLD) $(strip $(CXXFLAGS_) -o $@ $(OBJECTS) $(LDFLAGS_))
 
 .cpp.o:
-	$(CXX) $(strip $(CXXFLAGS_) -c -MMD -o $@ $<)
+	$(vCXX) $(strip $(CXXFLAGS_) -o $@ $<)
 
 AST.cpp: AST.cpp.in AST.hpp $(NODEGEN_DEPS)
-	$(NODEGEN) -d $(DATAFILE) -o $@ AST.cpp.in
+	$(vNODEGEN) -d $(DATAFILE) -o $@ AST.cpp.in
 
 AST.hpp: AST.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -d $(DATAFILE) -o $@ AST.hpp.in
+	$(vNODEGEN) -d $(DATAFILE) -o $@ AST.hpp.in
 
 Operators.cpp: Operators.cpp.in Operators.hpp $(NODEGEN_DEPS)
-	$(NODEGEN) -d $(DATAFILE) -o $@ Operators.cpp.in
+	$(vNODEGEN) -d $(DATAFILE) -o $@ Operators.cpp.in
 
 Operators.hpp: Operators.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -d $(DATAFILE) -o $@ Operators.hpp.in
+	$(vNODEGEN) -d $(DATAFILE) -o $@ Operators.hpp.in
 
 Transformer.cpp: Transformer.cpp.in Transformer.hpp $(NODEGEN_DEPS)
-	$(NODEGEN) -d $(DATAFILE) -o $@ Transformer.cpp.in
+	$(vNODEGEN) -d $(DATAFILE) -o $@ Transformer.cpp.in
 
 Transformer.hpp: Transformer.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -d $(DATAFILE) -o $@ Transformer.hpp.in
+	$(vNODEGEN) -d $(DATAFILE) -o $@ Transformer.hpp.in
 
 Visitor.cpp: Visitor.cpp.in Visitor.hpp $(NODEGEN_DEPS)
-	$(NODEGEN) -d $(DATAFILE) -o $@ Visitor.cpp.in
+	$(vNODEGEN) -d $(DATAFILE) -o $@ Visitor.cpp.in
 
 Visitor.hpp: Visitor.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -d $(DATAFILE) -o $@ Visitor.hpp.in
+	$(vNODEGEN) -d $(DATAFILE) -o $@ Visitor.hpp.in
 
 -include $(DEPENDS)
 

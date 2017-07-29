@@ -1,7 +1,6 @@
 #ifndef POP_AST_HPP
 #define POP_AST_HPP
 
-#include <Pop/Location.hpp>
 #include <Pop/Operators.hpp>
 #include <Pop/Transformer.hpp>
 #include <Pop/Visitor.hpp>
@@ -14,11 +13,25 @@ namespace Pop {
   struct Node;
   typedef std::vector<Node*> NodeVector;
 
+  struct Location {
+    const char *file;
+    int line, column;
+    Location(const char *file="", int line=-1, int column=-1)
+      : file(file), line(line), column(column) {
+    }
+  };
+
   struct Node {
-    unsigned long long ref_count = 1;
-    Location location;
+    Node *parent;
+    Node(const Node&) = delete;
+    Node(Node&&) = delete;
+    Node& operator=(const Node&) = delete;
+    Node& operator=(Node&&) = delete;
     virtual ~Node() {
     }
+    const char *file() const { return location.file?location.file:""; }
+    int line() const { return location.line; }
+    int column() const { return location.column; }
     Node *ref() {
       ref_count++;
       return this;
@@ -34,6 +47,13 @@ namespace Pop {
     virtual void accept(VisitorBase&) = 0;
     virtual Node *transform(TransformerBase&) = 0;
     virtual const std::string &type_name() const = 0;
+  protected:
+    Node(const char *fn="", int line=-1, int column=-1)
+      : parent(nullptr), ref_count(1), location(fn, line, column) {
+    }
+  private:
+    unsigned long long int ref_count;
+    Location location;
   };
 
   template< class T >
@@ -52,9 +72,22 @@ namespace Pop {
 
   struct NodeList final : public Node {
     NodeVector elements;
+    NodeList(const NodeList&) = delete;
+    NodeList(NodeList&&) = delete;
+    NodeList& operator=(const NodeList&) = delete;
+    NodeList& operator=(NodeList&&) = delete;
+    NodeList(const char *fn="", int line=-1, int column=-1)
+      : Node(fn, line, column) {
+    }
     ~NodeList() override final {
       for (auto child : elements)
         node_unref(child);
+    }
+    void append_take(Node *n) {
+      elements.push_back(n);
+    }
+    void append(Node *n) {
+      append_take(node_ref(n));
     }
     void accept(VisitorBase &v) override final {
       v.visit(this);
@@ -72,6 +105,18 @@ namespace Pop {
   {%- for field in node.fields %}
     {{ field.type }} {{ field.name }};
   {%- endfor %}
+  {{ node.name }}(const {{ node.name }}&) = delete;
+  {{ node.name }}({{ node.name }}&&) = delete;
+  {{ node.name }}& operator=(const {{ node.name }}&) = delete;
+  {{ node.name }}& operator=({{ node.name }}&&) = delete;
+  {{ node.name }}(const char *fn="", int line=-1, int column=-1)
+    : Node(fn, line, column) {
+  }
+  {%- if node.construct_fields | length > 0 %}
+  {{ node.name }}({% for field in node.construct_fields %}{{ field.type }} {{ field.name }}{% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %}, const char *fn="", int line=-1, int column=-1)
+    : Node(fn, line, column), {% for field in node.construct_fields %}{{ field.name }}({{ field.name }}){% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %} {
+  }
+  {%- endif %}
   {%- if node.child_fields | length > 0 %}
     ~{{ node.name }}() override final {
     {%- for field in node.child_fields %}
