@@ -1,0 +1,97 @@
+#include <Pop/Transformer.hpp>
+#include <Pop/AST.hpp>
+
+namespace Pop {
+
+  Node *PreOrderTransformer::transform(NodeList *n) {
+    if (n) {
+      NodeVector new_elements;
+      auto new_n = process(n);
+      for (auto child : n->elements) {
+        if (child) {
+          auto new_child = child->transform(*this);
+          child->unref();
+          new_elements.push_back(new_child);
+        } else {
+          new_elements.push_back(nullptr);
+        }
+      }
+      std::swap(n->elements, new_elements);
+      return new_n;
+    } else {
+      return nullptr;
+    }
+  }
+{% for node in nodes %}
+  Node *PreOrderTransformer::transform({{ node.name }} *n) {
+    if (n) {
+      auto new_n = process(n);
+  {%- for field in node.child_fields %}
+      if (n->{{ field.name }}) {
+        auto tmp = n->{{ field.name }};
+        n->{{ field.name }} = n->{{ field.name }}->transform(*this);
+        tmp->unref();
+      }
+  {%- endfor %}
+      return new_n;
+    } else {
+      return nullptr;
+    }
+  }
+{% endfor %}
+
+  Node *PostOrderTransformer::transform(NodeList *n) {
+    if (n) {
+      NodeVector new_elements;
+      for (auto child : n->elements) {
+        if (child) {
+          auto new_child = child->transform(*this);
+          child->unref();
+          new_elements.push_back(new_child);
+        } else {
+          new_elements.push_back(nullptr);
+        }
+      }
+      std::swap(n->elements, new_elements);
+      return process(n);
+    } else {
+      return nullptr;
+    }
+  }
+{% for node in nodes %}
+  Node *PostOrderTransformer::transform({{ node.name }} *n) {
+    if (n) {
+  {%- for field in node.child_fields %}
+      if (n->{{ field.name }}) {
+        auto tmp = n->{{ field.name }};
+        n->{{ field.name }} = n->{{ field.name }}->transform(*this);
+        tmp->unref();
+      }
+  {%- endfor %}
+      return process(n);
+    } else {
+      return nullptr;
+    }
+  }
+{% endfor %}
+
+  Node *DefaultPreOrderTransformer::process(NodeList *n) {
+    return node_ref(n);
+  }
+{% for node in nodes %}
+  Node *DefaultPreOrderTransformer::process({{ node.name }} *n) {
+    return node_ref(n);
+  }
+{% endfor %}
+
+  Node *DefaultPostOrderTransformer::process(NodeList *n) {
+    return node_ref(n);
+  }
+{% for node in nodes %}
+  Node *DefaultPostOrderTransformer::process({{ node.name }} *n) {
+    return node_ref(n);
+  }
+{% endfor %}
+
+// namespace Pop
+}

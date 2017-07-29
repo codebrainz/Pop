@@ -1,0 +1,96 @@
+#ifndef POP_AST_HPP
+#define POP_AST_HPP
+
+#include <Pop/Location.hpp>
+#include <Pop/Operators.hpp>
+#include <Pop/Transformer.hpp>
+#include <Pop/Visitor.hpp>
+#include <cassert>
+#include <string>
+#include <vector>
+
+namespace Pop {
+
+  struct Node;
+  typedef std::vector<Node*> NodeVector;
+
+  struct Node {
+    unsigned long long ref_count = 1;
+    Location location;
+    virtual ~Node() {
+    }
+    Node *ref() {
+      ref_count++;
+      return this;
+    }
+    Node *unref() {
+      ref_count--;
+      if (ref_count == 0) {
+        delete this;
+        return nullptr;
+      }
+      return this;
+    }
+    virtual void accept(VisitorBase&) = 0;
+    virtual Node *transform(TransformerBase&) = 0;
+    virtual const std::string &type_name() const = 0;
+  };
+
+  template< class T >
+  inline T *node_ref(T *n) {
+    if (n)
+      return static_cast<T*>(n->ref());
+    return nullptr;
+  }
+
+  template< class T >
+  inline T *node_unref(T *n) {
+    if (n)
+      return static_cast<T*>(n->unref());
+    return nullptr;
+  }
+
+  struct NodeList final : public Node {
+    NodeVector elements;
+    ~NodeList() override final {
+      for (auto child : elements)
+        node_unref(child);
+    }
+    void accept(VisitorBase &v) override final {
+      v.visit(this);
+    }
+    Node *transform(TransformerBase &t) override final {
+      return t.transform(this);
+    }
+    const std::string &type_name() const override final {
+      static const std::string s = "NodeList";
+      return s;
+    }
+  };
+{% for node in nodes %}
+  struct {{ node.name }} final : public Node {
+  {%- for field in node.fields %}
+    {{ field.type }} {{ field.name }};
+  {%- endfor %}
+  {%- if node.child_fields | length > 0 %}
+    ~{{ node.name }}() override final {
+    {%- for field in node.child_fields %}
+      node_unref({{ field.name }});
+    {%- endfor %}
+    }
+  {%- endif %}
+    void accept(VisitorBase &v) override final {
+      v.visit(this);
+    }
+    Node *transform(TransformerBase &t) override final {
+      return t.transform(this);
+    }
+    const std::string &type_name() const override final {
+      static const std::string s = "{{ node.name }}";
+      return s;
+    }
+  };
+{% endfor %}
+}
+
+#endif // POP_AST_HPP

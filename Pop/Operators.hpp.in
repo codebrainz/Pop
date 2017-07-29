@@ -1,0 +1,30 @@
+#ifndef POP_OPERATORS_HPP
+#define POP_OPERATORS_HPP
+
+#include <cstdint>
+#include <string>
+
+namespace Pop {
+
+  enum class Operator : std::uint8_t {
+    NONE = 0,
+{%- for operator in operators %}
+    {{ operator.id | upper }},
+{%- endfor %}
+  };
+
+  const std::string &operator_id(Operator op);
+  const std::string &operator_name(Operator op);
+  const std::string &operator_token(Operator op);
+  int operator_arity(Operator op);
+
+// namespace Pop
+}
+
+namespace std {
+  inline std::string to_string(Pop::Operator op) {
+    return Pop::operator_name(op);
+  }
+}
+
+#endif // POP_OPERATORS_HPP

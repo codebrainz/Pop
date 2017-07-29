@@ -1,0 +1,48 @@
+#include <Pop/Visitor.hpp>
+#include <Pop/AST.hpp>
+
+namespace Pop {
+
+  void PreOrderVisitor::visit(NodeList *n) {
+    if (n) {
+      process(n);
+      for (auto child : n->elements) {
+        if (child)
+          child->accept(*this);
+      }
+    }
+  }
+{% for node in nodes %}
+  void PreOrderVisitor::visit({{ node.name }} *n) {
+    if (n) {
+      process(n);
+  {%- for field in node.child_fields %}
+      if (n->{{ field.name }})
+        n->{{ field.name }}->accept(*this);
+  {%- endfor %}
+    }
+  }
+{% endfor %}
+  void PostOrderVisitor::visit(NodeList *n) {
+    if (n) {
+      for (auto child : n->elements) {
+        if (child)
+          child->accept(*this);
+      }
+      process(n);
+    }
+  }
+{% for node in nodes %}
+  void PostOrderVisitor::visit({{ node.name }} *n) {
+    if (n) {
+  {%- for field in node.child_fields %}
+      if (n->{{ field.name }})
+        n->{{ field.name }}->accept(*this);
+  {%- endfor %}
+      process(n);
+    }
+  }
+{% endfor %}
+
+// namespace Pop
+}

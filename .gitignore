@@ -1,0 +1,13 @@
+*.d
+*.o
+*.pro.user
+
+/Pop/pop
+/Pop/AST.cpp
+/Pop/AST.hpp
+/Pop/Operators.cpp
+/Pop/Operators.hpp
+/Pop/Transformer.cpp
+/Pop/Transformer.hpp
+/Pop/Visitor.cpp
+/Pop/Visitor.hpp

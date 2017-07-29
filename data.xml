@@ -1,0 +1,177 @@
+<?xml version="0" encoding="UTF-8" ?>
+<pop-data>
+
+  <operators>
+    <!-- unary operators -->
+    <operator id="pos" name="positive" token="+" arity="1" />
+    <operator id="neg" name="negative" token="-" arity="1" />
+    <operator id="not" name="not" token="!" arity="1" />
+    <operator id="compl" name="complement" token="~" arity="1" />
+    <operator id="preinc" name="pre-increment" token="++" arity="1" />
+    <operator id="predec" name="pre-decrement" token="--" arity="1" />
+    <operator id="postinc" name="post-increment" token="++" arity="1" suffix="yes" />
+    <operator id="postdec" name="post-decrement" token="--" arity="1" suffix="yes" />
+    <!-- binary operators -->
+    <operator id="add" name="addition" token="+" arity="2" />
+    <operator id="sub" name="subtraction" token="-" arity="2" />
+    <operator id="mul" name="multiplication" token="*" arity="2" />
+    <operator id="div" name="division" token="/" arity="2" />
+    <operator id="mod" name="modulo" token="%" arity="2" />
+    <operator id="lshift" name="left shift" token="&lt;&lt;" arity="2" />
+    <operator id="rshift" name="right shift" token="&gt;&gt;" arity="2" />
+    <operator id="land" name="logical AND" token="&amp;&amp;" arity="2" />
+    <operator id="lor" name="logical OR" token="||" arity="2" />
+    <operator id="band" name="bitwise AND" token="&amp;" arity="2" />
+    <operator id="bor" name="bitwise OR" token="|" arity="2" />
+    <operator id="bxor" name="bitwise XOR" token="^" arity="2" />
+    <operator id="le" name="less-than or equal-to" token="&lt;=" arity="2" />
+    <operator id="ge" name="greater-than or equal-to" token="&gt;=" arity="2" />
+    <operator id="lt" name="less-than" token="&lt;" arity="2" />
+    <operator id="gt" name="greater-than" token="&gt;" arity="2" />
+    <operator id="eq" name="equal-to" token="==" arity="2" />
+    <operator id="ne" name="not equal-to" token="!=" arity="2" />
+    <operator id="index" name="index" token="[]" arity="2" />
+    <operator id="member" name="member" token="." arity="2" />
+    <operator id="ptr_member" name="pointer member" token="-&gt;" arity="2" />
+    <operator id="assign" name="assignment" token="=" arity="2" />
+    <!-- binary in-place assignments -->
+    <operator id="lshift_assign" name="left-shift assignment" token="&lt;&lt;=" arity="2" />
+    <operator id="rshift_assign" name="right-shift assignment" token="&gt;&gt;=" arity="2" />
+    <operator id="add_assign" name="addition assignment" token="+=" arity="2" />
+    <operator id="sub_assign" name="subtraction assignment" token="-=" arity="2" />
+    <operator id="mul_assign" name="multiplication assignment" token="*=" arity="2" />
+    <operator id="div_assign" name="division assignment" token="/=" arity="2" />
+    <operator id="and_assign" name="bitwise AND assignment" token="&amp;=" arity="2" />
+    <operator id="or_assign" name="bitwise OR assignment" token="|=" arity="2" />
+    <operator id="xor_assign" name="bitwise XOR assignment" token="~=" arity="2" />
+  </operators>
+
+  <nodes>
+
+    <node name="Null"/>
+
+    <node name="Bool">
+      <field name="value" type="bool" />
+    </node>
+
+    <node name="Int">
+      <field name="value" type="long long int" />
+    </node>
+
+    <node name="Float">
+      <field name="value" type="long double" />
+    </node>
+
+    <node name="String">
+      <field name="value" type="std::string" />
+    </node>
+
+    <node name="Symbol">
+      <field name="value" type="std::string" />
+    </node>
+
+    <node name="Unary">
+      <field name="op" type="Operator" />
+      <field name="operand" />
+    </node>
+
+    <node name="Binary">
+      <field name="op" type="Operator" />
+      <field name="left" />
+      <field name="right" />
+    </node>
+
+    <node name="IfExpr">
+      <field name="predicate" />
+      <field name="consequence" />
+      <field name="alternative" />
+    </node>
+
+    <node name="Call">
+      <field name="callee" />
+      <field name="arguments" />
+    </node>
+
+    <node name="Function">
+      <field name="parameters" />
+      <field name="body" />
+    </node>
+
+    <node name="Block">
+      <field name="statements" />
+    </node>
+
+    <node name="ExprStmt">
+      <field name="expression" />
+    </node>
+
+    <node name="EmptyStmt" />
+    <node name="Continue" />
+    <node name="Break" />
+
+    <node name="Return">
+      <field name="expression" />
+    </node>
+
+    <node name="Goto">
+      <field name="label" type="std::string" />
+    </node>
+
+    <node name="IfStmt">
+      <field name="predicate" />
+      <field name="consequence" />
+      <field name="alternative" />
+    </node>
+
+    <node name="Case">
+      <field name="expression" />
+      <field name="body" />
+    </node>
+
+    <node name="Switch">
+      <field name="expression" />
+      <field name="cases" />
+    </node>
+
+    <node name="Do">
+      <field name="body" />
+      <field name="expression" />
+    </node>
+
+    <node name="While">
+      <field name="expression" />
+      <field name="body" />
+    </node>
+
+    <node name="For">
+      <field name="initialize" />
+      <field name="test" />
+      <field name="increment" />
+      <field name="body" />
+    </node>
+
+    <node name="Label">
+      <field name="name" type="std::string" />
+    </node>
+
+    <node name="Variable">
+      <field name="name" type="std::string" />
+      <field name="initializer" />
+    </node>
+
+    <node name="Class">
+      <field name="members" />
+    </node>
+
+    <node name="Module">
+      <field name="file" type="std::string" />
+      <field name="body" />
+    </node>
+
+    <node name="Program">
+      <field name="modules" />
+    </node>
+
+  </nodes>
+
+</pop-data>
