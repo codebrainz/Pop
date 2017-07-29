@@ -4,7 +4,6 @@
 #include <Pop/Operators.hpp>
 #include <Pop/Transformer.hpp>
 #include <Pop/Visitor.hpp>
-#include <cassert>
 #include <string>
 #include <vector>
 
