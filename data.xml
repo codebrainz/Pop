@@ -136,7 +136,6 @@
       <field name="members" />
     </node>
     <node name="Module">
-      <field name="file" type="std::string" />
       <field name="body" />
     </node>
     <node name="Program">
