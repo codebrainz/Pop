@@ -136,6 +136,11 @@ namespace Pop {
     }
   };
 {% endfor %}
+
+  template<class T, class... Args>
+  inline T* make_node(Args&& ...args) {
+    return new T(std::forward<Args>(args)...);
+  }
 }
 
 #endif // POP_AST_HPP
