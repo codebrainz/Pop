@@ -1,6 +1,5 @@
-<?xml version="0" encoding="UTF-8" ?>
+<?xml version="0" encoding="utf-8"?>
 <pop-data>
-
   <operators>
     <!-- unary operators -->
     <operator id="pos" name="positive" token="+" arity="1" />
@@ -45,133 +44,103 @@
     <operator id="or_assign" name="bitwise OR assignment" token="|=" arity="2" />
     <operator id="xor_assign" name="bitwise XOR assignment" token="~=" arity="2" />
   </operators>
-
   <nodes>
-
-    <node name="Null"/>
-
+    <node name="Null" />
     <node name="Bool">
       <field name="value" type="bool" />
     </node>
-
     <node name="Int">
       <field name="value" type="long long int" />
     </node>
-
     <node name="Float">
       <field name="value" type="long double" />
     </node>
-
     <node name="String">
       <field name="value" type="std::string" />
     </node>
-
     <node name="Symbol">
       <field name="value" type="std::string" />
     </node>
-
     <node name="Unary">
       <field name="op" type="Operator" />
       <field name="operand" />
     </node>
-
     <node name="Binary">
       <field name="op" type="Operator" />
       <field name="left" />
       <field name="right" />
     </node>
-
     <node name="IfExpr">
       <field name="predicate" />
       <field name="consequence" />
       <field name="alternative" />
     </node>
-
     <node name="Call">
       <field name="callee" />
       <field name="arguments" />
     </node>
-
     <node name="Function">
       <field name="parameters" />
       <field name="body" />
     </node>
-
     <node name="Block">
       <field name="statements" />
     </node>
-
     <node name="ExprStmt">
       <field name="expression" />
     </node>
-
     <node name="EmptyStmt" />
     <node name="Continue" />
     <node name="Break" />
-
     <node name="Return">
       <field name="expression" />
     </node>
-
     <node name="Goto">
       <field name="label" type="std::string" />
     </node>
-
     <node name="IfStmt">
       <field name="predicate" />
       <field name="consequence" />
       <field name="alternative" />
     </node>
-
     <node name="Case">
       <field name="expression" />
       <field name="body" />
     </node>
-
     <node name="Switch">
       <field name="expression" />
       <field name="cases" />
     </node>
-
     <node name="Do">
       <field name="body" />
       <field name="expression" />
     </node>
-
     <node name="While">
       <field name="expression" />
       <field name="body" />
     </node>
-
     <node name="For">
       <field name="initialize" />
       <field name="test" />
       <field name="increment" />
       <field name="body" />
     </node>
-
     <node name="Label">
       <field name="name" type="std::string" />
     </node>
-
     <node name="Variable">
       <field name="name" type="std::string" />
       <field name="initializer" />
     </node>
-
     <node name="Class">
       <field name="members" />
     </node>
-
     <node name="Module">
       <field name="file" type="std::string" />
       <field name="body" />
     </node>
-
     <node name="Program">
       <field name="modules" />
     </node>
-
   </nodes>
-
 </pop-data>
