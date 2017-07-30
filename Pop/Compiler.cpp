@@ -4,6 +4,7 @@
 #include <Pop/Grammar.hpp>
 #include <Pop/Lexer.hpp>
 #include <Pop/LinkParents.hpp>
+#include <Pop/LocationPatcher.hpp>
 #include <Pop/ParseState.hpp>
 #include <Pop/ResolveSymbols.hpp>
 #include <cstdlib>
@@ -47,6 +48,10 @@ namespace Pop {
 
   void Compiler::resolve_symbols() {
     Pop::resolve_symbols(program, log);
+  }
+
+  void Compiler::patch_locations() {
+    Pop::patch_locations(program);
   }
 
   void Compiler::generate_dot(std::ostream &os,

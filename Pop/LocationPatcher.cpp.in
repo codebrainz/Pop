@@ -1,0 +1,88 @@
+#include <Pop/LocationPatcher.hpp>
+#include <Pop/AST.hpp>
+#include <Pop/Visitor.hpp>
+#include <cassert>
+#include <vector>
+
+namespace Pop {
+
+  struct FilePatchVisitor final : public VisitorBase {
+    std::vector<const char *> file_stack;
+
+    void begin_file(const char *fn) {
+      if (fn)
+        file_stack.emplace_back(fn);
+    }
+    void end_file(const char *fn) {
+      if (fn) {
+        assert(fn == file_stack.back());
+        file_stack.pop_back();
+      }
+    }
+    const char *current_file() const {
+      if (!file_stack.empty())
+        return file_stack.back();
+      return nullptr;
+    }
+{%- for node in nodes %}
+    void visit({{ node.name }} &n) override final {
+  {%- if node.name != "Program" %}
+    {%- if node.child_fields | length > 0 %}
+      begin_file(n.file());
+      {%- for field in node.child_fields %}
+      if (n.{{ field.name }})
+        n.{{ field.name }}->accept(*this);
+      {%- endfor %}
+      end_file(n.file());
+    {%- else %}
+      (void)n;
+    {%- endif %}
+  {%- else %}
+    {%- for field in node.child_fields %}
+      if (n.{{ field.name }})
+        n.{{ field.name }}->accept(*this);
+    {%- endfor %}
+  {%- endif %}
+  }
+{%- endfor %}
+  };
+
+  struct LocationPatchVisitor final : public VisitorBase {
+{%- for node in nodes %}
+    void visit({{ node.name }} &n) override final {
+  {%- if node.child_fields | length > 0 %}
+      if (n.line() < 0) {
+        bool have_line = false;
+    {%- for field in node.child_fields %}
+        if (!have_line && n.{{ field.name }} && n.{{ field.name }}->line() >= 0) {
+          n.line(n.{{ field.name }}->line());
+          have_line = true;
+        }
+    {%- endfor %}
+      }
+      if (n.column() < 0) {
+        bool have_column = false;
+    {%- for field in node.child_fields %}
+        if (!have_column && n.{{ field.name }} && n.{{ field.name }}->column() >= 0) {
+          n.column(n.{{ field.name }}->column());
+          have_column = true;
+        }
+    {%- endfor %}
+      }
+  {%- else %}
+      (void)n;
+  {%- endif %}
+    }
+{%- endfor %}
+  };
+
+  void patch_locations(Node *root) {
+    assert(root);
+    FilePatchVisitor file_visitor;
+    root->accept(file_visitor);
+    LocationPatchVisitor location_visitor;
+    root->accept(location_visitor);
+  }
+
+  // namespace Pop
+}

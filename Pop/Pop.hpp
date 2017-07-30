@@ -3,11 +3,14 @@
 
 #include <Pop/AST.hpp>
 #include <Pop/Compiler.hpp>
+#include <Pop/DefineSymbols.hpp>
 #include <Pop/DOT.hpp>
 #include <Pop/Formatter.hpp>
 #include <Pop/LinkParents.hpp>
+#include <Pop/LocationPatcher.hpp>
 #include <Pop/Logger.hpp>
 #include <Pop/Operators.hpp>
+#include <Pop/ResolveSymbols.hpp>
 #include <Pop/SymbolTable.hpp>
 #include <Pop/Transformer.hpp>
 #include <Pop/Utils.hpp>

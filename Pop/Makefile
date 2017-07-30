@@ -27,9 +27,9 @@ GEN_SOURCES = \
 	Grammar.cpp \
 	Lexer.cpp \
 	LinkParents.cpp \
+	LocationPatcher.cpp \
 	Operators.cpp \
 	ResolveSymbols.cpp \
-	SymbolTable.cpp \
 	Transformer.cpp \
 	Visitor.cpp
 
@@ -41,6 +41,7 @@ SOURCES = \
 	Logger.cpp \
 	Main.cpp \
 	ParseState.cpp \
+	SymbolTable.cpp \
 	Utils.cpp \
 	$(GEN_SOURCES)
 
@@ -91,6 +92,9 @@ DOT.cpp: DOT.cpp.in $(NODEGEN_DEPS)
 
 LinkParents.cpp: LinkParents.cpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ LinkParents.cpp.in
+
+LocationPatcher.cpp: LocationPatcher.cpp.in $(NODEGEN_DEPS)
+	$(vNODEGEN) -d $(DATAFILE) -o $@ LocationPatcher.cpp.in
 
 Operators.cpp: Operators.cpp.in Operators.hpp $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ Operators.cpp.in

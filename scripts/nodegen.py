@@ -29,6 +29,12 @@ class Node:
   def has_scope(self):
     return any(field.name == "scope" and field.type == "SymbolTable"
       for field in self.fields)
+  @property
+  def first_child(self):
+    return self.child_fields[0]
+  @property
+  def last_child(self):
+    return self.child_fields[-1]
 
 class Field:
   def __init__(self, name, type, construct, child, default):

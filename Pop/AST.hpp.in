@@ -31,8 +31,11 @@ namespace Pop {
     virtual ~Node() {
     }
     const char *file() const { return location.file?location.file:""; }
+    void file(const char *f) { location.file = f?f:""; }
     int line() const { return location.line; }
+    void line(int l) { location.line = l; }
     int column() const { return location.column; }
+    void column(int c) { location.column = c; }
     Node *ref() {
       ref_count++;
       return this;
