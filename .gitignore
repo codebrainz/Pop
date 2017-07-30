@@ -6,6 +6,7 @@
 /Pop/AST.cpp
 /Pop/AST.hpp
 /Pop/DOT.cpp
+/Pop/LinkParents.cpp
 /Pop/Operators.cpp
 /Pop/Operators.hpp
 /Pop/Transformer.cpp

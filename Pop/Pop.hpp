@@ -5,6 +5,7 @@
 #include <Pop/Compiler.hpp>
 #include <Pop/DOT.hpp>
 #include <Pop/Formatter.hpp>
+#include <Pop/LinkParents.hpp>
 #include <Pop/Logger.hpp>
 #include <Pop/Operators.hpp>
 #include <Pop/SymbolTable.hpp>

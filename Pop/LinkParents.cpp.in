@@ -1,0 +1,47 @@
+#include <Pop/LinkParents.hpp>
+#include <Pop/AST.hpp>
+#include <Pop/Visitor.hpp>
+#include <cassert>
+#include <vector>
+
+namespace Pop {
+
+  struct ParentVisitor : public VisitorBase {
+    std::vector<Node*> parent_stack;
+    void begin_parent(Node &n) {
+      parent_stack.push_back(&n);
+    }
+    void end_parent(Node &n) {
+      (void)n;
+      assert(!parent_stack.empty());
+      assert(&n == parent_stack.back());
+      parent_stack.pop_back();
+    }
+    Node *current_parent() const {
+      if (!parent_stack.empty())
+        return parent_stack.back();
+      return nullptr;
+    }
+{%- for node in nodes %}
+    void visit({{ node.name }} &n) override final {
+      n.parent = current_parent();
+  {%- if node.child_fields | length > 0 %}
+      begin_parent(n);
+    {%- for field in node.child_fields %}
+      if (n.{{ field.name }})
+        n.{{ field.name }}->accept(*this);
+    {%- endfor %}
+      end_parent(n);
+  {%- endif %}
+    }
+{%- endfor %}
+  };
+
+  void link_parents(Node *root) {
+    assert(root);
+    ParentVisitor visitor;
+    root->accept(visitor);
+  }
+
+  // namespace Pop
+}

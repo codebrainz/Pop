@@ -25,6 +25,7 @@ GEN_SOURCES = \
 	DOT.cpp \
 	Grammar.cpp \
 	Lexer.cpp \
+	LinkParents.cpp \
 	Operators.cpp \
 	SymbolTable.cpp \
 	Transformer.cpp \
@@ -82,6 +83,9 @@ AST.hpp: AST.hpp.in $(NODEGEN_DEPS)
 
 DOT.cpp: DOT.cpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ DOT.cpp.in
+
+LinkParents.cpp: LinkParents.cpp.in $(NODEGEN_DEPS)
+	$(vNODEGEN) -d $(DATAFILE) -o $@ LinkParents.cpp.in
 
 Operators.cpp: Operators.cpp.in Operators.hpp $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ Operators.cpp.in
