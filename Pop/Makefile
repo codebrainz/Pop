@@ -22,6 +22,7 @@ endif
 
 GEN_SOURCES = \
 	AST.cpp \
+	DOT.cpp \
 	Grammar.cpp \
 	Lexer.cpp \
 	Operators.cpp \
@@ -77,6 +78,9 @@ AST.cpp: AST.cpp.in AST.hpp $(NODEGEN_DEPS)
 
 AST.hpp: AST.hpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ AST.hpp.in
+
+DOT.cpp: DOT.cpp.in $(NODEGEN_DEPS)
+	$(vNODEGEN) -d $(DATAFILE) -o $@ DOT.cpp.in
 
 Operators.cpp: Operators.cpp.in Operators.hpp $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ Operators.cpp.in

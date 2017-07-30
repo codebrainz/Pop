@@ -1,4 +1,5 @@
 #include <Pop/Compiler.hpp>
+#include <Pop/DOT.hpp>
 #include <Pop/ParseState.hpp>
 #include <Pop/Grammar.hpp>
 #include <Pop/Lexer.hpp>
@@ -31,6 +32,11 @@ namespace Pop {
     state.roots = nullptr;
     dynamic_cast< NodeList * >(program->modules)->append_take(mod);
     return mod;
+  }
+
+  void Compiler::generate_dot(std::ostream &os,
+                              const std::string &indent_token) {
+    Pop::generate_dot(program, os, indent_token);
   }
 
   void Compiler::report_diagnostics(int max_errors) {

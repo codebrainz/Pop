@@ -3,6 +3,8 @@
 
 #include <Pop/AST.hpp>
 #include <Pop/Logger.hpp>
+#include <ostream>
+#include <string>
 #include <vector>
 
 namespace Pop {
@@ -15,6 +17,7 @@ namespace Pop {
     ~Compiler();
     Node *parse_file(const std::string &fn);
     Node *parse_file(const std::string &fn, std::istream &is);
+    void generate_dot(std::ostream &os, const std::string &indent_token = "  ");
     void report_diagnostics(int max_errors = -1);
     void report_diagnostics(std::ostream &os, int max_errors = -1);
 

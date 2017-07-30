@@ -10,44 +10,44 @@ namespace Pop {
 
   struct VisitorBase {
     virtual ~VisitorBase() {}
-    virtual void visit(NodeList*) = 0;
+    virtual void visit(NodeList &n);
 {%- for node in nodes %}
-    virtual void visit({{ node.name }}*) = 0;
+    virtual void visit({{ node.name }}&) = 0;
 {%- endfor %}
   };
 
   struct OrderedVisitor : public VisitorBase {
-    virtual void process(NodeList*) = 0;
+    virtual void process(NodeList &n);
 {%- for node in nodes %}
-    virtual void process({{ node.name }}*) = 0;
+    virtual void process({{ node.name }}&) = 0;
 {%- endfor %}
   };
 
   struct PreOrderVisitor : public OrderedVisitor {
-    void visit(NodeList *n) override final;
+    void visit(NodeList &n) override final;
 {%- for node in nodes %}
-    void visit({{ node.name }} *n) override final;
+    void visit({{ node.name }} &n) override final;
 {%- endfor %}
   };
 
   struct PostOrderVisitor : public OrderedVisitor {
-    void visit(NodeList *n) override final;
+    void visit(NodeList &n) override final;
 {%- for node in nodes %}
-    void visit({{ node.name }} *n) override final;
+    void visit({{ node.name }} &n) override final;
 {%- endfor %}
   };
 
   struct DefaultPreOrderVisitor : public PreOrderVisitor {
-    void process(NodeList*) override {}
+    void process(NodeList&) override {}
 {%- for node in nodes %}
-    void process({{ node.name }}*) override {}
+    void process({{ node.name }}&) override {}
 {%- endfor %}
   };
 
   struct DefaultPostOrderVisitor : public PostOrderVisitor {
-    void process(NodeList*) override {}
+    void process(NodeList&) override {}
 {%- for node in nodes %}
-    void process({{ node.name }}*) override {}
+    void process({{ node.name }}&) override {}
 {%- endfor %}
   };
 

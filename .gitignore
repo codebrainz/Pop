@@ -5,6 +5,7 @@
 /Pop/pop
 /Pop/AST.cpp
 /Pop/AST.hpp
+/Pop/DOT.cpp
 /Pop/Operators.cpp
 /Pop/Operators.hpp
 /Pop/Transformer.cpp

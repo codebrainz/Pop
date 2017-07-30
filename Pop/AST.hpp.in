@@ -93,7 +93,7 @@ namespace Pop {
       append_take(node_ref(n));
     }
     void accept(VisitorBase &v) override final {
-      v.visit(this);
+      v.visit(*this);
     }
     Node *transform(TransformerBase &t) override final {
       return t.transform(this);
@@ -131,7 +131,7 @@ namespace Pop {
     }
   {%- endif %}
     void accept(VisitorBase &v) override final {
-      v.visit(this);
+      v.visit(*this);
     }
     Node *transform(TransformerBase &t) override final {
       return t.transform(this);
