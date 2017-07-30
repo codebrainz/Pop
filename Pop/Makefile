@@ -28,6 +28,7 @@ GEN_SOURCES = \
 	Lexer.cpp \
 	LinkParents.cpp \
 	Operators.cpp \
+	ResolveSymbols.cpp \
 	SymbolTable.cpp \
 	Transformer.cpp \
 	Visitor.cpp
@@ -96,6 +97,9 @@ Operators.cpp: Operators.cpp.in Operators.hpp $(NODEGEN_DEPS)
 
 Operators.hpp: Operators.hpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ Operators.hpp.in
+
+ResolveSymbols.cpp: ResolveSymbols.cpp.in $(NODEGEN_DEPS)
+	$(vNODEGEN) -d $(DATAFILE) -o $@ ResolveSymbols.cpp.in
 
 Transformer.cpp: Transformer.cpp.in Transformer.hpp $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ Transformer.cpp.in

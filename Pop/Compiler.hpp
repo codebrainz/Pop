@@ -19,6 +19,7 @@ namespace Pop {
     Node *parse_file(const std::string &fn, std::istream &is);
     void link_parents();
     void define_symbols();
+    void resolve_symbols();
     void generate_dot(std::ostream &os, const std::string &indent_token = "  ");
     void report_diagnostics(int max_errors = -1);
     void report_diagnostics(std::ostream &os, int max_errors = -1);

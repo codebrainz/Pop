@@ -10,6 +10,7 @@
 /Pop/LinkParents.cpp
 /Pop/Operators.cpp
 /Pop/Operators.hpp
+/Pop/ResolveSymbols.cpp
 /Pop/Transformer.cpp
 /Pop/Transformer.hpp
 /Pop/Visitor.cpp

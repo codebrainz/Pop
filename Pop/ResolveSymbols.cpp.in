@@ -1,0 +1,47 @@
+#include <Pop/ResolveSymbols.hpp>
+#include <Pop/AST.hpp>
+#include <Pop/Logger.hpp>
+#include <Pop/SymbolTable.hpp>
+#include <Pop/Visitor.hpp>
+#include <cassert>
+
+namespace Pop {
+
+  struct ResolveVisitor final : public VisitorBase {
+    Logger log;
+    ResolveVisitor(Logger &log) : log(log) {
+    }
+    template< class T >
+    void resolve(T &n, const std::string &name) {
+      auto scope = n.enclosing_scope;
+      if (scope->is_defined(name)) {
+        n.symbol = scope->lookup(name);
+      } else {
+        log.error(n.file(), n.line(), n.column(), "undefined symbol '%s'", name);
+        n.symbol = nullptr;
+      }
+    }
+{%- for node in nodes %}
+  {%- if node.name == "Symbol" %}
+    void visit({{ node.name }} &n) {
+      resolve(n, n.value);
+    }
+  {%- elif node.name == "Goto" %}
+    void visit({{ node.name }} &n) {
+      resolve(n, n.label);
+    }
+  {%- else %}
+    void visit({{ node.name }}&) {
+    }
+  {%- endif %}
+{%- endfor %}
+  };
+
+  void resolve_symbols(Node *root, Logger &log) {
+    assert(root);
+    ResolveVisitor visitor(log);
+    root->accept(visitor);
+  }
+
+// namespace Pop
+}

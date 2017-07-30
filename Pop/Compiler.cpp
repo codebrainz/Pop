@@ -1,10 +1,11 @@
 #include <Pop/Compiler.hpp>
 #include <Pop/DefineSymbols.hpp>
 #include <Pop/DOT.hpp>
-#include <Pop/LinkParents.hpp>
-#include <Pop/ParseState.hpp>
 #include <Pop/Grammar.hpp>
 #include <Pop/Lexer.hpp>
+#include <Pop/LinkParents.hpp>
+#include <Pop/ParseState.hpp>
+#include <Pop/ResolveSymbols.hpp>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -42,6 +43,10 @@ namespace Pop {
 
   void Compiler::define_symbols() {
     Pop::define_symbols(program, log);
+  }
+
+  void Compiler::resolve_symbols() {
+    Pop::resolve_symbols(program, log);
   }
 
   void Compiler::generate_dot(std::ostream &os,

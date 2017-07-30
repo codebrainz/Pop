@@ -61,6 +61,7 @@
     </node>
     <node name="Symbol">
       <field name="value" type="std::string" />
+      <field name="symbol" type="SymbolEntry*" construct="false" />
     </node>
     <node name="Unary">
       <field name="op" type="Operator" />
@@ -100,6 +101,7 @@
     </node>
     <node name="Goto">
       <field name="label" type="std::string" />
+      <field name="symbol" type="SymbolEntry*" construct="false" />
     </node>
     <node name="IfStmt">
       <field name="predicate" />
