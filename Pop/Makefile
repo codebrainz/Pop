@@ -26,6 +26,7 @@ GEN_SOURCES = \
 	Grammar.cpp \
 	Lexer.cpp \
 	Operators.cpp \
+	SymbolTable.cpp \
 	Transformer.cpp \
 	Visitor.cpp
 

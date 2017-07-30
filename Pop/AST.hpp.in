@@ -2,6 +2,7 @@
 #define POP_AST_HPP
 
 #include <Pop/Operators.hpp>
+#include <Pop/SymbolTable.hpp>
 #include <Pop/Transformer.hpp>
 #include <Pop/Visitor.hpp>
 #include <string>
