@@ -78,6 +78,10 @@ namespace Pop {
     NodeList(const char *fn="", int line=-1, int column=-1)
       : Node(fn, line, column) {
     }
+    NodeList(const char *fn, int line, int column, Node *first)
+      : Node(fn, line, column) {
+      append_take(first);
+    }
     ~NodeList() override final {
       for (auto child : elements)
         node_unref(child);
@@ -112,8 +116,11 @@ namespace Pop {
     : Node(fn, line, column) {
   }
   {%- if node.construct_fields | length > 0 %}
-  {{ node.name }}({% for field in node.construct_fields %}{{ field.type }} {{ field.name }}{% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %}, const char *fn="", int line=-1, int column=-1)
+  {{ node.name }}(const char *fn, int line, int column, {% for field in node.construct_fields %}{{ field.type }} {{ field.name }}{% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %})
     : Node(fn, line, column), {% for field in node.construct_fields %}{{ field.name }}({{ field.name }}){% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %} {
+  }
+  {{ node.name }}({% for field in node.construct_fields %}{{ field.type }} {{ field.name }}{% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %})
+    : Node(nullptr, -1, -1), {% for field in node.construct_fields %}{{ field.name }}({{ field.name }}){% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %} {
   }
   {%- endif %}
   {%- if node.child_fields | length > 0 %}

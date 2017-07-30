@@ -10,14 +10,20 @@ ifeq ($(V),1)
 	vCXX     = $(CXX) -c -MMD
 	vCXXLD   = $(CXX)
 	vNODEGEN = $(NODEGEN)
+	vLEX     = $(LEX)
+	vYACC    = $(YACC)
 else
 	vCXX     = @echo "  [CXX]   $@" && $(CXX) -c -MMD
 	vCXXLD   = @echo "  [CXXLD] $@" && $(CXX)
 	vNODEGEN = @echo "  [GEN]   $@" && $(NODEGEN)
+	vLEX     = @echo "  [LEX]   $@" && $(LEX)
+	vYACC    = @echo "  [YACC]  $@" && $(YACC)
 endif
 
 GEN_SOURCES = \
 	AST.cpp \
+	Grammar.cpp \
+	Lexer.cpp \
 	Operators.cpp \
 	Transformer.cpp \
 	Visitor.cpp
@@ -25,7 +31,14 @@ GEN_SOURCES = \
 GEN_HEADERS = $(GEN_SOURCES:.cpp=.hpp)
 GEN_FILES = $(GEN_SOURCES) $(GEN_HEADERS)
 
-SOURCES = Main.cpp Logger.cpp $(GEN_SOURCES)
+SOURCES = \
+	Compiler.cpp \
+	Logger.cpp \
+	Main.cpp \
+	ParseState.cpp \
+	Utils.cpp \
+	$(GEN_SOURCES)
+
 OBJECTS = $(SOURCES:.cpp=.o)
 DEPENDS = $(SOURCES:.cpp=.d)
 
@@ -42,6 +55,22 @@ pop: $(GEN_FILES) $(OBJECTS)
 
 .cpp.o:
 	$(vCXX) $(strip $(CXXFLAGS_) -o $@ $<)
+
+# squelch a warning in flex output
+Lexer.o: Lexer.cpp
+	$(vCXX) $(strip $(CXXFLAGS_) -Wno-sign-compare -o $@ Lexer.cpp)
+
+Lexer.cpp: Grammar.hpp Lexer.l
+	$(vLEX) --header-file=Lexer.hpp -o $@ Lexer.l
+
+Grammar.cpp: Grammar.y
+	$(vYACC) --verbose --defines=Grammar.hpp -o $@ Grammar.y
+
+Lexer.hpp: Lexer.cpp
+Grammar.hpp: Grammar.cpp
+ParseState.cpp: Lexer.hpp
+ParseState.cpp: Grammar.hpp
+Compiler.cpp: Grammar.hpp
 
 AST.cpp: AST.cpp.in AST.hpp $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ AST.cpp.in

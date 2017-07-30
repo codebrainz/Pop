@@ -40,6 +40,7 @@
     <operator id="sub_assign" name="subtraction assignment" token="-=" arity="2" />
     <operator id="mul_assign" name="multiplication assignment" token="*=" arity="2" />
     <operator id="div_assign" name="division assignment" token="/=" arity="2" />
+    <operator id="mod_assign" name="modulo assignment" token="%=" arity="2" />
     <operator id="and_assign" name="bitwise AND assignment" token="&amp;=" arity="2" />
     <operator id="or_assign" name="bitwise OR assignment" token="|=" arity="2" />
     <operator id="xor_assign" name="bitwise XOR assignment" token="~=" arity="2" />
@@ -133,6 +134,7 @@
       <field name="initializer" />
     </node>
     <node name="Class">
+      <field name="name" type="std::string" />
       <field name="members" />
     </node>
     <node name="Module">

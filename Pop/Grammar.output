@@ -1,0 +1,4649 @@
+Terminals unused in grammar
+
+   T_ENUM
+   T_FOR
+   T_GOTO
+   T_NAMESPACE
+   T_ELLIPSIS
+   T_PTR_OP
+
+
+Grammar
+
+    0 $accept: start $end
+
+    1 start: stmts
+
+    2 param_decl: T_IDENTIFIER
+    3           | T_IDENTIFIER '=' expr
+
+    4 param_list: param_decl
+    5           | param_list ',' param_decl
+
+    6 func_expr: T_FUNCTION '(' param_list ')' '{' '}'
+    7          | T_FUNCTION '(' param_list ')' '{' stmts '}'
+    8          | T_FUNCTION '(' ')' '{' stmts '}'
+    9          | T_FUNCTION '(' ')' '{' '}'
+
+   10 constant: T_NULL
+   11         | T_TRUE
+   12         | T_FALSE
+   13         | T_INT
+   14         | T_FLOAT
+   15         | T_STRING
+   16         | T_IDENTIFIER
+
+   17 prim_expr: constant
+   18          | '(' expr ')'
+   19          | func_expr
+
+   20 arg_list: expr
+   21         | arg_list ',' expr
+
+   22 post_expr: prim_expr
+   23          | post_expr '[' expr ']'
+   24          | post_expr '(' ')'
+   25          | post_expr '(' arg_list ')'
+   26          | post_expr '.' T_IDENTIFIER
+   27          | post_expr T_INC_OP
+   28          | post_expr T_DEC_OP
+
+   29 unary_expr: post_expr
+   30           | T_INC_OP unary_expr
+   31           | T_DEC_OP unary_expr
+   32           | '+' unary_expr
+   33           | '-' unary_expr
+   34           | '!' unary_expr
+   35           | '~' unary_expr
+
+   36 mul_expr: unary_expr
+   37         | mul_expr '*' unary_expr
+   38         | mul_expr '/' unary_expr
+   39         | mul_expr '%' unary_expr
+
+   40 add_expr: mul_expr
+   41         | add_expr '+' mul_expr
+   42         | add_expr '-' mul_expr
+
+   43 shift_expr: add_expr
+   44           | shift_expr T_LEFT_OP add_expr
+   45           | shift_expr T_RIGHT_OP add_expr
+
+   46 rel_expr: shift_expr
+   47         | rel_expr '<' shift_expr
+   48         | rel_expr '>' shift_expr
+   49         | rel_expr T_LE_OP shift_expr
+   50         | rel_expr T_GE_OP shift_expr
+
+   51 eq_expr: rel_expr
+   52        | eq_expr T_EQ_OP rel_expr
+   53        | eq_expr T_NE_OP rel_expr
+
+   54 and_expr: eq_expr
+   55         | and_expr '&' eq_expr
+
+   56 xor_expr: and_expr
+   57         | xor_expr '^' and_expr
+
+   58 or_expr: xor_expr
+   59        | or_expr '|' xor_expr
+
+   60 log_and_expr: or_expr
+   61             | log_and_expr T_AND_OP or_expr
+
+   62 log_or_expr: log_and_expr
+   63            | log_or_expr T_OR_OP log_and_expr
+
+   64 cond_expr: log_or_expr
+   65          | log_or_expr '?' expr ':' cond_expr
+
+   66 assign_expr: cond_expr
+   67            | unary_expr '=' assign_expr
+   68            | unary_expr T_ADD_ASSIGN assign_expr
+   69            | unary_expr T_SUB_ASSIGN assign_expr
+   70            | unary_expr T_MUL_ASSIGN assign_expr
+   71            | unary_expr T_DIV_ASSIGN assign_expr
+   72            | unary_expr T_MOD_ASSIGN assign_expr
+   73            | unary_expr T_LEFT_ASSIGN assign_expr
+   74            | unary_expr T_RIGHT_ASSIGN assign_expr
+   75            | unary_expr T_AND_ASSIGN assign_expr
+   76            | unary_expr T_XOR_ASSIGN assign_expr
+   77            | unary_expr T_OR_ASSIGN assign_expr
+
+   78 expr: assign_expr
+
+   79 stmts: stmt
+   80      | stmts stmt
+
+   81 stmt: expr_stmt
+   82     | block_stmt
+   83     | func_decl
+   84     | var_decl
+   85     | jump_stmt
+   86     | iter_stmt
+   87     | sel_stmt
+   88     | class_decl
+   89     | ';'
+
+   90 expr_stmt: expr ';'
+
+   91 block_stmt: '{' '}'
+   92           | '{' stmts '}'
+
+   93 case_stmt: T_CASE expr ':'
+   94          | T_CASE expr ':' stmts
+   95          | T_DEFAULT ':'
+   96          | T_DEFAULT ':' stmts
+
+   97 case_list: case_stmt
+   98          | case_list case_stmt
+
+   99 sel_stmt: T_IF '(' expr ')' stmt
+  100         | T_IF '(' expr ')' stmt T_ELSE stmt
+  101         | T_SWITCH '(' expr ')' '{' case_list '}'
+  102         | T_SWITCH '(' expr ')' '{' '}'
+
+  103 iter_stmt: T_WHILE '(' expr ')' stmt
+  104          | T_DO stmt T_WHILE '(' expr ')'
+
+  105 jump_stmt: T_CONTINUE ';'
+  106          | T_BREAK ';'
+  107          | T_RETURN ';'
+  108          | T_RETURN expr ';'
+
+  109 class_field: var_decl
+  110            | func_decl
+
+  111 class_fields: class_field
+  112             | class_fields class_field
+
+  113 class_decl: T_CLASS T_IDENTIFIER '{' '}'
+  114           | T_CLASS T_IDENTIFIER '{' class_fields '}'
+
+  115 func_decl: T_FUNCTION T_IDENTIFIER '(' param_list ')' '{' '}'
+  116          | T_FUNCTION T_IDENTIFIER '(' ')' '{' stmts '}'
+  117          | T_FUNCTION T_IDENTIFIER '(' param_list ')' '{' stmts '}'
+  118          | T_FUNCTION T_IDENTIFIER '(' ')' '{' '}'
+
+  119 var_decl: T_LET T_IDENTIFIER
+  120         | T_LET T_IDENTIFIER '=' expr ';'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 34
+'%' (37) 39
+'&' (38) 55
+'(' (40) 6 7 8 9 18 24 25 99 100 101 102 103 104 115 116 117 118
+')' (41) 6 7 8 9 18 24 25 99 100 101 102 103 104 115 116 117 118
+'*' (42) 37
+'+' (43) 32 41
+',' (44) 5 21
+'-' (45) 33 42
+'.' (46) 26
+'/' (47) 38
+':' (58) 65 93 94 95 96
+';' (59) 89 90 105 106 107 108 120
+'<' (60) 47
+'=' (61) 3 67 120
+'>' (62) 48
+'?' (63) 65
+'[' (91) 23
+']' (93) 23
+'^' (94) 57
+'{' (123) 6 7 8 9 91 92 101 102 113 114 115 116 117 118
+'|' (124) 59
+'}' (125) 6 7 8 9 91 92 101 102 113 114 115 116 117 118
+'~' (126) 35
+error (256)
+T_BREAK (258) 106
+T_CASE (259) 93 94
+T_CLASS (260) 113 114
+T_CONTINUE (261) 105
+T_DEFAULT (262) 95 96
+T_DO (263) 104
+T_ELSE (264) 100
+T_ENUM (265)
+T_FOR (266)
+T_FUNCTION (267) 6 7 8 9 115 116 117 118
+T_GOTO (268)
+T_IF (269) 99 100
+T_LET (270) 119 120
+T_NAMESPACE (271)
+T_RETURN (272) 107 108
+T_SWITCH (273) 101 102
+T_WHILE (274) 103 104
+T_ELLIPSIS (275)
+T_RIGHT_ASSIGN (276) 74
+T_LEFT_ASSIGN (277) 73
+T_ADD_ASSIGN (278) 68
+T_SUB_ASSIGN (279) 69
+T_MUL_ASSIGN (280) 70
+T_DIV_ASSIGN (281) 71
+T_MOD_ASSIGN (282) 72
+T_AND_ASSIGN (283) 75
+T_XOR_ASSIGN (284) 76
+T_OR_ASSIGN (285) 77
+T_RIGHT_OP (286) 45
+T_LEFT_OP (287) 44
+T_INC_OP (288) 27 30
+T_DEC_OP (289) 28 31
+T_PTR_OP (290)
+T_AND_OP (291) 61
+T_OR_OP (292) 63
+T_LE_OP (293) 49
+T_GE_OP (294) 50
+T_EQ_OP (295) 52
+T_NE_OP (296) 53
+T_NULL (297) 10
+T_TRUE (298) 11
+T_FALSE (299) 12
+T_IDENTIFIER (300) 2 3 16 26 113 114 115 116 117 118 119 120
+T_INT (301) 13
+T_FLOAT (302) 14
+T_STRING (303) 15
+NO_ELSE (304)
+
+
+Nonterminals, with rules where they appear
+
+$accept (74)
+    on left: 0
+start (75)
+    on left: 1, on right: 0
+param_decl (76)
+    on left: 2 3, on right: 4 5
+param_list (77)
+    on left: 4 5, on right: 5 6 7 115 117
+func_expr (78)
+    on left: 6 7 8 9, on right: 19
+constant (79)
+    on left: 10 11 12 13 14 15 16, on right: 17
+prim_expr (80)
+    on left: 17 18 19, on right: 22
+arg_list (81)
+    on left: 20 21, on right: 21 25
+post_expr (82)
+    on left: 22 23 24 25 26 27 28, on right: 23 24 25 26 27 28 29
+unary_expr (83)
+    on left: 29 30 31 32 33 34 35, on right: 30 31 32 33 34 35 36 37
+    38 39 67 68 69 70 71 72 73 74 75 76 77
+mul_expr (84)
+    on left: 36 37 38 39, on right: 37 38 39 40 41 42
+add_expr (85)
+    on left: 40 41 42, on right: 41 42 43 44 45
+shift_expr (86)
+    on left: 43 44 45, on right: 44 45 46 47 48 49 50
+rel_expr (87)
+    on left: 46 47 48 49 50, on right: 47 48 49 50 51 52 53
+eq_expr (88)
+    on left: 51 52 53, on right: 52 53 54 55
+and_expr (89)
+    on left: 54 55, on right: 55 56 57
+xor_expr (90)
+    on left: 56 57, on right: 57 58 59
+or_expr (91)
+    on left: 58 59, on right: 59 60 61
+log_and_expr (92)
+    on left: 60 61, on right: 61 62 63
+log_or_expr (93)
+    on left: 62 63, on right: 63 64 65
+cond_expr (94)
+    on left: 64 65, on right: 65 66
+assign_expr (95)
+    on left: 66 67 68 69 70 71 72 73 74 75 76 77, on right: 67 68 69
+    70 71 72 73 74 75 76 77 78
+expr (96)
+    on left: 78, on right: 3 18 20 21 23 65 90 93 94 99 100 101 102
+    103 104 108 120
+stmts (97)
+    on left: 79 80, on right: 1 7 8 80 92 94 96 116 117
+stmt (98)
+    on left: 81 82 83 84 85 86 87 88 89, on right: 79 80 99 100 103
+    104
+expr_stmt (99)
+    on left: 90, on right: 81
+block_stmt (100)
+    on left: 91 92, on right: 82
+case_stmt (101)
+    on left: 93 94 95 96, on right: 97 98
+case_list (102)
+    on left: 97 98, on right: 98 101
+sel_stmt (103)
+    on left: 99 100 101 102, on right: 87
+iter_stmt (104)
+    on left: 103 104, on right: 86
+jump_stmt (105)
+    on left: 105 106 107 108, on right: 85
+class_field (106)
+    on left: 109 110, on right: 111 112
+class_fields (107)
+    on left: 111 112, on right: 112 114
+class_decl (108)
+    on left: 113 114, on right: 88
+func_decl (109)
+    on left: 115 116 117 118, on right: 83 110
+var_decl (110)
+    on left: 119 120, on right: 84 109
+
+
+State 0
+
+    0 $accept: . start $end
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    start         go to state 27
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmts         go to state 46
+    stmt          go to state 47
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 1
+
+  106 jump_stmt: T_BREAK . ';'
+
+    ';'  shift, and go to state 56
+
+
+State 2
+
+  113 class_decl: T_CLASS . T_IDENTIFIER '{' '}'
+  114           | T_CLASS . T_IDENTIFIER '{' class_fields '}'
+
+    T_IDENTIFIER  shift, and go to state 57
+
+
+State 3
+
+  105 jump_stmt: T_CONTINUE . ';'
+
+    ';'  shift, and go to state 58
+
+
+State 4
+
+  104 iter_stmt: T_DO . stmt T_WHILE '(' expr ')'
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 59
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 5
+
+    6 func_expr: T_FUNCTION . '(' param_list ')' '{' '}'
+    7          | T_FUNCTION . '(' param_list ')' '{' stmts '}'
+    8          | T_FUNCTION . '(' ')' '{' stmts '}'
+    9          | T_FUNCTION . '(' ')' '{' '}'
+  115 func_decl: T_FUNCTION . T_IDENTIFIER '(' param_list ')' '{' '}'
+  116          | T_FUNCTION . T_IDENTIFIER '(' ')' '{' stmts '}'
+  117          | T_FUNCTION . T_IDENTIFIER '(' param_list ')' '{' stmts '}'
+  118          | T_FUNCTION . T_IDENTIFIER '(' ')' '{' '}'
+
+    T_IDENTIFIER  shift, and go to state 60
+    '('           shift, and go to state 61
+
+
+State 6
+
+   99 sel_stmt: T_IF . '(' expr ')' stmt
+  100         | T_IF . '(' expr ')' stmt T_ELSE stmt
+
+    '('  shift, and go to state 62
+
+
+State 7
+
+  119 var_decl: T_LET . T_IDENTIFIER
+  120         | T_LET . T_IDENTIFIER '=' expr ';'
+
+    T_IDENTIFIER  shift, and go to state 63
+
+
+State 8
+
+  107 jump_stmt: T_RETURN . ';'
+  108          | T_RETURN . expr ';'
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 65
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 66
+
+
+State 9
+
+  101 sel_stmt: T_SWITCH . '(' expr ')' '{' case_list '}'
+  102         | T_SWITCH . '(' expr ')' '{' '}'
+
+    '('  shift, and go to state 67
+
+
+State 10
+
+  103 iter_stmt: T_WHILE . '(' expr ')' stmt
+
+    '('  shift, and go to state 68
+
+
+State 11
+
+   30 unary_expr: T_INC_OP . unary_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 69
+
+
+State 12
+
+   31 unary_expr: T_DEC_OP . unary_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 70
+
+
+State 13
+
+   10 constant: T_NULL .
+
+    $default  reduce using rule 10 (constant)
+
+
+State 14
+
+   11 constant: T_TRUE .
+
+    $default  reduce using rule 11 (constant)
+
+
+State 15
+
+   12 constant: T_FALSE .
+
+    $default  reduce using rule 12 (constant)
+
+
+State 16
+
+   16 constant: T_IDENTIFIER .
+
+    $default  reduce using rule 16 (constant)
+
+
+State 17
+
+   13 constant: T_INT .
+
+    $default  reduce using rule 13 (constant)
+
+
+State 18
+
+   14 constant: T_FLOAT .
+
+    $default  reduce using rule 14 (constant)
+
+
+State 19
+
+   15 constant: T_STRING .
+
+    $default  reduce using rule 15 (constant)
+
+
+State 20
+
+   18 prim_expr: '(' . expr ')'
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 71
+
+
+State 21
+
+   91 block_stmt: '{' . '}'
+   92           | '{' . stmts '}'
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '}'           shift, and go to state 72
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmts         go to state 73
+    stmt          go to state 47
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 22
+
+   32 unary_expr: '+' . unary_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 74
+
+
+State 23
+
+   33 unary_expr: '-' . unary_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 75
+
+
+State 24
+
+   34 unary_expr: '!' . unary_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 76
+
+
+State 25
+
+   35 unary_expr: '~' . unary_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 77
+
+
+State 26
+
+   89 stmt: ';' .
+
+    $default  reduce using rule 89 (stmt)
+
+
+State 27
+
+    0 $accept: start . $end
+
+    $end  shift, and go to state 78
+
+
+State 28
+
+   19 prim_expr: func_expr .
+
+    $default  reduce using rule 19 (prim_expr)
+
+
+State 29
+
+   17 prim_expr: constant .
+
+    $default  reduce using rule 17 (prim_expr)
+
+
+State 30
+
+   22 post_expr: prim_expr .
+
+    $default  reduce using rule 22 (post_expr)
+
+
+State 31
+
+   23 post_expr: post_expr . '[' expr ']'
+   24          | post_expr . '(' ')'
+   25          | post_expr . '(' arg_list ')'
+   26          | post_expr . '.' T_IDENTIFIER
+   27          | post_expr . T_INC_OP
+   28          | post_expr . T_DEC_OP
+   29 unary_expr: post_expr .
+
+    T_INC_OP  shift, and go to state 79
+    T_DEC_OP  shift, and go to state 80
+    '('       shift, and go to state 81
+    '['       shift, and go to state 82
+    '.'       shift, and go to state 83
+
+    $default  reduce using rule 29 (unary_expr)
+
+
+State 32
+
+   36 mul_expr: unary_expr .
+   67 assign_expr: unary_expr . '=' assign_expr
+   68            | unary_expr . T_ADD_ASSIGN assign_expr
+   69            | unary_expr . T_SUB_ASSIGN assign_expr
+   70            | unary_expr . T_MUL_ASSIGN assign_expr
+   71            | unary_expr . T_DIV_ASSIGN assign_expr
+   72            | unary_expr . T_MOD_ASSIGN assign_expr
+   73            | unary_expr . T_LEFT_ASSIGN assign_expr
+   74            | unary_expr . T_RIGHT_ASSIGN assign_expr
+   75            | unary_expr . T_AND_ASSIGN assign_expr
+   76            | unary_expr . T_XOR_ASSIGN assign_expr
+   77            | unary_expr . T_OR_ASSIGN assign_expr
+
+    T_RIGHT_ASSIGN  shift, and go to state 84
+    T_LEFT_ASSIGN   shift, and go to state 85
+    T_ADD_ASSIGN    shift, and go to state 86
+    T_SUB_ASSIGN    shift, and go to state 87
+    T_MUL_ASSIGN    shift, and go to state 88
+    T_DIV_ASSIGN    shift, and go to state 89
+    T_MOD_ASSIGN    shift, and go to state 90
+    T_AND_ASSIGN    shift, and go to state 91
+    T_XOR_ASSIGN    shift, and go to state 92
+    T_OR_ASSIGN     shift, and go to state 93
+    '='             shift, and go to state 94
+
+    $default  reduce using rule 36 (mul_expr)
+
+
+State 33
+
+   37 mul_expr: mul_expr . '*' unary_expr
+   38         | mul_expr . '/' unary_expr
+   39         | mul_expr . '%' unary_expr
+   40 add_expr: mul_expr .
+
+    '*'  shift, and go to state 95
+    '/'  shift, and go to state 96
+    '%'  shift, and go to state 97
+
+    $default  reduce using rule 40 (add_expr)
+
+
+State 34
+
+   41 add_expr: add_expr . '+' mul_expr
+   42         | add_expr . '-' mul_expr
+   43 shift_expr: add_expr .
+
+    '+'  shift, and go to state 98
+    '-'  shift, and go to state 99
+
+    $default  reduce using rule 43 (shift_expr)
+
+
+State 35
+
+   44 shift_expr: shift_expr . T_LEFT_OP add_expr
+   45           | shift_expr . T_RIGHT_OP add_expr
+   46 rel_expr: shift_expr .
+
+    T_RIGHT_OP  shift, and go to state 100
+    T_LEFT_OP   shift, and go to state 101
+
+    $default  reduce using rule 46 (rel_expr)
+
+
+State 36
+
+   47 rel_expr: rel_expr . '<' shift_expr
+   48         | rel_expr . '>' shift_expr
+   49         | rel_expr . T_LE_OP shift_expr
+   50         | rel_expr . T_GE_OP shift_expr
+   51 eq_expr: rel_expr .
+
+    T_LE_OP  shift, and go to state 102
+    T_GE_OP  shift, and go to state 103
+    '<'      shift, and go to state 104
+    '>'      shift, and go to state 105
+
+    $default  reduce using rule 51 (eq_expr)
+
+
+State 37
+
+   52 eq_expr: eq_expr . T_EQ_OP rel_expr
+   53        | eq_expr . T_NE_OP rel_expr
+   54 and_expr: eq_expr .
+
+    T_EQ_OP  shift, and go to state 106
+    T_NE_OP  shift, and go to state 107
+
+    $default  reduce using rule 54 (and_expr)
+
+
+State 38
+
+   55 and_expr: and_expr . '&' eq_expr
+   56 xor_expr: and_expr .
+
+    '&'  shift, and go to state 108
+
+    $default  reduce using rule 56 (xor_expr)
+
+
+State 39
+
+   57 xor_expr: xor_expr . '^' and_expr
+   58 or_expr: xor_expr .
+
+    '^'  shift, and go to state 109
+
+    $default  reduce using rule 58 (or_expr)
+
+
+State 40
+
+   59 or_expr: or_expr . '|' xor_expr
+   60 log_and_expr: or_expr .
+
+    '|'  shift, and go to state 110
+
+    $default  reduce using rule 60 (log_and_expr)
+
+
+State 41
+
+   61 log_and_expr: log_and_expr . T_AND_OP or_expr
+   62 log_or_expr: log_and_expr .
+
+    T_AND_OP  shift, and go to state 111
+
+    $default  reduce using rule 62 (log_or_expr)
+
+
+State 42
+
+   63 log_or_expr: log_or_expr . T_OR_OP log_and_expr
+   64 cond_expr: log_or_expr .
+   65          | log_or_expr . '?' expr ':' cond_expr
+
+    T_OR_OP  shift, and go to state 112
+    '?'      shift, and go to state 113
+
+    $default  reduce using rule 64 (cond_expr)
+
+
+State 43
+
+   66 assign_expr: cond_expr .
+
+    $default  reduce using rule 66 (assign_expr)
+
+
+State 44
+
+   78 expr: assign_expr .
+
+    $default  reduce using rule 78 (expr)
+
+
+State 45
+
+   90 expr_stmt: expr . ';'
+
+    ';'  shift, and go to state 114
+
+
+State 46
+
+    1 start: stmts .
+   80 stmts: stmts . stmt
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    $default  reduce using rule 1 (start)
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 115
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 47
+
+   79 stmts: stmt .
+
+    $default  reduce using rule 79 (stmts)
+
+
+State 48
+
+   81 stmt: expr_stmt .
+
+    $default  reduce using rule 81 (stmt)
+
+
+State 49
+
+   82 stmt: block_stmt .
+
+    $default  reduce using rule 82 (stmt)
+
+
+State 50
+
+   87 stmt: sel_stmt .
+
+    $default  reduce using rule 87 (stmt)
+
+
+State 51
+
+   86 stmt: iter_stmt .
+
+    $default  reduce using rule 86 (stmt)
+
+
+State 52
+
+   85 stmt: jump_stmt .
+
+    $default  reduce using rule 85 (stmt)
+
+
+State 53
+
+   88 stmt: class_decl .
+
+    $default  reduce using rule 88 (stmt)
+
+
+State 54
+
+   83 stmt: func_decl .
+
+    $default  reduce using rule 83 (stmt)
+
+
+State 55
+
+   84 stmt: var_decl .
+
+    $default  reduce using rule 84 (stmt)
+
+
+State 56
+
+  106 jump_stmt: T_BREAK ';' .
+
+    $default  reduce using rule 106 (jump_stmt)
+
+
+State 57
+
+  113 class_decl: T_CLASS T_IDENTIFIER . '{' '}'
+  114           | T_CLASS T_IDENTIFIER . '{' class_fields '}'
+
+    '{'  shift, and go to state 116
+
+
+State 58
+
+  105 jump_stmt: T_CONTINUE ';' .
+
+    $default  reduce using rule 105 (jump_stmt)
+
+
+State 59
+
+  104 iter_stmt: T_DO stmt . T_WHILE '(' expr ')'
+
+    T_WHILE  shift, and go to state 117
+
+
+State 60
+
+  115 func_decl: T_FUNCTION T_IDENTIFIER . '(' param_list ')' '{' '}'
+  116          | T_FUNCTION T_IDENTIFIER . '(' ')' '{' stmts '}'
+  117          | T_FUNCTION T_IDENTIFIER . '(' param_list ')' '{' stmts '}'
+  118          | T_FUNCTION T_IDENTIFIER . '(' ')' '{' '}'
+
+    '('  shift, and go to state 118
+
+
+State 61
+
+    6 func_expr: T_FUNCTION '(' . param_list ')' '{' '}'
+    7          | T_FUNCTION '(' . param_list ')' '{' stmts '}'
+    8          | T_FUNCTION '(' . ')' '{' stmts '}'
+    9          | T_FUNCTION '(' . ')' '{' '}'
+
+    T_IDENTIFIER  shift, and go to state 119
+    ')'           shift, and go to state 120
+
+    param_decl  go to state 121
+    param_list  go to state 122
+
+
+State 62
+
+   99 sel_stmt: T_IF '(' . expr ')' stmt
+  100         | T_IF '(' . expr ')' stmt T_ELSE stmt
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 123
+
+
+State 63
+
+  119 var_decl: T_LET T_IDENTIFIER .
+  120         | T_LET T_IDENTIFIER . '=' expr ';'
+
+    '='  shift, and go to state 124
+
+    $default  reduce using rule 119 (var_decl)
+
+
+State 64
+
+    6 func_expr: T_FUNCTION . '(' param_list ')' '{' '}'
+    7          | T_FUNCTION . '(' param_list ')' '{' stmts '}'
+    8          | T_FUNCTION . '(' ')' '{' stmts '}'
+    9          | T_FUNCTION . '(' ')' '{' '}'
+
+    '('  shift, and go to state 61
+
+
+State 65
+
+  107 jump_stmt: T_RETURN ';' .
+
+    $default  reduce using rule 107 (jump_stmt)
+
+
+State 66
+
+  108 jump_stmt: T_RETURN expr . ';'
+
+    ';'  shift, and go to state 125
+
+
+State 67
+
+  101 sel_stmt: T_SWITCH '(' . expr ')' '{' case_list '}'
+  102         | T_SWITCH '(' . expr ')' '{' '}'
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 126
+
+
+State 68
+
+  103 iter_stmt: T_WHILE '(' . expr ')' stmt
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 127
+
+
+State 69
+
+   30 unary_expr: T_INC_OP unary_expr .
+
+    $default  reduce using rule 30 (unary_expr)
+
+
+State 70
+
+   31 unary_expr: T_DEC_OP unary_expr .
+
+    $default  reduce using rule 31 (unary_expr)
+
+
+State 71
+
+   18 prim_expr: '(' expr . ')'
+
+    ')'  shift, and go to state 128
+
+
+State 72
+
+   91 block_stmt: '{' '}' .
+
+    $default  reduce using rule 91 (block_stmt)
+
+
+State 73
+
+   80 stmts: stmts . stmt
+   92 block_stmt: '{' stmts . '}'
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '}'           shift, and go to state 129
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 115
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 74
+
+   32 unary_expr: '+' unary_expr .
+
+    $default  reduce using rule 32 (unary_expr)
+
+
+State 75
+
+   33 unary_expr: '-' unary_expr .
+
+    $default  reduce using rule 33 (unary_expr)
+
+
+State 76
+
+   34 unary_expr: '!' unary_expr .
+
+    $default  reduce using rule 34 (unary_expr)
+
+
+State 77
+
+   35 unary_expr: '~' unary_expr .
+
+    $default  reduce using rule 35 (unary_expr)
+
+
+State 78
+
+    0 $accept: start $end .
+
+    $default  accept
+
+
+State 79
+
+   27 post_expr: post_expr T_INC_OP .
+
+    $default  reduce using rule 27 (post_expr)
+
+
+State 80
+
+   28 post_expr: post_expr T_DEC_OP .
+
+    $default  reduce using rule 28 (post_expr)
+
+
+State 81
+
+   24 post_expr: post_expr '(' . ')'
+   25          | post_expr '(' . arg_list ')'
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    ')'           shift, and go to state 130
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    arg_list      go to state 131
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 132
+
+
+State 82
+
+   23 post_expr: post_expr '[' . expr ']'
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 133
+
+
+State 83
+
+   26 post_expr: post_expr '.' . T_IDENTIFIER
+
+    T_IDENTIFIER  shift, and go to state 134
+
+
+State 84
+
+   74 assign_expr: unary_expr T_RIGHT_ASSIGN . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 135
+
+
+State 85
+
+   73 assign_expr: unary_expr T_LEFT_ASSIGN . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 136
+
+
+State 86
+
+   68 assign_expr: unary_expr T_ADD_ASSIGN . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 137
+
+
+State 87
+
+   69 assign_expr: unary_expr T_SUB_ASSIGN . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 138
+
+
+State 88
+
+   70 assign_expr: unary_expr T_MUL_ASSIGN . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 139
+
+
+State 89
+
+   71 assign_expr: unary_expr T_DIV_ASSIGN . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 140
+
+
+State 90
+
+   72 assign_expr: unary_expr T_MOD_ASSIGN . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 141
+
+
+State 91
+
+   75 assign_expr: unary_expr T_AND_ASSIGN . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 142
+
+
+State 92
+
+   76 assign_expr: unary_expr T_XOR_ASSIGN . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 143
+
+
+State 93
+
+   77 assign_expr: unary_expr T_OR_ASSIGN . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 144
+
+
+State 94
+
+   67 assign_expr: unary_expr '=' . assign_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 145
+
+
+State 95
+
+   37 mul_expr: mul_expr '*' . unary_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 146
+
+
+State 96
+
+   38 mul_expr: mul_expr '/' . unary_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 147
+
+
+State 97
+
+   39 mul_expr: mul_expr '%' . unary_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 148
+
+
+State 98
+
+   41 add_expr: add_expr '+' . mul_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 150
+
+
+State 99
+
+   42 add_expr: add_expr '-' . mul_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 151
+
+
+State 100
+
+   45 shift_expr: shift_expr T_RIGHT_OP . add_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 152
+
+
+State 101
+
+   44 shift_expr: shift_expr T_LEFT_OP . add_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 153
+
+
+State 102
+
+   49 rel_expr: rel_expr T_LE_OP . shift_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 34
+    shift_expr  go to state 154
+
+
+State 103
+
+   50 rel_expr: rel_expr T_GE_OP . shift_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 34
+    shift_expr  go to state 155
+
+
+State 104
+
+   47 rel_expr: rel_expr '<' . shift_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 34
+    shift_expr  go to state 156
+
+
+State 105
+
+   48 rel_expr: rel_expr '>' . shift_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 34
+    shift_expr  go to state 157
+
+
+State 106
+
+   52 eq_expr: eq_expr T_EQ_OP . rel_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 34
+    shift_expr  go to state 35
+    rel_expr    go to state 158
+
+
+State 107
+
+   53 eq_expr: eq_expr T_NE_OP . rel_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 34
+    shift_expr  go to state 35
+    rel_expr    go to state 159
+
+
+State 108
+
+   55 and_expr: and_expr '&' . eq_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 34
+    shift_expr  go to state 35
+    rel_expr    go to state 36
+    eq_expr     go to state 160
+
+
+State 109
+
+   57 xor_expr: xor_expr '^' . and_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 34
+    shift_expr  go to state 35
+    rel_expr    go to state 36
+    eq_expr     go to state 37
+    and_expr    go to state 161
+
+
+State 110
+
+   59 or_expr: or_expr '|' . xor_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 34
+    shift_expr  go to state 35
+    rel_expr    go to state 36
+    eq_expr     go to state 37
+    and_expr    go to state 38
+    xor_expr    go to state 162
+
+
+State 111
+
+   61 log_and_expr: log_and_expr T_AND_OP . or_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr   go to state 28
+    constant    go to state 29
+    prim_expr   go to state 30
+    post_expr   go to state 31
+    unary_expr  go to state 149
+    mul_expr    go to state 33
+    add_expr    go to state 34
+    shift_expr  go to state 35
+    rel_expr    go to state 36
+    eq_expr     go to state 37
+    and_expr    go to state 38
+    xor_expr    go to state 39
+    or_expr     go to state 163
+
+
+State 112
+
+   63 log_or_expr: log_or_expr T_OR_OP . log_and_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 149
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 164
+
+
+State 113
+
+   65 cond_expr: log_or_expr '?' . expr ':' cond_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 165
+
+
+State 114
+
+   90 expr_stmt: expr ';' .
+
+    $default  reduce using rule 90 (expr_stmt)
+
+
+State 115
+
+   80 stmts: stmts stmt .
+
+    $default  reduce using rule 80 (stmts)
+
+
+State 116
+
+  113 class_decl: T_CLASS T_IDENTIFIER '{' . '}'
+  114           | T_CLASS T_IDENTIFIER '{' . class_fields '}'
+
+    T_FUNCTION  shift, and go to state 166
+    T_LET       shift, and go to state 7
+    '}'         shift, and go to state 167
+
+    class_field   go to state 168
+    class_fields  go to state 169
+    func_decl     go to state 170
+    var_decl      go to state 171
+
+
+State 117
+
+  104 iter_stmt: T_DO stmt T_WHILE . '(' expr ')'
+
+    '('  shift, and go to state 172
+
+
+State 118
+
+  115 func_decl: T_FUNCTION T_IDENTIFIER '(' . param_list ')' '{' '}'
+  116          | T_FUNCTION T_IDENTIFIER '(' . ')' '{' stmts '}'
+  117          | T_FUNCTION T_IDENTIFIER '(' . param_list ')' '{' stmts '}'
+  118          | T_FUNCTION T_IDENTIFIER '(' . ')' '{' '}'
+
+    T_IDENTIFIER  shift, and go to state 119
+    ')'           shift, and go to state 173
+
+    param_decl  go to state 121
+    param_list  go to state 174
+
+
+State 119
+
+    2 param_decl: T_IDENTIFIER .
+    3           | T_IDENTIFIER . '=' expr
+
+    '='  shift, and go to state 175
+
+    $default  reduce using rule 2 (param_decl)
+
+
+State 120
+
+    8 func_expr: T_FUNCTION '(' ')' . '{' stmts '}'
+    9          | T_FUNCTION '(' ')' . '{' '}'
+
+    '{'  shift, and go to state 176
+
+
+State 121
+
+    4 param_list: param_decl .
+
+    $default  reduce using rule 4 (param_list)
+
+
+State 122
+
+    5 param_list: param_list . ',' param_decl
+    6 func_expr: T_FUNCTION '(' param_list . ')' '{' '}'
+    7          | T_FUNCTION '(' param_list . ')' '{' stmts '}'
+
+    ','  shift, and go to state 177
+    ')'  shift, and go to state 178
+
+
+State 123
+
+   99 sel_stmt: T_IF '(' expr . ')' stmt
+  100         | T_IF '(' expr . ')' stmt T_ELSE stmt
+
+    ')'  shift, and go to state 179
+
+
+State 124
+
+  120 var_decl: T_LET T_IDENTIFIER '=' . expr ';'
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 180
+
+
+State 125
+
+  108 jump_stmt: T_RETURN expr ';' .
+
+    $default  reduce using rule 108 (jump_stmt)
+
+
+State 126
+
+  101 sel_stmt: T_SWITCH '(' expr . ')' '{' case_list '}'
+  102         | T_SWITCH '(' expr . ')' '{' '}'
+
+    ')'  shift, and go to state 181
+
+
+State 127
+
+  103 iter_stmt: T_WHILE '(' expr . ')' stmt
+
+    ')'  shift, and go to state 182
+
+
+State 128
+
+   18 prim_expr: '(' expr ')' .
+
+    $default  reduce using rule 18 (prim_expr)
+
+
+State 129
+
+   92 block_stmt: '{' stmts '}' .
+
+    $default  reduce using rule 92 (block_stmt)
+
+
+State 130
+
+   24 post_expr: post_expr '(' ')' .
+
+    $default  reduce using rule 24 (post_expr)
+
+
+State 131
+
+   21 arg_list: arg_list . ',' expr
+   25 post_expr: post_expr '(' arg_list . ')'
+
+    ','  shift, and go to state 183
+    ')'  shift, and go to state 184
+
+
+State 132
+
+   20 arg_list: expr .
+
+    $default  reduce using rule 20 (arg_list)
+
+
+State 133
+
+   23 post_expr: post_expr '[' expr . ']'
+
+    ']'  shift, and go to state 185
+
+
+State 134
+
+   26 post_expr: post_expr '.' T_IDENTIFIER .
+
+    $default  reduce using rule 26 (post_expr)
+
+
+State 135
+
+   74 assign_expr: unary_expr T_RIGHT_ASSIGN assign_expr .
+
+    $default  reduce using rule 74 (assign_expr)
+
+
+State 136
+
+   73 assign_expr: unary_expr T_LEFT_ASSIGN assign_expr .
+
+    $default  reduce using rule 73 (assign_expr)
+
+
+State 137
+
+   68 assign_expr: unary_expr T_ADD_ASSIGN assign_expr .
+
+    $default  reduce using rule 68 (assign_expr)
+
+
+State 138
+
+   69 assign_expr: unary_expr T_SUB_ASSIGN assign_expr .
+
+    $default  reduce using rule 69 (assign_expr)
+
+
+State 139
+
+   70 assign_expr: unary_expr T_MUL_ASSIGN assign_expr .
+
+    $default  reduce using rule 70 (assign_expr)
+
+
+State 140
+
+   71 assign_expr: unary_expr T_DIV_ASSIGN assign_expr .
+
+    $default  reduce using rule 71 (assign_expr)
+
+
+State 141
+
+   72 assign_expr: unary_expr T_MOD_ASSIGN assign_expr .
+
+    $default  reduce using rule 72 (assign_expr)
+
+
+State 142
+
+   75 assign_expr: unary_expr T_AND_ASSIGN assign_expr .
+
+    $default  reduce using rule 75 (assign_expr)
+
+
+State 143
+
+   76 assign_expr: unary_expr T_XOR_ASSIGN assign_expr .
+
+    $default  reduce using rule 76 (assign_expr)
+
+
+State 144
+
+   77 assign_expr: unary_expr T_OR_ASSIGN assign_expr .
+
+    $default  reduce using rule 77 (assign_expr)
+
+
+State 145
+
+   67 assign_expr: unary_expr '=' assign_expr .
+
+    $default  reduce using rule 67 (assign_expr)
+
+
+State 146
+
+   37 mul_expr: mul_expr '*' unary_expr .
+
+    $default  reduce using rule 37 (mul_expr)
+
+
+State 147
+
+   38 mul_expr: mul_expr '/' unary_expr .
+
+    $default  reduce using rule 38 (mul_expr)
+
+
+State 148
+
+   39 mul_expr: mul_expr '%' unary_expr .
+
+    $default  reduce using rule 39 (mul_expr)
+
+
+State 149
+
+   36 mul_expr: unary_expr .
+
+    $default  reduce using rule 36 (mul_expr)
+
+
+State 150
+
+   37 mul_expr: mul_expr . '*' unary_expr
+   38         | mul_expr . '/' unary_expr
+   39         | mul_expr . '%' unary_expr
+   41 add_expr: add_expr '+' mul_expr .
+
+    '*'  shift, and go to state 95
+    '/'  shift, and go to state 96
+    '%'  shift, and go to state 97
+
+    $default  reduce using rule 41 (add_expr)
+
+
+State 151
+
+   37 mul_expr: mul_expr . '*' unary_expr
+   38         | mul_expr . '/' unary_expr
+   39         | mul_expr . '%' unary_expr
+   42 add_expr: add_expr '-' mul_expr .
+
+    '*'  shift, and go to state 95
+    '/'  shift, and go to state 96
+    '%'  shift, and go to state 97
+
+    $default  reduce using rule 42 (add_expr)
+
+
+State 152
+
+   41 add_expr: add_expr . '+' mul_expr
+   42         | add_expr . '-' mul_expr
+   45 shift_expr: shift_expr T_RIGHT_OP add_expr .
+
+    '+'  shift, and go to state 98
+    '-'  shift, and go to state 99
+
+    $default  reduce using rule 45 (shift_expr)
+
+
+State 153
+
+   41 add_expr: add_expr . '+' mul_expr
+   42         | add_expr . '-' mul_expr
+   44 shift_expr: shift_expr T_LEFT_OP add_expr .
+
+    '+'  shift, and go to state 98
+    '-'  shift, and go to state 99
+
+    $default  reduce using rule 44 (shift_expr)
+
+
+State 154
+
+   44 shift_expr: shift_expr . T_LEFT_OP add_expr
+   45           | shift_expr . T_RIGHT_OP add_expr
+   49 rel_expr: rel_expr T_LE_OP shift_expr .
+
+    T_RIGHT_OP  shift, and go to state 100
+    T_LEFT_OP   shift, and go to state 101
+
+    $default  reduce using rule 49 (rel_expr)
+
+
+State 155
+
+   44 shift_expr: shift_expr . T_LEFT_OP add_expr
+   45           | shift_expr . T_RIGHT_OP add_expr
+   50 rel_expr: rel_expr T_GE_OP shift_expr .
+
+    T_RIGHT_OP  shift, and go to state 100
+    T_LEFT_OP   shift, and go to state 101
+
+    $default  reduce using rule 50 (rel_expr)
+
+
+State 156
+
+   44 shift_expr: shift_expr . T_LEFT_OP add_expr
+   45           | shift_expr . T_RIGHT_OP add_expr
+   47 rel_expr: rel_expr '<' shift_expr .
+
+    T_RIGHT_OP  shift, and go to state 100
+    T_LEFT_OP   shift, and go to state 101
+
+    $default  reduce using rule 47 (rel_expr)
+
+
+State 157
+
+   44 shift_expr: shift_expr . T_LEFT_OP add_expr
+   45           | shift_expr . T_RIGHT_OP add_expr
+   48 rel_expr: rel_expr '>' shift_expr .
+
+    T_RIGHT_OP  shift, and go to state 100
+    T_LEFT_OP   shift, and go to state 101
+
+    $default  reduce using rule 48 (rel_expr)
+
+
+State 158
+
+   47 rel_expr: rel_expr . '<' shift_expr
+   48         | rel_expr . '>' shift_expr
+   49         | rel_expr . T_LE_OP shift_expr
+   50         | rel_expr . T_GE_OP shift_expr
+   52 eq_expr: eq_expr T_EQ_OP rel_expr .
+
+    T_LE_OP  shift, and go to state 102
+    T_GE_OP  shift, and go to state 103
+    '<'      shift, and go to state 104
+    '>'      shift, and go to state 105
+
+    $default  reduce using rule 52 (eq_expr)
+
+
+State 159
+
+   47 rel_expr: rel_expr . '<' shift_expr
+   48         | rel_expr . '>' shift_expr
+   49         | rel_expr . T_LE_OP shift_expr
+   50         | rel_expr . T_GE_OP shift_expr
+   53 eq_expr: eq_expr T_NE_OP rel_expr .
+
+    T_LE_OP  shift, and go to state 102
+    T_GE_OP  shift, and go to state 103
+    '<'      shift, and go to state 104
+    '>'      shift, and go to state 105
+
+    $default  reduce using rule 53 (eq_expr)
+
+
+State 160
+
+   52 eq_expr: eq_expr . T_EQ_OP rel_expr
+   53        | eq_expr . T_NE_OP rel_expr
+   55 and_expr: and_expr '&' eq_expr .
+
+    T_EQ_OP  shift, and go to state 106
+    T_NE_OP  shift, and go to state 107
+
+    $default  reduce using rule 55 (and_expr)
+
+
+State 161
+
+   55 and_expr: and_expr . '&' eq_expr
+   57 xor_expr: xor_expr '^' and_expr .
+
+    '&'  shift, and go to state 108
+
+    $default  reduce using rule 57 (xor_expr)
+
+
+State 162
+
+   57 xor_expr: xor_expr . '^' and_expr
+   59 or_expr: or_expr '|' xor_expr .
+
+    '^'  shift, and go to state 109
+
+    $default  reduce using rule 59 (or_expr)
+
+
+State 163
+
+   59 or_expr: or_expr . '|' xor_expr
+   61 log_and_expr: log_and_expr T_AND_OP or_expr .
+
+    '|'  shift, and go to state 110
+
+    $default  reduce using rule 61 (log_and_expr)
+
+
+State 164
+
+   61 log_and_expr: log_and_expr . T_AND_OP or_expr
+   63 log_or_expr: log_or_expr T_OR_OP log_and_expr .
+
+    T_AND_OP  shift, and go to state 111
+
+    $default  reduce using rule 63 (log_or_expr)
+
+
+State 165
+
+   65 cond_expr: log_or_expr '?' expr . ':' cond_expr
+
+    ':'  shift, and go to state 186
+
+
+State 166
+
+  115 func_decl: T_FUNCTION . T_IDENTIFIER '(' param_list ')' '{' '}'
+  116          | T_FUNCTION . T_IDENTIFIER '(' ')' '{' stmts '}'
+  117          | T_FUNCTION . T_IDENTIFIER '(' param_list ')' '{' stmts '}'
+  118          | T_FUNCTION . T_IDENTIFIER '(' ')' '{' '}'
+
+    T_IDENTIFIER  shift, and go to state 60
+
+
+State 167
+
+  113 class_decl: T_CLASS T_IDENTIFIER '{' '}' .
+
+    $default  reduce using rule 113 (class_decl)
+
+
+State 168
+
+  111 class_fields: class_field .
+
+    $default  reduce using rule 111 (class_fields)
+
+
+State 169
+
+  112 class_fields: class_fields . class_field
+  114 class_decl: T_CLASS T_IDENTIFIER '{' class_fields . '}'
+
+    T_FUNCTION  shift, and go to state 166
+    T_LET       shift, and go to state 7
+    '}'         shift, and go to state 187
+
+    class_field  go to state 188
+    func_decl    go to state 170
+    var_decl     go to state 171
+
+
+State 170
+
+  110 class_field: func_decl .
+
+    $default  reduce using rule 110 (class_field)
+
+
+State 171
+
+  109 class_field: var_decl .
+
+    $default  reduce using rule 109 (class_field)
+
+
+State 172
+
+  104 iter_stmt: T_DO stmt T_WHILE '(' . expr ')'
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 189
+
+
+State 173
+
+  116 func_decl: T_FUNCTION T_IDENTIFIER '(' ')' . '{' stmts '}'
+  118          | T_FUNCTION T_IDENTIFIER '(' ')' . '{' '}'
+
+    '{'  shift, and go to state 190
+
+
+State 174
+
+    5 param_list: param_list . ',' param_decl
+  115 func_decl: T_FUNCTION T_IDENTIFIER '(' param_list . ')' '{' '}'
+  117          | T_FUNCTION T_IDENTIFIER '(' param_list . ')' '{' stmts '}'
+
+    ','  shift, and go to state 177
+    ')'  shift, and go to state 191
+
+
+State 175
+
+    3 param_decl: T_IDENTIFIER '=' . expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 192
+
+
+State 176
+
+    8 func_expr: T_FUNCTION '(' ')' '{' . stmts '}'
+    9          | T_FUNCTION '(' ')' '{' . '}'
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '}'           shift, and go to state 193
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmts         go to state 194
+    stmt          go to state 47
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 177
+
+    5 param_list: param_list ',' . param_decl
+
+    T_IDENTIFIER  shift, and go to state 119
+
+    param_decl  go to state 195
+
+
+State 178
+
+    6 func_expr: T_FUNCTION '(' param_list ')' . '{' '}'
+    7          | T_FUNCTION '(' param_list ')' . '{' stmts '}'
+
+    '{'  shift, and go to state 196
+
+
+State 179
+
+   99 sel_stmt: T_IF '(' expr ')' . stmt
+  100         | T_IF '(' expr ')' . stmt T_ELSE stmt
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 197
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 180
+
+  120 var_decl: T_LET T_IDENTIFIER '=' expr . ';'
+
+    ';'  shift, and go to state 198
+
+
+State 181
+
+  101 sel_stmt: T_SWITCH '(' expr ')' . '{' case_list '}'
+  102         | T_SWITCH '(' expr ')' . '{' '}'
+
+    '{'  shift, and go to state 199
+
+
+State 182
+
+  103 iter_stmt: T_WHILE '(' expr ')' . stmt
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 200
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 183
+
+   21 arg_list: arg_list ',' . expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 201
+
+
+State 184
+
+   25 post_expr: post_expr '(' arg_list ')' .
+
+    $default  reduce using rule 25 (post_expr)
+
+
+State 185
+
+   23 post_expr: post_expr '[' expr ']' .
+
+    $default  reduce using rule 23 (post_expr)
+
+
+State 186
+
+   65 cond_expr: log_or_expr '?' expr ':' . cond_expr
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 149
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 202
+
+
+State 187
+
+  114 class_decl: T_CLASS T_IDENTIFIER '{' class_fields '}' .
+
+    $default  reduce using rule 114 (class_decl)
+
+
+State 188
+
+  112 class_fields: class_fields class_field .
+
+    $default  reduce using rule 112 (class_fields)
+
+
+State 189
+
+  104 iter_stmt: T_DO stmt T_WHILE '(' expr . ')'
+
+    ')'  shift, and go to state 203
+
+
+State 190
+
+  116 func_decl: T_FUNCTION T_IDENTIFIER '(' ')' '{' . stmts '}'
+  118          | T_FUNCTION T_IDENTIFIER '(' ')' '{' . '}'
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '}'           shift, and go to state 204
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmts         go to state 205
+    stmt          go to state 47
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 191
+
+  115 func_decl: T_FUNCTION T_IDENTIFIER '(' param_list ')' . '{' '}'
+  117          | T_FUNCTION T_IDENTIFIER '(' param_list ')' . '{' stmts '}'
+
+    '{'  shift, and go to state 206
+
+
+State 192
+
+    3 param_decl: T_IDENTIFIER '=' expr .
+
+    $default  reduce using rule 3 (param_decl)
+
+
+State 193
+
+    9 func_expr: T_FUNCTION '(' ')' '{' '}' .
+
+    $default  reduce using rule 9 (func_expr)
+
+
+State 194
+
+    8 func_expr: T_FUNCTION '(' ')' '{' stmts . '}'
+   80 stmts: stmts . stmt
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '}'           shift, and go to state 207
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 115
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 195
+
+    5 param_list: param_list ',' param_decl .
+
+    $default  reduce using rule 5 (param_list)
+
+
+State 196
+
+    6 func_expr: T_FUNCTION '(' param_list ')' '{' . '}'
+    7          | T_FUNCTION '(' param_list ')' '{' . stmts '}'
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '}'           shift, and go to state 208
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmts         go to state 209
+    stmt          go to state 47
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 197
+
+   99 sel_stmt: T_IF '(' expr ')' stmt .
+  100         | T_IF '(' expr ')' stmt . T_ELSE stmt
+
+    T_ELSE  shift, and go to state 210
+
+    $default  reduce using rule 99 (sel_stmt)
+
+
+State 198
+
+  120 var_decl: T_LET T_IDENTIFIER '=' expr ';' .
+
+    $default  reduce using rule 120 (var_decl)
+
+
+State 199
+
+  101 sel_stmt: T_SWITCH '(' expr ')' '{' . case_list '}'
+  102         | T_SWITCH '(' expr ')' '{' . '}'
+
+    T_CASE     shift, and go to state 211
+    T_DEFAULT  shift, and go to state 212
+    '}'        shift, and go to state 213
+
+    case_stmt  go to state 214
+    case_list  go to state 215
+
+
+State 200
+
+  103 iter_stmt: T_WHILE '(' expr ')' stmt .
+
+    $default  reduce using rule 103 (iter_stmt)
+
+
+State 201
+
+   21 arg_list: arg_list ',' expr .
+
+    $default  reduce using rule 21 (arg_list)
+
+
+State 202
+
+   65 cond_expr: log_or_expr '?' expr ':' cond_expr .
+
+    $default  reduce using rule 65 (cond_expr)
+
+
+State 203
+
+  104 iter_stmt: T_DO stmt T_WHILE '(' expr ')' .
+
+    $default  reduce using rule 104 (iter_stmt)
+
+
+State 204
+
+  118 func_decl: T_FUNCTION T_IDENTIFIER '(' ')' '{' '}' .
+
+    $default  reduce using rule 118 (func_decl)
+
+
+State 205
+
+   80 stmts: stmts . stmt
+  116 func_decl: T_FUNCTION T_IDENTIFIER '(' ')' '{' stmts . '}'
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '}'           shift, and go to state 216
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 115
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 206
+
+  115 func_decl: T_FUNCTION T_IDENTIFIER '(' param_list ')' '{' . '}'
+  117          | T_FUNCTION T_IDENTIFIER '(' param_list ')' '{' . stmts '}'
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '}'           shift, and go to state 217
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmts         go to state 218
+    stmt          go to state 47
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 207
+
+    8 func_expr: T_FUNCTION '(' ')' '{' stmts '}' .
+
+    $default  reduce using rule 8 (func_expr)
+
+
+State 208
+
+    6 func_expr: T_FUNCTION '(' param_list ')' '{' '}' .
+
+    $default  reduce using rule 6 (func_expr)
+
+
+State 209
+
+    7 func_expr: T_FUNCTION '(' param_list ')' '{' stmts . '}'
+   80 stmts: stmts . stmt
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '}'           shift, and go to state 219
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 115
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 210
+
+  100 sel_stmt: T_IF '(' expr ')' stmt T_ELSE . stmt
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 220
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 211
+
+   93 case_stmt: T_CASE . expr ':'
+   94          | T_CASE . expr ':' stmts
+
+    T_FUNCTION    shift, and go to state 64
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 221
+
+
+State 212
+
+   95 case_stmt: T_DEFAULT . ':'
+   96          | T_DEFAULT . ':' stmts
+
+    ':'  shift, and go to state 222
+
+
+State 213
+
+  102 sel_stmt: T_SWITCH '(' expr ')' '{' '}' .
+
+    $default  reduce using rule 102 (sel_stmt)
+
+
+State 214
+
+   97 case_list: case_stmt .
+
+    $default  reduce using rule 97 (case_list)
+
+
+State 215
+
+   98 case_list: case_list . case_stmt
+  101 sel_stmt: T_SWITCH '(' expr ')' '{' case_list . '}'
+
+    T_CASE     shift, and go to state 211
+    T_DEFAULT  shift, and go to state 212
+    '}'        shift, and go to state 223
+
+    case_stmt  go to state 224
+
+
+State 216
+
+  116 func_decl: T_FUNCTION T_IDENTIFIER '(' ')' '{' stmts '}' .
+
+    $default  reduce using rule 116 (func_decl)
+
+
+State 217
+
+  115 func_decl: T_FUNCTION T_IDENTIFIER '(' param_list ')' '{' '}' .
+
+    $default  reduce using rule 115 (func_decl)
+
+
+State 218
+
+   80 stmts: stmts . stmt
+  117 func_decl: T_FUNCTION T_IDENTIFIER '(' param_list ')' '{' stmts . '}'
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '}'           shift, and go to state 225
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 115
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 219
+
+    7 func_expr: T_FUNCTION '(' param_list ')' '{' stmts '}' .
+
+    $default  reduce using rule 7 (func_expr)
+
+
+State 220
+
+  100 sel_stmt: T_IF '(' expr ')' stmt T_ELSE stmt .
+
+    $default  reduce using rule 100 (sel_stmt)
+
+
+State 221
+
+   93 case_stmt: T_CASE expr . ':'
+   94          | T_CASE expr . ':' stmts
+
+    ':'  shift, and go to state 226
+
+
+State 222
+
+   95 case_stmt: T_DEFAULT ':' .
+   96          | T_DEFAULT ':' . stmts
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    $default  reduce using rule 95 (case_stmt)
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmts         go to state 227
+    stmt          go to state 47
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 223
+
+  101 sel_stmt: T_SWITCH '(' expr ')' '{' case_list '}' .
+
+    $default  reduce using rule 101 (sel_stmt)
+
+
+State 224
+
+   98 case_list: case_list case_stmt .
+
+    $default  reduce using rule 98 (case_list)
+
+
+State 225
+
+  117 func_decl: T_FUNCTION T_IDENTIFIER '(' param_list ')' '{' stmts '}' .
+
+    $default  reduce using rule 117 (func_decl)
+
+
+State 226
+
+   93 case_stmt: T_CASE expr ':' .
+   94          | T_CASE expr ':' . stmts
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    $default  reduce using rule 93 (case_stmt)
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmts         go to state 228
+    stmt          go to state 47
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 227
+
+   80 stmts: stmts . stmt
+   96 case_stmt: T_DEFAULT ':' stmts .
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    $default  reduce using rule 96 (case_stmt)
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 115
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
+
+
+State 228
+
+   80 stmts: stmts . stmt
+   94 case_stmt: T_CASE expr ':' stmts .
+
+    T_BREAK       shift, and go to state 1
+    T_CLASS       shift, and go to state 2
+    T_CONTINUE    shift, and go to state 3
+    T_DO          shift, and go to state 4
+    T_FUNCTION    shift, and go to state 5
+    T_IF          shift, and go to state 6
+    T_LET         shift, and go to state 7
+    T_RETURN      shift, and go to state 8
+    T_SWITCH      shift, and go to state 9
+    T_WHILE       shift, and go to state 10
+    T_INC_OP      shift, and go to state 11
+    T_DEC_OP      shift, and go to state 12
+    T_NULL        shift, and go to state 13
+    T_TRUE        shift, and go to state 14
+    T_FALSE       shift, and go to state 15
+    T_IDENTIFIER  shift, and go to state 16
+    T_INT         shift, and go to state 17
+    T_FLOAT       shift, and go to state 18
+    T_STRING      shift, and go to state 19
+    '('           shift, and go to state 20
+    '{'           shift, and go to state 21
+    '+'           shift, and go to state 22
+    '-'           shift, and go to state 23
+    '!'           shift, and go to state 24
+    '~'           shift, and go to state 25
+    ';'           shift, and go to state 26
+
+    $default  reduce using rule 94 (case_stmt)
+
+    func_expr     go to state 28
+    constant      go to state 29
+    prim_expr     go to state 30
+    post_expr     go to state 31
+    unary_expr    go to state 32
+    mul_expr      go to state 33
+    add_expr      go to state 34
+    shift_expr    go to state 35
+    rel_expr      go to state 36
+    eq_expr       go to state 37
+    and_expr      go to state 38
+    xor_expr      go to state 39
+    or_expr       go to state 40
+    log_and_expr  go to state 41
+    log_or_expr   go to state 42
+    cond_expr     go to state 43
+    assign_expr   go to state 44
+    expr          go to state 45
+    stmt          go to state 115
+    expr_stmt     go to state 48
+    block_stmt    go to state 49
+    sel_stmt      go to state 50
+    iter_stmt     go to state 51
+    jump_stmt     go to state 52
+    class_decl    go to state 53
+    func_decl     go to state 54
+    var_decl      go to state 55
