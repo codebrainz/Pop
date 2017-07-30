@@ -46,14 +46,26 @@ namespace Pop {
     void write_value({{ node.name }} &n) {
       fmt.write("\\n%", n.value);
     }
+  {%- elif node.name == "Goto" %}
+    void write_value({{ node.name }} &n) {
+      fmt.write("\\n%", n.label);
+    }
+  {%- elif node.name in [ "Label", "Variable", "Class" ] %}
+    void write_value({{ node.name }} &n) {
+      fmt.write("\\n%", n.name);
+    }
   {%- elif node.name != "Bool" %}
     void write_value({{ node.name }}&) {
     }
   {%- endif %}
 {%- endfor %}
     void write_location(Node &n) {
-      if (n.line() >= 0 && n.column() >= 0)
-        fmt.write("\\n[%:%]", n.line(), n.column());
+      if (n.line() >= 0 && n.column() >= 0) {
+        if (dynamic_cast<Module*>(&n))
+          fmt.write("\\n[%:%:%]", n.file(), n.line(), n.column());
+        else
+          fmt.write("\\n[%:%]", n.line(), n.column());
+      }
     }
 {%- for node in nodes %}
     void visit({{ node.name }} &n) override final {
