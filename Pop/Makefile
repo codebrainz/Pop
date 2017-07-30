@@ -25,7 +25,7 @@ GEN_SOURCES = \
 GEN_HEADERS = $(GEN_SOURCES:.cpp=.hpp)
 GEN_FILES = $(GEN_SOURCES) $(GEN_HEADERS)
 
-SOURCES = Main.cpp $(GEN_SOURCES)
+SOURCES = Main.cpp Logger.cpp $(GEN_SOURCES)
 OBJECTS = $(SOURCES:.cpp=.o)
 DEPENDS = $(SOURCES:.cpp=.d)
 
