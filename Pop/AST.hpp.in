@@ -23,6 +23,7 @@ namespace Pop {
 
   struct Node {
     Node *parent;
+    SymbolTable *enclosing_scope;
     Node(const Node&) = delete;
     Node(Node&&) = delete;
     Node& operator=(const Node&) = delete;
@@ -49,7 +50,7 @@ namespace Pop {
     virtual const std::string &type_name() const = 0;
   protected:
     Node(const char *fn="", int line=-1, int column=-1)
-      : parent(nullptr), ref_count(1), location(fn, line, column) {
+      : parent(nullptr), enclosing_scope(nullptr), ref_count(1), location(fn, line, column) {
     }
   private:
     unsigned long long int ref_count;

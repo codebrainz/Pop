@@ -146,6 +146,7 @@
     </node>
     <node name="Program">
       <field name="modules" />
+      <field name="scope" type="SymbolTable" construct="false" />
     </node>
   </nodes>
 </pop-data>

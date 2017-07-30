@@ -25,6 +25,10 @@ class Node:
   @property
   def construct_fields(self):
     return [ field for field in self.fields if field.construct ]
+  @property
+  def has_scope(self):
+    return any(field.name == "scope" and field.type == "SymbolTable"
+      for field in self.fields)
 
 class Field:
   def __init__(self, name, type, construct, child, default):

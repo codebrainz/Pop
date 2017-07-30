@@ -22,6 +22,7 @@ endif
 
 GEN_SOURCES = \
 	AST.cpp \
+	DefineSymbols.cpp \
 	DOT.cpp \
 	Grammar.cpp \
 	Lexer.cpp \
@@ -80,6 +81,9 @@ AST.cpp: AST.cpp.in AST.hpp $(NODEGEN_DEPS)
 
 AST.hpp: AST.hpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ AST.hpp.in
+
+DefineSymbols.cpp: DefineSymbols.cpp.in $(NODEGEN_SCRIPT)
+	$(vNODEGEN) -d $(DATAFILE) -o $@ DefineSymbols.cpp.in
 
 DOT.cpp: DOT.cpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ DOT.cpp.in

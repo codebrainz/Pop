@@ -1,4 +1,5 @@
 #include <Pop/Compiler.hpp>
+#include <Pop/DefineSymbols.hpp>
 #include <Pop/DOT.hpp>
 #include <Pop/LinkParents.hpp>
 #include <Pop/ParseState.hpp>
@@ -37,6 +38,10 @@ namespace Pop {
 
   void Compiler::link_parents() {
     Pop::link_parents(program);
+  }
+
+  void Compiler::define_symbols() {
+    Pop::define_symbols(program, log);
   }
 
   void Compiler::generate_dot(std::ostream &os,
