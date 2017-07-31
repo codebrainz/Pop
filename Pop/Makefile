@@ -1,4 +1,4 @@
-CXXFLAGS_ = $(CPPFLAGS) -I.. $(CXXFLAGS) -g -std=c++14 -Wall -Wextra -Werror -fmax-errors=2
+CXXFLAGS_ = $(CPPFLAGS) -I.. $(CXXFLAGS) -g -std=c++14 -Wall -Wextra -Werror
 LDFLAGS_ = $(LDFLAGS)
 
 NODEGEN_SCRIPT = ../scripts/nodegen.py
@@ -31,6 +31,7 @@ GEN_SOURCES = \
 	Operators.cpp \
 	ResolveSymbols.cpp \
 	Transformer.cpp \
+	Validate.cpp \
 	Visitor.cpp
 
 GEN_HEADERS = $(GEN_SOURCES:.cpp=.hpp)
@@ -111,11 +112,17 @@ Transformer.cpp: Transformer.cpp.in Transformer.hpp $(NODEGEN_DEPS)
 Transformer.hpp: Transformer.hpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ Transformer.hpp.in
 
+Validate.cpp: Validate.cpp.in $(NODEGEN_DEPS)
+	$(vNODEGEN) -d $(DATAFILE) -o $@ Validate.cpp.in
+
 Visitor.cpp: Visitor.cpp.in Visitor.hpp $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ Visitor.cpp.in
 
 Visitor.hpp: Visitor.hpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ Visitor.hpp.in
+
+tidy: $(SOURCES)
+	clang-tidy -checks='modernize-*' $(SOURCES) -- $(CXXFLAGS_)
 
 -include $(DEPENDS)
 

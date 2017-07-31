@@ -10,4 +10,7 @@ deps-clean:
 format-xml:
 	tidy -bcimq -utf8 -w 120 -xml -asxml data.xml
 
-.PHONY: all clean deps-clean
+tidy:
+	$(MAKE) -C Pop $@
+
+.PHONY: all clean deps-clean format-xml tidy

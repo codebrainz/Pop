@@ -59,6 +59,7 @@ namespace Pop {
           have_line = true;
         }
     {%- endfor %}
+        (void)have_line;
       }
       if (n.column() < 0) {
         bool have_column = false;
@@ -68,6 +69,7 @@ namespace Pop {
           have_column = true;
         }
     {%- endfor %}
+        (void)have_column;
       }
   {%- else %}
       (void)n;

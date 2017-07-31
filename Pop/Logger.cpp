@@ -22,7 +22,7 @@ namespace Pop {
     return "unknown";
   }
 
-  void Logger::report_messages(std::ostream &out, int max_errors) const {
+  int Logger::report_messages(std::ostream &out, int max_errors) const {
     int count = 0;
     for (const auto &msg : messages) {
       bool have_loc = false;
@@ -43,6 +43,7 @@ namespace Pop {
       if (count == max_errors)
         break;
     }
+    return count;
   }
 
   // namespace Pop

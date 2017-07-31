@@ -3,7 +3,7 @@
 
 namespace Pop {
 
-  struct Logger;
+  class Logger;
   struct Node;
 
   void define_symbols(Node *root, Logger &log);

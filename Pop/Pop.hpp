@@ -14,6 +14,7 @@
 #include <Pop/SymbolTable.hpp>
 #include <Pop/Transformer.hpp>
 #include <Pop/Utils.hpp>
+#include <Pop/Validate.hpp>
 #include <Pop/Visitor.hpp>
 
 #endif // POP_HPP

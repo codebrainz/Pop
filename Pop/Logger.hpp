@@ -30,9 +30,47 @@ namespace Pop {
     }
   };
 
-  struct Logger {
+  class Logger {
+  public:
+    int report_messages(std::ostream &out, int max_errors = -1) const;
+
+    template < class... Args >
+    void note(Args &&... args) {
+      log(MessageType::NOTE, std::forward< Args >(args)...);
+    }
+
+    template < class... Args >
+    void info(Args &&... args) {
+      log(MessageType::INFO, std::forward< Args >(args)...);
+    }
+
+    template < class... Args >
+    void debug(Args &&... args) {
+      log(MessageType::DEBUG, std::forward< Args >(args)...);
+    }
+
+    template < class... Args >
+    void warning(Args &&... args) {
+      log(MessageType::WARNING, std::forward< Args >(args)...);
+    }
+
+    template < class... Args >
+    void critical(Args &&... args) {
+      log(MessageType::CRITICAL, std::forward< Args >(args)...);
+    }
+
+    template < class... Args >
+    void error(Args &&... args) {
+      log(MessageType::ERROR, std::forward< Args >(args)...);
+    }
+
+    template < class... Args >
+    void fatal(Args &&... args) {
+      log(MessageType::FATAL, std::forward< Args >(args)...);
+    }
+
+  private:
     std::vector< Message > messages;
-    void report_messages(std::ostream &out, int max_errors = -1) const;
 
     void log_(std::ostream &os, const char *s) {
       while (*s) {
@@ -76,41 +114,6 @@ namespace Pop {
     template < class... Args >
     void log(MessageType ty, Args &&... args) {
       log(ty, nullptr, -1, -1, std::forward< Args >(args)...);
-    }
-
-    template < class... Args >
-    void note(Args &&... args) {
-      log(MessageType::NOTE, std::forward< Args >(args)...);
-    }
-
-    template < class... Args >
-    void info(Args &&... args) {
-      log(MessageType::INFO, std::forward< Args >(args)...);
-    }
-
-    template < class... Args >
-    void debug(Args &&... args) {
-      log(MessageType::DEBUG, std::forward< Args >(args)...);
-    }
-
-    template < class... Args >
-    void warning(Args &&... args) {
-      log(MessageType::WARNING, std::forward< Args >(args)...);
-    }
-
-    template < class... Args >
-    void critical(Args &&... args) {
-      log(MessageType::CRITICAL, std::forward< Args >(args)...);
-    }
-
-    template < class... Args >
-    void error(Args &&... args) {
-      log(MessageType::ERROR, std::forward< Args >(args)...);
-    }
-
-    template < class... Args >
-    void fatal(Args &&... args) {
-      log(MessageType::FATAL, std::forward< Args >(args)...);
     }
   };
 

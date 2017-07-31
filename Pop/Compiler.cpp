@@ -7,6 +7,7 @@
 #include <Pop/LocationPatcher.hpp>
 #include <Pop/ParseState.hpp>
 #include <Pop/ResolveSymbols.hpp>
+#include <Pop/Validate.hpp>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -54,17 +55,21 @@ namespace Pop {
     Pop::patch_locations(program);
   }
 
+  void Compiler::validate() {
+    Pop::validate(program, log);
+  }
+
   void Compiler::generate_dot(std::ostream &os,
                               const std::string &indent_token) {
     Pop::generate_dot(program, os, indent_token);
   }
 
-  void Compiler::report_diagnostics(int max_errors) {
-    report_diagnostics(std::cerr, max_errors);
+  int Compiler::report_diagnostics(int max_errors) {
+    return report_diagnostics(std::cerr, max_errors);
   }
 
-  void Compiler::report_diagnostics(std::ostream &os, int max_errors) {
-    log.report_messages(os, max_errors);
+  int Compiler::report_diagnostics(std::ostream &os, int max_errors) {
+    return log.report_messages(os, max_errors);
   }
 
   const char *Compiler::add_fn(const std::string &fn) {
