@@ -117,7 +117,13 @@ namespace Pop {
   {{ node.name }}& operator=(const {{ node.name }}&) = delete;
   {{ node.name }}& operator=({{ node.name }}&&) = delete;
   {{ node.name }}(const char *fn="", int line=-1, int column=-1)
-    : Node(fn, line, column) {
+    : Node(fn, line, column){% for field in node.fields -%}
+        {%- if field.default is not none -%}
+          ,{{ field.name }}({{ field.default }})
+        {%- elif field.child -%}
+          ,{{ field.name }}(nullptr)
+        {%- endif -%}
+      {%- endfor %}  {
   }
   {%- if node.construct_fields | length > 0 %}
   {{ node.name }}(const char *fn, int line, int column, {% for field in node.construct_fields -%}
@@ -133,6 +139,7 @@ namespace Pop {
         {%- if loop.index < node.construct_fields | length %}, {% endif %}
       {%- endfor %} {
   }
+  {% if node.construct_fields | length == 1 %}explicit {% endif -%}
   {{ node.name }}({% for field in node.construct_fields %}{{ field.type }} {{ field.name }}{% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %})
     : Node(nullptr, -1, -1), {% for field in node.construct_fields -%}
         {%- if field.type == "std::string" -%}

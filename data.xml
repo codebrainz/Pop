@@ -48,27 +48,27 @@
   <nodes>
     <node name="Null" />
     <node name="Bool">
-      <field name="value" type="bool" />
+      <field name="value" type="bool" default="false" />
     </node>
     <node name="Int">
-      <field name="value" type="long long int" />
+      <field name="value" type="long long int" default="0" />
     </node>
     <node name="Float">
-      <field name="value" type="long double" />
+      <field name="value" type="long double" default="0.0" />
     </node>
     <node name="String">
       <field name="value" type="std::string" />
     </node>
     <node name="Symbol">
       <field name="value" type="std::string" />
-      <field name="symbol" type="SymbolEntry*" construct="false" />
+      <field name="symbol" type="SymbolEntry*" construct="false" default="nullptr" />
     </node>
     <node name="Unary">
-      <field name="op" type="Operator" />
+      <field name="op" type="Operator" default="Operator::NONE" />
       <field name="operand" />
     </node>
     <node name="Binary">
-      <field name="op" type="Operator" />
+      <field name="op" type="Operator" default="Operator::NONE" />
       <field name="left" />
       <field name="right" />
     </node>
@@ -101,7 +101,7 @@
     </node>
     <node name="Goto">
       <field name="label" type="std::string" />
-      <field name="symbol" type="SymbolEntry*" construct="false" />
+      <field name="symbol" type="SymbolEntry*" construct="false" default="nullptr" />
     </node>
     <node name="IfStmt">
       <field name="predicate" />
