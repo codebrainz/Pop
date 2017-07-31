@@ -1,5 +1,6 @@
 #include <Pop/LocationPatcher.hpp>
 #include <Pop/AST.hpp>
+#include <Pop/Logger.hpp>
 #include <Pop/Visitor.hpp>
 #include <cassert>
 #include <vector>
@@ -78,12 +79,44 @@ namespace Pop {
 {%- endfor %}
   };
 
-  void patch_locations(Node *root) {
+  struct LocationVerifierVisitor final : public DefaultPostOrderVisitor {
+    Logger &log;
+    explicit LocationVerifierVisitor(Logger &log)
+      : log(log) {
+    }
+{%- for node in nodes %}
+  {%- if node.name != "Program" %}
+    void process({{ node.name }} &n) final {
+      if (!n.file()) {
+        log.debug(n.file(), n.line(), n.column(),
+          "Node '%' of type '%' is missing a filename",
+          (void*)&n, n.type_name());
+      }
+      if (n.line() < 0) {
+        log.debug(n.file(), n.line(), n.column(),
+          "Node '%' of type '%' is missing line number",
+          (void*)&n, n.type_name());
+      }
+      if (n.column() < 0) {
+        log.debug(n.file(), n.line(), n.column(),
+          "Node '%' of type '%' is missing column number",
+          (void*)&n, n.type_name());
+      }
+    }
+  {%- endif %}
+{%- endfor %}
+  };
+
+  void patch_locations(Node *root, Logger &log, bool verify) {
     assert(root);
     FilePatchVisitor file_visitor;
     root->accept(file_visitor);
     LocationPatchVisitor location_visitor;
     root->accept(location_visitor);
+    if (verify) {
+      LocationVerifierVisitor verifier_visitor(log);
+      root->accept(verifier_visitor);
+    }
   }
 
   // namespace Pop

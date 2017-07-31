@@ -51,8 +51,8 @@ namespace Pop {
     Pop::resolve_symbols(program, log);
   }
 
-  void Compiler::patch_locations() {
-    Pop::patch_locations(program);
+  void Compiler::patch_locations(bool verify) {
+    Pop::patch_locations(program, log, verify);
   }
 
   void Compiler::validate() {

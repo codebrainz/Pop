@@ -3,9 +3,10 @@
 
 namespace Pop {
 
+  class Logger;
   struct Node;
 
-  void patch_locations(Node *root);
+  void patch_locations(Node *root, Logger &log, bool verify = false);
 
   // namespace Pop
 }

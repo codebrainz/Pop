@@ -20,7 +20,7 @@ namespace Pop {
     void link_parents();
     void define_symbols();
     void resolve_symbols();
-    void patch_locations();
+    void patch_locations(bool verify = false);
     void validate();
     void generate_dot(std::ostream &os, const std::string &indent_token = "  ");
     int report_diagnostics(int max_errors = -1);
