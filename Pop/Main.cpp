@@ -1,4 +1,5 @@
 #include <Pop/Pop.hpp>
+#include <cassert>
 #include <iostream>
 
 using namespace Pop;
@@ -12,5 +13,6 @@ int main() {
   cmp.patch_locations(true);  // 4
   cmp.validate();             // 5
   cmp.generate_dot(std::cout);
-  return (cmp.report_diagnostics(std::cerr) == 0);
+  assert(cmp.report_diagnostics(std::cerr) == 0);
+  return 0;
 }
