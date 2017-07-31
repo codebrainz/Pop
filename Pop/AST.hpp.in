@@ -28,8 +28,7 @@ namespace Pop {
     Node(Node&&) = delete;
     Node& operator=(const Node&) = delete;
     Node& operator=(Node&&) = delete;
-    virtual ~Node() {
-    }
+    virtual ~Node() = default;
     const char *file() const { return location.file?location.file:""; }
     void file(const char *f) { location.file = f?f:""; }
     int line() const { return location.line; }
@@ -87,7 +86,7 @@ namespace Pop {
       : Node(fn, line, column) {
       append_take(first);
     }
-    ~NodeList() override final {
+    ~NodeList() final {
       for (auto child : elements)
         node_unref(child);
     }
@@ -97,13 +96,13 @@ namespace Pop {
     void append(Node *n) {
       append_take(node_ref(n));
     }
-    void accept(VisitorBase &v) override final {
+    void accept(VisitorBase &v) final {
       v.visit(*this);
     }
-    Node *transform(TransformerBase &t) override final {
+    Node *transform(TransformerBase &t) final {
       return t.transform(this);
     }
-    const std::string &type_name() const override final {
+    const std::string &type_name() const final {
       static const std::string s = "NodeList";
       return s;
     }
@@ -121,27 +120,44 @@ namespace Pop {
     : Node(fn, line, column) {
   }
   {%- if node.construct_fields | length > 0 %}
-  {{ node.name }}(const char *fn, int line, int column, {% for field in node.construct_fields %}{{ field.type }} {{ field.name }}{% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %})
-    : Node(fn, line, column), {% for field in node.construct_fields %}{{ field.name }}({{ field.name }}){% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %} {
+  {{ node.name }}(const char *fn, int line, int column, {% for field in node.construct_fields -%}
+        {{ field.type }} {{ field.name }}
+        {%- if loop.index < node.construct_fields | length %}, {% endif %}
+      {%- endfor %})
+    : Node(fn, line, column), {% for field in node.construct_fields -%}
+        {%- if field.type == "std::string" -%}
+          {{ field.name }}(std::move({{ field.name }}))
+        {%- else -%}
+          {{ field.name }}({{ field.name }})
+        {%- endif -%}
+        {%- if loop.index < node.construct_fields | length %}, {% endif %}
+      {%- endfor %} {
   }
   {{ node.name }}({% for field in node.construct_fields %}{{ field.type }} {{ field.name }}{% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %})
-    : Node(nullptr, -1, -1), {% for field in node.construct_fields %}{{ field.name }}({{ field.name }}){% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %} {
+    : Node(nullptr, -1, -1), {% for field in node.construct_fields -%}
+        {%- if field.type == "std::string" -%}
+          {{ field.name }}(std::move({{ field.name }}))
+        {%- else -%}
+          {{ field.name }}({{ field.name }})
+        {%- endif -%}
+        {%- if loop.index < node.construct_fields | length %}, {% endif %}
+      {%- endfor %} {
   }
   {%- endif %}
   {%- if node.child_fields | length > 0 %}
-    ~{{ node.name }}() override final {
+    ~{{ node.name }}() final {
     {%- for field in node.child_fields %}
       node_unref({{ field.name }});
     {%- endfor %}
     }
   {%- endif %}
-    void accept(VisitorBase &v) override final {
+    void accept(VisitorBase &v) final {
       v.visit(*this);
     }
-    Node *transform(TransformerBase &t) override final {
+    Node *transform(TransformerBase &t) final {
       return t.transform(this);
     }
-    const std::string &type_name() const override final {
+    const std::string &type_name() const final {
       static const std::string s = "{{ node.name }}";
       return s;
     }

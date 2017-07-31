@@ -52,7 +52,7 @@ namespace Pop {
     }
 {%- for node in nodes %}
   {%- if node.name in [ "Do", "While", "For" ] %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
     {%- if node.child_fields | length > 0 %}
       begin_breakable();
       begin_continuable();
@@ -67,7 +67,7 @@ namespace Pop {
     {%- endif %}
     }
   {%- elif node.name == "Case" %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
     {%- if node.child_fields | length > 0 %}
       begin_breakable();
       {%- for field in node.child_fields %}
@@ -80,7 +80,7 @@ namespace Pop {
     {%- endif %}
     }
   {%- elif node.name == "Function" %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
     {%- if node.child_fields | length > 0 %}
       begin_returnable();
       {%- for field in node.child_fields %}
@@ -91,28 +91,28 @@ namespace Pop {
     {%- endif %}
     }
   {%- elif node.name == "Continue" %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
       if (!continuable()) {
         log.error(n.file(), n.line(), n.column(),
           "continue statement in wrong context");
       }
     }
   {%- elif node.name == "Break" %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
       if (!breakable()) {
         log.error(n.file(), n.line(), n.column(),
           "break statement in wrong context");
       }
     }
   {%- elif node.name == "Return" %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
       if (!returnable()) {
         log.error(n.file(), n.line(), n.column(),
           "return statement in wrong context");
       }
     }
   {%- else %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
     {%- if node.child_fields | length > 0 %}
       {%- for field in node.child_fields %}
       if (n.{{ field.name }})

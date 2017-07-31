@@ -40,7 +40,7 @@ namespace Pop {
       }
     }
 {%- for node in nodes %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
       n.enclosing_scope = current_scope();
   {%- if node.name in [ "Label", "Variable", "Class" ] %}
       define(n);

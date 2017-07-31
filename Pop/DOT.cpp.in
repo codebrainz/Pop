@@ -68,7 +68,7 @@ namespace Pop {
       }
     }
 {%- for node in nodes %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
       auto nid = id.node_id(n);
       fmt.iwrite("node_% [label=\"% (%)", nid, n.type_name(), nid);
       write_location(n);
@@ -104,7 +104,7 @@ namespace Pop {
       fmt.writeln("node_%;", id.node_id(n));
     }
 {%- for node in nodes %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
       write_edge(n);
   {%- if node.child_fields | length > 0 %}
       begin_parent(n);

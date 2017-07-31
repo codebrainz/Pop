@@ -10,7 +10,7 @@ namespace Pop {
 {%- endfor %}
 
   struct TransformerBase {
-    virtual ~TransformerBase() {}
+    virtual ~TransformerBase() = default;
     virtual Node *transform(NodeList*) = 0;
 {%- for node in nodes %}
     virtual Node *transform({{ node.name }}*) = 0;

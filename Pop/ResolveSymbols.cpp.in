@@ -23,15 +23,15 @@ namespace Pop {
     }
 {%- for node in nodes %}
   {%- if node.name == "Symbol" %}
-    void visit({{ node.name }} &n) {
+    void visit({{ node.name }} &n) final {
       resolve(n, n.value);
     }
   {%- elif node.name == "Goto" %}
-    void visit({{ node.name }} &n) {
+    void visit({{ node.name }} &n) final {
       resolve(n, n.label);
     }
   {%- else %}
-    void visit({{ node.name }}&) {
+    void visit({{ node.name }}&) final {
     }
   {%- endif %}
 {%- endfor %}

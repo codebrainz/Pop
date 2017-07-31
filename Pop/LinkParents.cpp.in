@@ -23,7 +23,7 @@ namespace Pop {
       return nullptr;
     }
 {%- for node in nodes %}
-    void visit({{ node.name }} &n) override final {
+    void visit({{ node.name }} &n) final {
       n.parent = current_parent();
   {%- if node.child_fields | length > 0 %}
       begin_parent(n);

@@ -46,6 +46,24 @@ SOURCES = \
 	Utils.cpp \
 	$(GEN_SOURCES)
 
+TIDY_SOURCES = \
+	AST.cpp \
+	Compiler.cpp \
+	DefineSymbols.cpp \
+	DOT.cpp \
+	LinkParents.cpp \
+	LocationPatcher.cpp \
+	Logger.cpp \
+	Main.cpp \
+	Operators.cpp \
+	ParseState.cpp \
+	ResolveSymbols.cpp \
+	SymbolTable.cpp \
+	Transformer.cpp \
+	Utils.cpp \
+	Validate.cpp \
+	Visitor.cpp
+
 OBJECTS = $(SOURCES:.cpp=.o)
 DEPENDS = $(SOURCES:.cpp=.d)
 
@@ -121,8 +139,8 @@ Visitor.cpp: Visitor.cpp.in Visitor.hpp $(NODEGEN_DEPS)
 Visitor.hpp: Visitor.hpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ Visitor.hpp.in
 
-tidy: $(SOURCES)
-	clang-tidy -checks='modernize-*' $(SOURCES) -- $(CXXFLAGS_)
+tidy: $(TIDY_SOURCES)
+	clang-tidy -header-filter=.* -checks='modernize-*' $(TIDY_SOURCES) -- $(CXXFLAGS_)
 
 -include $(DEPENDS)
 

@@ -9,7 +9,7 @@ namespace Pop {
 {%- endfor %}
 
   struct VisitorBase {
-    virtual ~VisitorBase() {}
+    virtual ~VisitorBase() = default;
     virtual void visit(NodeList &n);
 {%- for node in nodes %}
     virtual void visit({{ node.name }}&) = 0;
@@ -24,16 +24,16 @@ namespace Pop {
   };
 
   struct PreOrderVisitor : public OrderedVisitor {
-    void visit(NodeList &n) override final;
+    void visit(NodeList &n) final;
 {%- for node in nodes %}
-    void visit({{ node.name }} &n) override final;
+    void visit({{ node.name }} &n) final;
 {%- endfor %}
   };
 
   struct PostOrderVisitor : public OrderedVisitor {
-    void visit(NodeList &n) override final;
+    void visit(NodeList &n) final;
 {%- for node in nodes %}
-    void visit({{ node.name }} &n) override final;
+    void visit({{ node.name }} &n) final;
 {%- endfor %}
   };
 

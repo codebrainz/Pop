@@ -51,35 +51,35 @@ namespace Pop {
         return returnables.back();
       return false;
     }
-    void visit(Null &n) override final {
+    void visit(Null &n) final {
       (void)n;
     }
-    void visit(Bool &n) override final {
+    void visit(Bool &n) final {
       (void)n;
     }
-    void visit(Int &n) override final {
+    void visit(Int &n) final {
       (void)n;
     }
-    void visit(Float &n) override final {
+    void visit(Float &n) final {
       (void)n;
     }
-    void visit(String &n) override final {
+    void visit(String &n) final {
       (void)n;
     }
-    void visit(Symbol &n) override final {
+    void visit(Symbol &n) final {
       (void)n;
     }
-    void visit(Unary &n) override final {
+    void visit(Unary &n) final {
       if (n.operand)
         n.operand->accept(*this);
     }
-    void visit(Binary &n) override final {
+    void visit(Binary &n) final {
       if (n.left)
         n.left->accept(*this);
       if (n.right)
         n.right->accept(*this);
     }
-    void visit(IfExpr &n) override final {
+    void visit(IfExpr &n) final {
       if (n.predicate)
         n.predicate->accept(*this);
       if (n.consequence)
@@ -87,13 +87,13 @@ namespace Pop {
       if (n.alternative)
         n.alternative->accept(*this);
     }
-    void visit(Call &n) override final {
+    void visit(Call &n) final {
       if (n.callee)
         n.callee->accept(*this);
       if (n.arguments)
         n.arguments->accept(*this);
     }
-    void visit(Function &n) override final {
+    void visit(Function &n) final {
       begin_returnable();
       if (n.parameters)
         n.parameters->accept(*this);
@@ -101,39 +101,39 @@ namespace Pop {
         n.body->accept(*this);
       end_returnable();
     }
-    void visit(Block &n) override final {
+    void visit(Block &n) final {
       if (n.statements)
         n.statements->accept(*this);
     }
-    void visit(ExprStmt &n) override final {
+    void visit(ExprStmt &n) final {
       if (n.expression)
         n.expression->accept(*this);
     }
-    void visit(EmptyStmt &n) override final {
+    void visit(EmptyStmt &n) final {
       (void)n;
     }
-    void visit(Continue &n) override final {
+    void visit(Continue &n) final {
       if (!continuable()) {
         log.error(n.file(), n.line(), n.column(),
                   "continue statement in wrong context");
       }
     }
-    void visit(Break &n) override final {
+    void visit(Break &n) final {
       if (!breakable()) {
         log.error(n.file(), n.line(), n.column(),
                   "break statement in wrong context");
       }
     }
-    void visit(Return &n) override final {
+    void visit(Return &n) final {
       if (!returnable()) {
         log.error(n.file(), n.line(), n.column(),
                   "return statement in wrong context");
       }
     }
-    void visit(Goto &n) override final {
+    void visit(Goto &n) final {
       (void)n;
     }
-    void visit(IfStmt &n) override final {
+    void visit(IfStmt &n) final {
       if (n.predicate)
         n.predicate->accept(*this);
       if (n.consequence)
@@ -141,7 +141,7 @@ namespace Pop {
       if (n.alternative)
         n.alternative->accept(*this);
     }
-    void visit(Case &n) override final {
+    void visit(Case &n) final {
       begin_breakable();
       if (n.expression)
         n.expression->accept(*this);
@@ -149,13 +149,13 @@ namespace Pop {
         n.body->accept(*this);
       end_breakable();
     }
-    void visit(Switch &n) override final {
+    void visit(Switch &n) final {
       if (n.expression)
         n.expression->accept(*this);
       if (n.cases)
         n.cases->accept(*this);
     }
-    void visit(Do &n) override final {
+    void visit(Do &n) final {
       begin_breakable();
       begin_continuable();
       if (n.body)
@@ -165,7 +165,7 @@ namespace Pop {
       end_continuable();
       end_breakable();
     }
-    void visit(While &n) override final {
+    void visit(While &n) final {
       begin_breakable();
       begin_continuable();
       if (n.expression)
@@ -175,7 +175,7 @@ namespace Pop {
       end_continuable();
       end_breakable();
     }
-    void visit(For &n) override final {
+    void visit(For &n) final {
       begin_breakable();
       begin_continuable();
       if (n.initialize)
@@ -189,22 +189,22 @@ namespace Pop {
       end_continuable();
       end_breakable();
     }
-    void visit(Label &n) override final {
+    void visit(Label &n) final {
       (void)n;
     }
-    void visit(Variable &n) override final {
+    void visit(Variable &n) final {
       if (n.initializer)
         n.initializer->accept(*this);
     }
-    void visit(Class &n) override final {
+    void visit(Class &n) final {
       if (n.members)
         n.members->accept(*this);
     }
-    void visit(Module &n) override final {
+    void visit(Module &n) final {
       if (n.body)
         n.body->accept(*this);
     }
-    void visit(Program &n) override final {
+    void visit(Program &n) final {
       if (n.modules)
         n.modules->accept(*this);
     }
