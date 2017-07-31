@@ -3,9 +3,10 @@
 
 namespace Pop {
 
+  class Logger;
   struct Node;
 
-  void link_parents(Node *root);
+  void link_parents(Node *root, Logger &log, bool verify = false);
 
   // namespace Pop
 }

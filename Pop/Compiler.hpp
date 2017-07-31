@@ -17,7 +17,7 @@ namespace Pop {
     ~Compiler();
     Node *parse_file(const std::string &fn);
     Node *parse_file(const std::string &fn, std::istream &is);
-    void link_parents();
+    void link_parents(bool verify = false);
     void define_symbols();
     void resolve_symbols();
     void patch_locations(bool verify = false);

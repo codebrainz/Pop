@@ -6,7 +6,7 @@ using namespace Pop;
 int main() {
   Compiler cmp;
   cmp.parse_file("test.pop"); // 0
-  cmp.link_parents();         // 1
+  cmp.link_parents(true);     // 1
   cmp.define_symbols();       // 2
   cmp.resolve_symbols();      // 3
   cmp.patch_locations(true);  // 4

@@ -39,8 +39,8 @@ namespace Pop {
     return mod;
   }
 
-  void Compiler::link_parents() {
-    Pop::link_parents(program);
+  void Compiler::link_parents(bool verify) {
+    Pop::link_parents(program, log, verify);
   }
 
   void Compiler::define_symbols() {

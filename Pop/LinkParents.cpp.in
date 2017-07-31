@@ -1,5 +1,6 @@
 #include <Pop/LinkParents.hpp>
 #include <Pop/AST.hpp>
+#include <Pop/Logger.hpp>
 #include <Pop/Visitor.hpp>
 #include <cassert>
 #include <vector>
@@ -37,10 +38,37 @@ namespace Pop {
 {%- endfor %}
   };
 
-  void link_parents(Node *root) {
+  struct ParentVerifierVisitor : public VisitorBase {
+    Logger &log;
+    ParentVerifierVisitor(Logger &log) : log(log) {
+    }
+{%- for node in nodes %}
+    void visit({{ node.name }} &n) {
+  {%- if node.name != "Program" %}
+      if (!n.parent) {
+        log.debug(n.file(), n.line(), n.column(),
+          "Node '%' of type '%' is missing parent back-link",
+          (void*)&n, n.type_name());
+      }
+  {%- else %}
+      if (n.parent) {
+        log.debug(n.file(), n.line(), n.column(),
+          "Node '%' of type '%' has a parent back-link but shouldn't",
+          (void*)&n, n.type_name());
+      }
+  {%- endif %}
+    }
+{%- endfor %}
+  };
+
+  void link_parents(Node *root, Logger &log, bool verify) {
     assert(root);
     ParentVisitor visitor;
     root->accept(visitor);
+    if (verify) {
+      ParentVerifierVisitor verifier(log);
+      root->accept(visitor);
+    }
   }
 
   // namespace Pop
