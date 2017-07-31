@@ -1,5 +1,11 @@
-CXXFLAGS_ = $(CPPFLAGS) -I.. $(CXXFLAGS) -g -std=c++14 -Wall -Wextra -Werror
+CXXFLAGS_ = $(CPPFLAGS) -I.. $(CXXFLAGS) -std=c++14 -Wall -Wextra -Werror
 LDFLAGS_ = $(LDFLAGS)
+
+ifdef RELEASE
+CXXFLAGS_ += -flto -O3 -DNDEBUG
+else
+CXXFLAGS_ += -g
+endif
 
 NODEGEN_SCRIPT = ../scripts/nodegen.py
 DATAFILE = ../data.xml
