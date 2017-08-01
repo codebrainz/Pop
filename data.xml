@@ -151,4 +151,58 @@
       <field name="scope" type="SymbolTable" construct="false" />
     </node>
   </nodes>
+  <instructions>
+    <!-- Misc instructions -->
+    <node name="Halt" mnemonic="HLT" />
+    <node name="Nop" mnemonic="NOP" />
+
+    <!-- Stack manipulation -->
+    <node name="PushConst" mnemonic="PUSH" size="5" />
+    <node name="Pop" mnemonic="POP" />
+
+    <!-- Environments -->
+    <node name="Closure" mnemonic="CLSR" size="5" />
+    <node name="OpenEnvironment" mnemonic="OENV" />
+    <node name="CloseEnvironment" mnemonic="CENV" />
+    <node name="Bind" mnemonic="BIND" />
+    <node name="Lookup" mnemonic="LKUP" />
+
+    <!-- Branching -->
+    <node name="Jump" mnemonic="JMP" size="5" />
+    <node name="JumpIfTrue" mnemonic="JT" size="5" />
+    <node name="JumpIfFalse" mnemonic="JF" size="5" />
+    <node name="Call" mnemonic="CALL" />
+    <node name="Return" mnemonic="RET" />
+
+    <!-- Unary operations -->
+    <node name="Positive" mnemonic="POS" />
+    <node name="Negative" mnemonic="NEG" />
+    <node name="LogicalNot" mnemonic="NOT" />
+    <node name="BitwiseNot" mnemonic="CMPL" />
+    <node name="Increment" mnemonic="INC" />
+    <node name="Decrement" mnemonic="DEC" />
+
+    <!-- Binary operations -->
+    <node name="Add" mnemonic="ADD" />
+    <node name="Subtract" mnemonic="SUB" />
+    <node name="Multiply" mnemonic="MUL" />
+    <node name="Divide" mnemonic="DIV" />
+    <node name="Modulo" mnemonic="MOD" />
+    <node name="LeftShift" mnemonic="LSH" />
+    <node name="RightShift" mnemonic="RSH" />
+    <node name="BitwiseAnd" mnemonic="AND" />
+    <node name="BitwiseOr" mnemonic="OR" />
+    <node name="BitwiseXor" mnemonic="XOR" />
+    <node name="LessThan" mnemonic="LT" />
+    <node name="GreaterThan" mnemonic="GT" />
+    <node name="LessOrEqual" mnemonic="LE" />
+    <node name="GreaterOrEqual" mnemonic="GE" />
+    <node name="Equal" mnemonic="EQ" />
+    <node name="NotEqual" mnemonic="NE" />
+    <node name="Index" mnemonic="IDX" />
+    <node name="Member" mnemonic="MEM" />
+
+    <!-- Pseudo instructions -->
+    <node name="Label" />
+  </instructions>
 </pop-data>

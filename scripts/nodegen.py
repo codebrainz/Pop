@@ -44,6 +44,12 @@ class Field:
     self.child = child
     self.default = default
 
+class Instruction:
+  def __init__(self, name, mnemonic, size=1):
+    self.name = name
+    self.mnemonic = mnemonic
+    self.size = size
+
 def parse_operators(root):
   operators = []
   for elem in root.iterfind('operators/operator'):
@@ -72,6 +78,15 @@ def parse_nodes(root):
       ))
     nodes.append(Node(name, fields))
   return nodes
+
+def parse_instructions(root):
+  instructions = []
+  for node_elem in root.iterfind('instructions/node'):
+    name = node_elem.attrib['name']
+    mnemonic = node_elem.attrib.get('mnemonic', None)
+    size = int(node_elem.attrib.get('size', '1'))
+    instructions.append(Instruction(name, mnemonic, size))
+  return instructions
 
 def do_format(fn):
   def can_format():
@@ -105,6 +120,7 @@ def main(args):
 
   operators = parse_operators(xml_root)
   nodes = parse_nodes(xml_root)
+  instructions = parse_instructions(xml_root)
 
   in_files = []
   if len(in_fns) == 0:
@@ -114,7 +130,7 @@ def main(args):
 
   for fn, f in in_files:
     t = jinja2.Template(f.read())
-    s = t.render(fn=fn, operators=operators, nodes=nodes)
+    s = t.render(fn=fn, operators=operators, nodes=nodes, instructions=instructions)
     com = '// This file is auto-generated from %s, do not edit.\n' % fn
     out_file.write(com + s.rstrip() + '\n')
 
