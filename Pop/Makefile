@@ -40,11 +40,21 @@ GEN_SOURCES = \
 	Validate.cpp \
 	Visitor.cpp
 
-GEN_HEADERS = $(GEN_SOURCES:.cpp=.hpp)
+GEN_HEADERS = \
+	AST.hpp \
+	AST.cpp \
+	Grammar.hpp \
+	Instructions.hpp \
+	Lexer.hpp \
+	Operators.hpp \
+	Transformer.hpp \
+	Visitor.hpp
+
 GEN_FILES = $(GEN_SOURCES) $(GEN_HEADERS)
 
 SOURCES = \
 	Compiler.cpp \
+	Instructions.cpp \
 	Logger.cpp \
 	Main.cpp \
 	ParseState.cpp \
@@ -57,6 +67,7 @@ TIDY_SOURCES = \
 	Compiler.cpp \
 	DefineSymbols.cpp \
 	DOT.cpp \
+	Instructions.cpp \
 	LinkParents.cpp \
 	LocationPatcher.cpp \
 	Logger.cpp \
@@ -76,7 +87,7 @@ DEPENDS = $(SOURCES:.cpp=.d)
 all: pop
 
 clean:
-	$(RM) *.o pop $(GEN_SOURCES)
+	$(RM) *.o pop $(GEN_FILES)
 
 deps-clean: clean
 	$(RM) *.d
@@ -114,6 +125,9 @@ DefineSymbols.cpp: DefineSymbols.cpp.in $(NODEGEN_SCRIPT)
 
 DOT.cpp: DOT.cpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ DOT.cpp.in
+
+Instructions.hpp: Instructions.hpp.in $(NODEGEN_DEPS)
+	$(vNODEGEN) -d $(DATAFILE) -o $@ Instructions.hpp.in
 
 LinkParents.cpp: LinkParents.cpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ LinkParents.cpp.in

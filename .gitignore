@@ -7,6 +7,7 @@
 /Pop/AST.hpp
 /Pop/DefineSymbols.cpp
 /Pop/DOT.cpp
+/Pop/Instructions.hpp
 /Pop/LinkParents.cpp
 /Pop/LocationPatcher.cpp
 /Pop/Operators.cpp

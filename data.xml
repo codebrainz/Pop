@@ -161,16 +161,28 @@
     <node name="Pop" mnemonic="POP" />
 
     <!-- Environments -->
-    <node name="Closure" mnemonic="CLSR" size="5" />
+    <node name="Closure" mnemonic="CLSR" size="5">
+      <field name="name" type="std::string" />
+      <field name="target" type="int" construct="false" default="-1" />
+    </node>
     <node name="OpenEnvironment" mnemonic="OENV" />
     <node name="CloseEnvironment" mnemonic="CENV" />
     <node name="Bind" mnemonic="BIND" />
     <node name="Lookup" mnemonic="LKUP" />
 
     <!-- Branching -->
-    <node name="Jump" mnemonic="JMP" size="5" />
-    <node name="JumpIfTrue" mnemonic="JT" size="5" />
-    <node name="JumpIfFalse" mnemonic="JF" size="5" />
+    <node name="Jump" mnemonic="JMP" size="5">
+      <field name="label" type="std::string" />
+      <field name="target" type="int" construct="false" default="-1" />
+    </node>
+    <node name="JumpIfTrue" mnemonic="JT" size="5">
+      <field name="label" type="std::string" />
+      <field name="target" type="int" construct="false" default="-1" />
+    </node>
+    <node name="JumpIfFalse" mnemonic="JF" size="5">
+      <field name="label" type="std::string" />
+      <field name="target" type="int" construct="false" default="-1" />
+    </node>
     <node name="Call" mnemonic="CALL" />
     <node name="Return" mnemonic="RET" />
 
@@ -203,6 +215,8 @@
     <node name="Member" mnemonic="MEM" />
 
     <!-- Pseudo instructions -->
-    <node name="Label" />
+    <node name="Label" mnemonic="LBL" size="0">
+      <field name="name" type="std::string" />
+    </node>
   </instructions>
 </pop-data>
