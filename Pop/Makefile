@@ -113,6 +113,7 @@ Grammar.hpp: Grammar.cpp
 ParseState.cpp: Lexer.hpp
 ParseState.cpp: Grammar.hpp
 Compiler.cpp: Grammar.hpp
+Instructions.cpp: Instructions.hpp
 
 AST.cpp: AST.cpp.in AST.hpp $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ AST.cpp.in
