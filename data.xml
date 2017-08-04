@@ -158,7 +158,7 @@
 
     <!-- Stack manipulation -->
     <node name="PushConst" mnemonic="PUSH" size="5">
-      <field name="const_id" type="int" construct="false" default="-1" />
+      <field name="const_id" type="int" construct="true" />
     </node>
     <node name="Pop" mnemonic="POP" />
 
