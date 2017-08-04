@@ -1,5 +1,6 @@
 #include <Pop/AST.hpp>
 #include <typeinfo>
+#include <utility>
 
 namespace Pop {
 
@@ -18,12 +19,12 @@ namespace Pop {
     return seed;
   }
 
-  bool NodeList::operator==(const Node *n) const {
+  bool NodeList::equal(const Node *n) const {
     if (auto nn = dynamic_cast<const NodeList*>(n)) {
       if (nn->elements.size() != elements.size())
         return false;
       for (size_t i = 0; i < elements.size(); i++) {
-        if (!(elements[i]->operator==(nn->elements[i])))
+        if (!(elements[i]->equal(nn->elements[i])))
           return false;
       }
       return true;
@@ -39,7 +40,7 @@ namespace Pop {
     return typeid({{ node.name }}).hash_code();
   }
 
-  bool {{ node.name }}::operator==(const Node *n) const {
+  bool {{ node.name }}::equal(const Node *n) const {
     return (dynamic_cast<const {{ node.name }}*>(n) != nullptr);
   }
   {%- elif node.name == "Bool" %}
@@ -49,7 +50,7 @@ namespace Pop {
     return seed;
   }
 
-  bool {{ node.name }}::operator==(const Node *n) const {
+  bool {{ node.name }}::equal(const Node *n) const {
     if (auto nn = dynamic_cast<const {{ node.name }}*>(n)) {
       return (nn->value == value);
     }
@@ -62,7 +63,7 @@ namespace Pop {
     return seed;
   }
 
-  bool {{ node.name }}::operator==(const Node *n) const {
+  bool {{ node.name }}::equal(const Node *n) const {
     if (auto nn = dynamic_cast<const {{ node.name }}*>(n)) {
       return (nn->value == value);
     }
@@ -75,7 +76,7 @@ namespace Pop {
     return seed;
   }
 
-  bool {{ node.name }}::operator==(const Node *n) const {
+  bool {{ node.name }}::equal(const Node *n) const {
     if (auto nn = dynamic_cast<const {{ node.name }}*>(n)) {
       return (nn->value == value);
     }
@@ -88,7 +89,7 @@ namespace Pop {
     return seed;
   }
 
-  bool {{ node.name }}::operator==(const Node *n) const {
+  bool {{ node.name }}::equal(const Node *n) const {
     if (auto nn = dynamic_cast<const {{ node.name }}*>(n)) {
       return (nn->value == value);
     }
@@ -101,7 +102,7 @@ namespace Pop {
     return seed;
   }
 
-  bool {{ node.name }}::operator==(const Node *n) const {
+  bool {{ node.name }}::equal(const Node *n) const {
     if (auto nn = dynamic_cast<const {{ node.name }}*>(n)) {
       return (nn->value == value);
     }
@@ -114,7 +115,7 @@ namespace Pop {
     return seed;
   }
 
-  bool {{ node.name }}::operator==(const Node *n) const {
+  bool {{ node.name }}::equal(const Node *n) const {
     return (n == this);
   }
   {%- endif %}
