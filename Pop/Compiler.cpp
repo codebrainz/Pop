@@ -2,6 +2,7 @@
 #include <Pop/DefineSymbols.hpp>
 #include <Pop/DOT.hpp>
 #include <Pop/Grammar.hpp>
+#include <Pop/InstructionCompiler.hpp>
 #include <Pop/Instructions.hpp>
 #include <Pop/Lexer.hpp>
 #include <Pop/LinkParents.hpp>
@@ -66,6 +67,7 @@ namespace Pop {
   }
 
   void Compiler::compile_instructions() {
+    Pop::compile_instructions(program, const_tab, instructions);
   }
 
   void Compiler::dump_instructions(std::ostream &out) {

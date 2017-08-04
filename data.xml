@@ -157,7 +157,9 @@
     <node name="Nop" mnemonic="NOP" />
 
     <!-- Stack manipulation -->
-    <node name="PushConst" mnemonic="PUSH" size="5" />
+    <node name="PushConst" mnemonic="PUSH" size="5">
+      <field name="const_id" type="int" construct="false" default="-1" />
+    </node>
     <node name="Pop" mnemonic="POP" />
 
     <!-- Environments -->

@@ -5,9 +5,11 @@
 
 namespace Pop {
 
+  class ConstantsTable;
   struct Node;
 
-  void compile_instructions(Node *root, InstructionList &list);
+  void compile_instructions(Node *root, ConstantsTable &const_tab,
+                            InstructionList &list);
 
   // namespace Pop
 }

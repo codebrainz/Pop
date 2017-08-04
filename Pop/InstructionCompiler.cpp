@@ -6,14 +6,17 @@
 namespace Pop {
 
   struct InstructionCompiler : public DefaultPostOrderVisitor {
+    ConstantsTable &const_tab;
     InstructionList &list;
-    InstructionCompiler(InstructionList &list) : list(list) {
+    InstructionCompiler(ConstantsTable &const_tab, InstructionList &list)
+        : const_tab(const_tab), list(list) {
     }
   };
 
-  void compile_instructions(Node *root, InstructionList &list) {
+  void compile_instructions(Node *root, ConstantsTable &const_tab,
+                            InstructionList &list) {
     assert(root);
-    InstructionCompiler visitor(list);
+    InstructionCompiler visitor(const_tab, list);
     root->accept(visitor);
   }
 

@@ -2,6 +2,7 @@
 #define POP_COMPILER_HPP
 
 #include <Pop/AST.hpp>
+#include <Pop/ConstantsTable.hpp>
 #include <Pop/Instructions.hpp>
 #include <Pop/Logger.hpp>
 #include <ostream>
@@ -32,6 +33,7 @@ namespace Pop {
   private:
     Program *program;
     std::vector< char * > filenames;
+    ConstantsTable const_tab;
     InstructionList instructions;
     const char *add_fn(const std::string &fn);
   };
