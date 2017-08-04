@@ -15,6 +15,7 @@ namespace Pop {
 
   int ConstantsTable::intern(Node *n) {
     assert(n);
+    assert(n->is_atom());
     auto found = node_to_id.find(n);
     if (found != node_to_id.end())
       return found->second;

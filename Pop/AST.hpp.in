@@ -54,6 +54,7 @@ namespace Pop {
     virtual const std::string &type_name() const = 0;
     virtual size_t hash() const = 0;
     virtual bool equal(const Node *n) const = 0;
+    virtual bool is_atom() const { return false; }
   protected:
     Node(const char *fn="", int line=-1, int column=-1)
       : parent(nullptr), enclosing_scope(nullptr), ref_count(1), location(fn, line, column) {
@@ -176,6 +177,9 @@ namespace Pop {
     }
     size_t hash() const final;
     bool equal(const Node *n) const;
+  {%- if node.is_atom %}
+    bool is_atom() const { return true; }
+  {%- endif %}
   };
 {% endfor %}
 
