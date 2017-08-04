@@ -74,9 +74,10 @@ using namespace Pop;
 
 %{
 #include <Pop/Compiler.hpp>
-#include <Pop/Lexer.hpp>
 #include <Pop/Operators.hpp>
 #include <Pop/Utils.hpp>
+
+extern int yylex(YYSTYPE *, YYLTYPE *, void*);
 
 using namespace Pop;
 

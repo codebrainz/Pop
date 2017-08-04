@@ -250,9 +250,10 @@ int yyparse (Pop::ParseState *state);
 #line 75 "Grammar.y" /* yacc.c:358  */
 
 #include <Pop/Compiler.hpp>
-#include <Pop/Lexer.hpp>
 #include <Pop/Operators.hpp>
 #include <Pop/Utils.hpp>
+
+extern int yylex(YYSTYPE *, YYLTYPE *, void*);
 
 using namespace Pop;
 
@@ -269,7 +270,7 @@ void yyerror(YYLTYPE *locp, ParseState *state, const char *err) {
 	dynamic_cast<NodeList*>(lst)->append_take(elem)
 
 
-#line 273 "Grammar.cpp" /* yacc.c:358  */
+#line 274 "Grammar.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -573,19 +574,19 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   100,   100,   104,   105,   109,   110,   114,   115,   116,
-     117,   121,   122,   123,   124,   136,   148,   149,   153,   154,
-     155,   159,   160,   164,   165,   166,   167,   168,   174,   175,
-     179,   180,   181,   182,   183,   184,   185,   189,   190,   191,
-     192,   196,   197,   198,   202,   203,   204,   208,   209,   210,
-     211,   212,   216,   217,   218,   222,   223,   227,   228,   232,
-     233,   237,   238,   242,   243,   247,   248,   252,   253,   254,
-     255,   256,   257,   258,   259,   260,   261,   262,   263,   267,
-     271,   272,   276,   277,   278,   279,   280,   281,   282,   283,
-     284,   288,   292,   297,   301,   302,   303,   304,   308,   309,
-     313,   314,   315,   316,   320,   321,   325,   326,   327,   328,
-     332,   333,   337,   338,   342,   348,   356,   363,   370,   376,
-     387,   388
+       0,   101,   101,   105,   106,   110,   111,   115,   116,   117,
+     118,   122,   123,   124,   125,   137,   149,   150,   154,   155,
+     156,   160,   161,   165,   166,   167,   168,   169,   175,   176,
+     180,   181,   182,   183,   184,   185,   186,   190,   191,   192,
+     193,   197,   198,   199,   203,   204,   205,   209,   210,   211,
+     212,   213,   217,   218,   219,   223,   224,   228,   229,   233,
+     234,   238,   239,   243,   244,   248,   249,   253,   254,   255,
+     256,   257,   258,   259,   260,   261,   262,   263,   264,   268,
+     272,   273,   277,   278,   279,   280,   281,   282,   283,   284,
+     285,   289,   293,   298,   302,   303,   304,   305,   309,   310,
+     314,   315,   316,   317,   321,   322,   326,   327,   328,   329,
+     333,   334,   338,   339,   343,   349,   357,   364,   371,   377,
+     388,   389
 };
 #endif
 
@@ -1475,235 +1476,235 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, YYLTYPE *yylocatio
           case 45: /* T_IDENTIFIER  */
 #line 60 "Grammar.y" /* yacc.c:1257  */
       { free(((*yyvaluep).sval)); }
-#line 1479 "Grammar.cpp" /* yacc.c:1257  */
+#line 1480 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 46: /* T_INT  */
 #line 60 "Grammar.y" /* yacc.c:1257  */
       { free(((*yyvaluep).sval)); }
-#line 1485 "Grammar.cpp" /* yacc.c:1257  */
+#line 1486 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 47: /* T_FLOAT  */
 #line 60 "Grammar.y" /* yacc.c:1257  */
       { free(((*yyvaluep).sval)); }
-#line 1491 "Grammar.cpp" /* yacc.c:1257  */
+#line 1492 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 48: /* T_STRING  */
 #line 60 "Grammar.y" /* yacc.c:1257  */
       { free(((*yyvaluep).sval)); }
-#line 1497 "Grammar.cpp" /* yacc.c:1257  */
+#line 1498 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 76: /* param_decl  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1503 "Grammar.cpp" /* yacc.c:1257  */
+#line 1504 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 77: /* param_list  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1509 "Grammar.cpp" /* yacc.c:1257  */
+#line 1510 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 78: /* func_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1515 "Grammar.cpp" /* yacc.c:1257  */
+#line 1516 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 79: /* constant  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1521 "Grammar.cpp" /* yacc.c:1257  */
+#line 1522 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 80: /* prim_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1527 "Grammar.cpp" /* yacc.c:1257  */
+#line 1528 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 81: /* arg_list  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1533 "Grammar.cpp" /* yacc.c:1257  */
+#line 1534 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 82: /* post_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1539 "Grammar.cpp" /* yacc.c:1257  */
+#line 1540 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 83: /* unary_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1545 "Grammar.cpp" /* yacc.c:1257  */
+#line 1546 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 84: /* mul_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1551 "Grammar.cpp" /* yacc.c:1257  */
+#line 1552 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 85: /* add_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1557 "Grammar.cpp" /* yacc.c:1257  */
+#line 1558 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 86: /* shift_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1563 "Grammar.cpp" /* yacc.c:1257  */
+#line 1564 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 87: /* rel_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1569 "Grammar.cpp" /* yacc.c:1257  */
+#line 1570 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 88: /* eq_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1575 "Grammar.cpp" /* yacc.c:1257  */
+#line 1576 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 89: /* and_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1581 "Grammar.cpp" /* yacc.c:1257  */
+#line 1582 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 90: /* xor_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1587 "Grammar.cpp" /* yacc.c:1257  */
+#line 1588 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 91: /* or_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1593 "Grammar.cpp" /* yacc.c:1257  */
+#line 1594 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 92: /* log_and_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1599 "Grammar.cpp" /* yacc.c:1257  */
+#line 1600 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 93: /* log_or_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1605 "Grammar.cpp" /* yacc.c:1257  */
+#line 1606 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 94: /* cond_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1611 "Grammar.cpp" /* yacc.c:1257  */
+#line 1612 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 95: /* assign_expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1617 "Grammar.cpp" /* yacc.c:1257  */
+#line 1618 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 96: /* expr  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1623 "Grammar.cpp" /* yacc.c:1257  */
+#line 1624 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 97: /* stmts  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1629 "Grammar.cpp" /* yacc.c:1257  */
+#line 1630 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 98: /* stmt  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1635 "Grammar.cpp" /* yacc.c:1257  */
+#line 1636 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 99: /* expr_stmt  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1641 "Grammar.cpp" /* yacc.c:1257  */
+#line 1642 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 100: /* block_stmt  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1647 "Grammar.cpp" /* yacc.c:1257  */
+#line 1648 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 101: /* case_stmt  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1653 "Grammar.cpp" /* yacc.c:1257  */
+#line 1654 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 102: /* case_list  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1659 "Grammar.cpp" /* yacc.c:1257  */
+#line 1660 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 103: /* sel_stmt  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1665 "Grammar.cpp" /* yacc.c:1257  */
+#line 1666 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 104: /* iter_stmt  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1671 "Grammar.cpp" /* yacc.c:1257  */
+#line 1672 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 105: /* jump_stmt  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1677 "Grammar.cpp" /* yacc.c:1257  */
+#line 1678 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 106: /* class_field  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1683 "Grammar.cpp" /* yacc.c:1257  */
+#line 1684 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 107: /* class_fields  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1689 "Grammar.cpp" /* yacc.c:1257  */
+#line 1690 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 108: /* class_decl  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1695 "Grammar.cpp" /* yacc.c:1257  */
+#line 1696 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 109: /* func_decl  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1701 "Grammar.cpp" /* yacc.c:1257  */
+#line 1702 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
     case 110: /* var_decl  */
 #line 61 "Grammar.y" /* yacc.c:1257  */
       { Pop::node_unref(((*yyvaluep).nval)); }
-#line 1707 "Grammar.cpp" /* yacc.c:1257  */
+#line 1708 "Grammar.cpp" /* yacc.c:1257  */
         break;
 
 
@@ -1995,79 +1996,79 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 100 "Grammar.y" /* yacc.c:1646  */
+#line 101 "Grammar.y" /* yacc.c:1646  */
     { state->roots = (yyvsp[0].nval); }
-#line 2001 "Grammar.cpp" /* yacc.c:1646  */
+#line 2002 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 104 "Grammar.y" /* yacc.c:1646  */
+#line 105 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Variable, (yylsp[0]), (yyvsp[0].sval), nullptr); free((yyvsp[0].sval)); }
-#line 2007 "Grammar.cpp" /* yacc.c:1646  */
+#line 2008 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 105 "Grammar.y" /* yacc.c:1646  */
+#line 106 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Variable, (yylsp[-2]), (yyvsp[-2].sval), (yyvsp[0].nval)); free((yyvsp[-2].sval)); }
-#line 2013 "Grammar.cpp" /* yacc.c:1646  */
+#line 2014 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 109 "Grammar.y" /* yacc.c:1646  */
+#line 110 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(NodeList, (yylsp[0]), (yyvsp[0].nval)); }
-#line 2019 "Grammar.cpp" /* yacc.c:1646  */
+#line 2020 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 110 "Grammar.y" /* yacc.c:1646  */
+#line 111 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[-2].nval); list_append((yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2025 "Grammar.cpp" /* yacc.c:1646  */
+#line 2026 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 114 "Grammar.y" /* yacc.c:1646  */
+#line 115 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Function, (yylsp[-5]), (yyvsp[-3].nval), nullptr); }
-#line 2031 "Grammar.cpp" /* yacc.c:1646  */
+#line 2032 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 115 "Grammar.y" /* yacc.c:1646  */
+#line 116 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Function, (yylsp[-6]), (yyvsp[-4].nval), (yyvsp[-1].nval)); }
-#line 2037 "Grammar.cpp" /* yacc.c:1646  */
+#line 2038 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 116 "Grammar.y" /* yacc.c:1646  */
+#line 117 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Function, (yylsp[-5]), nullptr, (yyvsp[-1].nval)); }
-#line 2043 "Grammar.cpp" /* yacc.c:1646  */
+#line 2044 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 117 "Grammar.y" /* yacc.c:1646  */
+#line 118 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Function, (yylsp[-4]), nullptr, nullptr); }
-#line 2049 "Grammar.cpp" /* yacc.c:1646  */
+#line 2050 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 121 "Grammar.y" /* yacc.c:1646  */
+#line 122 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Null, (yylsp[0])); }
-#line 2055 "Grammar.cpp" /* yacc.c:1646  */
+#line 2056 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 122 "Grammar.y" /* yacc.c:1646  */
+#line 123 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Bool, (yylsp[0]), true); }
-#line 2061 "Grammar.cpp" /* yacc.c:1646  */
+#line 2062 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 123 "Grammar.y" /* yacc.c:1646  */
+#line 124 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Bool, (yylsp[0]), false); }
-#line 2067 "Grammar.cpp" /* yacc.c:1646  */
+#line 2068 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 125 "Grammar.y" /* yacc.c:1646  */
+#line 126 "Grammar.y" /* yacc.c:1646  */
     {
 			try {
 				long long int val = Pop::parse_int((yyvsp[0].sval));
@@ -2079,11 +2080,11 @@ yyreduce:
 				free((yyvsp[0].sval));
 			}
 		}
-#line 2083 "Grammar.cpp" /* yacc.c:1646  */
+#line 2084 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 137 "Grammar.y" /* yacc.c:1646  */
+#line 138 "Grammar.y" /* yacc.c:1646  */
     {
 			try {
 				long double val = Pop::parse_float((yyvsp[0].sval));
@@ -2095,657 +2096,657 @@ yyreduce:
 				free((yyvsp[0].sval));
 			}
 		}
-#line 2099 "Grammar.cpp" /* yacc.c:1646  */
+#line 2100 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 148 "Grammar.y" /* yacc.c:1646  */
+#line 149 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(String, (yylsp[0]), (yyvsp[0].sval)); free((yyvsp[0].sval)); }
-#line 2105 "Grammar.cpp" /* yacc.c:1646  */
+#line 2106 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 149 "Grammar.y" /* yacc.c:1646  */
+#line 150 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Symbol, (yylsp[0]), (yyvsp[0].sval)); free((yyvsp[0].sval)); }
-#line 2111 "Grammar.cpp" /* yacc.c:1646  */
+#line 2112 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 153 "Grammar.y" /* yacc.c:1646  */
+#line 154 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2117 "Grammar.cpp" /* yacc.c:1646  */
+#line 2118 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 154 "Grammar.y" /* yacc.c:1646  */
+#line 155 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[-1].nval); }
-#line 2123 "Grammar.cpp" /* yacc.c:1646  */
+#line 2124 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 155 "Grammar.y" /* yacc.c:1646  */
+#line 156 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2129 "Grammar.cpp" /* yacc.c:1646  */
+#line 2130 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 159 "Grammar.y" /* yacc.c:1646  */
+#line 160 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(NodeList, (yylsp[0]), (yyvsp[0].nval)); }
-#line 2135 "Grammar.cpp" /* yacc.c:1646  */
+#line 2136 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 160 "Grammar.y" /* yacc.c:1646  */
+#line 161 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[-2].nval); list_append((yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2141 "Grammar.cpp" /* yacc.c:1646  */
+#line 2142 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 164 "Grammar.y" /* yacc.c:1646  */
+#line 165 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2147 "Grammar.cpp" /* yacc.c:1646  */
+#line 2148 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 165 "Grammar.y" /* yacc.c:1646  */
+#line 166 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-3]), Operator::INDEX, (yyvsp[-3].nval), (yyvsp[-1].nval)); }
-#line 2153 "Grammar.cpp" /* yacc.c:1646  */
+#line 2154 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 166 "Grammar.y" /* yacc.c:1646  */
+#line 167 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Call, (yylsp[-2]), (yyvsp[-2].nval), nullptr); }
-#line 2159 "Grammar.cpp" /* yacc.c:1646  */
+#line 2160 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 167 "Grammar.y" /* yacc.c:1646  */
+#line 168 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Call, (yylsp[-3]), (yyvsp[-3].nval), (yyvsp[-1].nval)); }
-#line 2165 "Grammar.cpp" /* yacc.c:1646  */
+#line 2166 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 169 "Grammar.y" /* yacc.c:1646  */
+#line 170 "Grammar.y" /* yacc.c:1646  */
     {
 			Node *id = mknode(Symbol, (yylsp[0]), (yyvsp[0].sval));
 			(yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::MEMBER, (yyvsp[-2].nval), id);
 			free((yyvsp[0].sval));
 		}
-#line 2175 "Grammar.cpp" /* yacc.c:1646  */
+#line 2176 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 174 "Grammar.y" /* yacc.c:1646  */
+#line 175 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Unary, (yylsp[-1]), Operator::POSTINC, (yyvsp[-1].nval)); }
-#line 2181 "Grammar.cpp" /* yacc.c:1646  */
+#line 2182 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 175 "Grammar.y" /* yacc.c:1646  */
+#line 176 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Unary, (yylsp[-1]), Operator::POSTDEC, (yyvsp[-1].nval)); }
-#line 2187 "Grammar.cpp" /* yacc.c:1646  */
+#line 2188 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 179 "Grammar.y" /* yacc.c:1646  */
+#line 180 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2193 "Grammar.cpp" /* yacc.c:1646  */
+#line 2194 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 180 "Grammar.y" /* yacc.c:1646  */
+#line 181 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Unary, (yylsp[-1]), Operator::PREINC, (yyvsp[0].nval)); }
-#line 2199 "Grammar.cpp" /* yacc.c:1646  */
+#line 2200 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 181 "Grammar.y" /* yacc.c:1646  */
+#line 182 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Unary, (yylsp[-1]), Operator::PREDEC, (yyvsp[0].nval)); }
-#line 2205 "Grammar.cpp" /* yacc.c:1646  */
+#line 2206 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 182 "Grammar.y" /* yacc.c:1646  */
+#line 183 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Unary, (yylsp[-1]), Operator::POS, (yyvsp[0].nval)); }
-#line 2211 "Grammar.cpp" /* yacc.c:1646  */
+#line 2212 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 183 "Grammar.y" /* yacc.c:1646  */
+#line 184 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Unary, (yylsp[-1]), Operator::NEG, (yyvsp[0].nval)); }
-#line 2217 "Grammar.cpp" /* yacc.c:1646  */
+#line 2218 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 184 "Grammar.y" /* yacc.c:1646  */
+#line 185 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Unary, (yylsp[-1]), Operator::NOT, (yyvsp[0].nval)); }
-#line 2223 "Grammar.cpp" /* yacc.c:1646  */
+#line 2224 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 185 "Grammar.y" /* yacc.c:1646  */
+#line 186 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Unary, (yylsp[-1]), Operator::COMPL, (yyvsp[0].nval)); }
-#line 2229 "Grammar.cpp" /* yacc.c:1646  */
+#line 2230 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 189 "Grammar.y" /* yacc.c:1646  */
+#line 190 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2235 "Grammar.cpp" /* yacc.c:1646  */
+#line 2236 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 190 "Grammar.y" /* yacc.c:1646  */
+#line 191 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::MUL, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2241 "Grammar.cpp" /* yacc.c:1646  */
+#line 2242 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 191 "Grammar.y" /* yacc.c:1646  */
+#line 192 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::DIV, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2247 "Grammar.cpp" /* yacc.c:1646  */
+#line 2248 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 192 "Grammar.y" /* yacc.c:1646  */
+#line 193 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::MOD, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2253 "Grammar.cpp" /* yacc.c:1646  */
+#line 2254 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 196 "Grammar.y" /* yacc.c:1646  */
+#line 197 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2259 "Grammar.cpp" /* yacc.c:1646  */
+#line 2260 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 197 "Grammar.y" /* yacc.c:1646  */
+#line 198 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::ADD, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2265 "Grammar.cpp" /* yacc.c:1646  */
+#line 2266 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 198 "Grammar.y" /* yacc.c:1646  */
+#line 199 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::SUB, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2271 "Grammar.cpp" /* yacc.c:1646  */
+#line 2272 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 202 "Grammar.y" /* yacc.c:1646  */
+#line 203 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2277 "Grammar.cpp" /* yacc.c:1646  */
+#line 2278 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 203 "Grammar.y" /* yacc.c:1646  */
+#line 204 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::LSHIFT, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2283 "Grammar.cpp" /* yacc.c:1646  */
+#line 2284 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 204 "Grammar.y" /* yacc.c:1646  */
+#line 205 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::RSHIFT, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2289 "Grammar.cpp" /* yacc.c:1646  */
+#line 2290 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 208 "Grammar.y" /* yacc.c:1646  */
+#line 209 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2295 "Grammar.cpp" /* yacc.c:1646  */
+#line 2296 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 209 "Grammar.y" /* yacc.c:1646  */
+#line 210 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::LT, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2301 "Grammar.cpp" /* yacc.c:1646  */
+#line 2302 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 210 "Grammar.y" /* yacc.c:1646  */
+#line 211 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::GT, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2307 "Grammar.cpp" /* yacc.c:1646  */
+#line 2308 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 211 "Grammar.y" /* yacc.c:1646  */
+#line 212 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::LE, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2313 "Grammar.cpp" /* yacc.c:1646  */
+#line 2314 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 212 "Grammar.y" /* yacc.c:1646  */
+#line 213 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::GE, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2319 "Grammar.cpp" /* yacc.c:1646  */
+#line 2320 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 216 "Grammar.y" /* yacc.c:1646  */
+#line 217 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2325 "Grammar.cpp" /* yacc.c:1646  */
+#line 2326 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 217 "Grammar.y" /* yacc.c:1646  */
+#line 218 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::EQ, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2331 "Grammar.cpp" /* yacc.c:1646  */
+#line 2332 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 218 "Grammar.y" /* yacc.c:1646  */
+#line 219 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::NE, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2337 "Grammar.cpp" /* yacc.c:1646  */
+#line 2338 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 222 "Grammar.y" /* yacc.c:1646  */
+#line 223 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2343 "Grammar.cpp" /* yacc.c:1646  */
+#line 2344 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 223 "Grammar.y" /* yacc.c:1646  */
+#line 224 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::BAND, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2349 "Grammar.cpp" /* yacc.c:1646  */
+#line 2350 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 227 "Grammar.y" /* yacc.c:1646  */
+#line 228 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2355 "Grammar.cpp" /* yacc.c:1646  */
+#line 2356 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 228 "Grammar.y" /* yacc.c:1646  */
+#line 229 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::BXOR, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2361 "Grammar.cpp" /* yacc.c:1646  */
+#line 2362 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 232 "Grammar.y" /* yacc.c:1646  */
+#line 233 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2367 "Grammar.cpp" /* yacc.c:1646  */
+#line 2368 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 233 "Grammar.y" /* yacc.c:1646  */
+#line 234 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::BOR, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2373 "Grammar.cpp" /* yacc.c:1646  */
+#line 2374 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 237 "Grammar.y" /* yacc.c:1646  */
+#line 238 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2379 "Grammar.cpp" /* yacc.c:1646  */
+#line 2380 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 238 "Grammar.y" /* yacc.c:1646  */
+#line 239 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::LAND, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2385 "Grammar.cpp" /* yacc.c:1646  */
+#line 2386 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 242 "Grammar.y" /* yacc.c:1646  */
+#line 243 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2391 "Grammar.cpp" /* yacc.c:1646  */
+#line 2392 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 243 "Grammar.y" /* yacc.c:1646  */
+#line 244 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::LOR, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2397 "Grammar.cpp" /* yacc.c:1646  */
+#line 2398 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 247 "Grammar.y" /* yacc.c:1646  */
+#line 248 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2403 "Grammar.cpp" /* yacc.c:1646  */
+#line 2404 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 248 "Grammar.y" /* yacc.c:1646  */
+#line 249 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(IfExpr, (yylsp[-4]), (yyvsp[-4].nval), (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2409 "Grammar.cpp" /* yacc.c:1646  */
+#line 2410 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 252 "Grammar.y" /* yacc.c:1646  */
+#line 253 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2415 "Grammar.cpp" /* yacc.c:1646  */
+#line 2416 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 253 "Grammar.y" /* yacc.c:1646  */
+#line 254 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2421 "Grammar.cpp" /* yacc.c:1646  */
+#line 2422 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 254 "Grammar.y" /* yacc.c:1646  */
+#line 255 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::ADD_ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2427 "Grammar.cpp" /* yacc.c:1646  */
+#line 2428 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 255 "Grammar.y" /* yacc.c:1646  */
+#line 256 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::SUB_ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2433 "Grammar.cpp" /* yacc.c:1646  */
+#line 2434 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 256 "Grammar.y" /* yacc.c:1646  */
+#line 257 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::MUL_ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2439 "Grammar.cpp" /* yacc.c:1646  */
+#line 2440 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 257 "Grammar.y" /* yacc.c:1646  */
+#line 258 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::DIV_ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2445 "Grammar.cpp" /* yacc.c:1646  */
+#line 2446 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 258 "Grammar.y" /* yacc.c:1646  */
+#line 259 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::MOD_ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2451 "Grammar.cpp" /* yacc.c:1646  */
+#line 2452 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 259 "Grammar.y" /* yacc.c:1646  */
+#line 260 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::LSHIFT_ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2457 "Grammar.cpp" /* yacc.c:1646  */
+#line 2458 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 260 "Grammar.y" /* yacc.c:1646  */
+#line 261 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::RSHIFT_ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2463 "Grammar.cpp" /* yacc.c:1646  */
+#line 2464 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 261 "Grammar.y" /* yacc.c:1646  */
+#line 262 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::AND_ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2469 "Grammar.cpp" /* yacc.c:1646  */
+#line 2470 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 262 "Grammar.y" /* yacc.c:1646  */
+#line 263 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::XOR_ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2475 "Grammar.cpp" /* yacc.c:1646  */
+#line 2476 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 263 "Grammar.y" /* yacc.c:1646  */
+#line 264 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Binary, (yylsp[-2]), Operator::OR_ASSIGN, (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2481 "Grammar.cpp" /* yacc.c:1646  */
+#line 2482 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 267 "Grammar.y" /* yacc.c:1646  */
+#line 268 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2487 "Grammar.cpp" /* yacc.c:1646  */
+#line 2488 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 271 "Grammar.y" /* yacc.c:1646  */
+#line 272 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(NodeList, (yylsp[0]), (yyvsp[0].nval)); }
-#line 2493 "Grammar.cpp" /* yacc.c:1646  */
+#line 2494 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 272 "Grammar.y" /* yacc.c:1646  */
+#line 273 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[-1].nval); list_append((yyvsp[-1].nval), (yyvsp[0].nval)); }
-#line 2499 "Grammar.cpp" /* yacc.c:1646  */
+#line 2500 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 276 "Grammar.y" /* yacc.c:1646  */
+#line 277 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2505 "Grammar.cpp" /* yacc.c:1646  */
+#line 2506 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 277 "Grammar.y" /* yacc.c:1646  */
+#line 278 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2511 "Grammar.cpp" /* yacc.c:1646  */
+#line 2512 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 278 "Grammar.y" /* yacc.c:1646  */
+#line 279 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2517 "Grammar.cpp" /* yacc.c:1646  */
+#line 2518 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 279 "Grammar.y" /* yacc.c:1646  */
+#line 280 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2523 "Grammar.cpp" /* yacc.c:1646  */
+#line 2524 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 280 "Grammar.y" /* yacc.c:1646  */
+#line 281 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2529 "Grammar.cpp" /* yacc.c:1646  */
+#line 2530 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 281 "Grammar.y" /* yacc.c:1646  */
+#line 282 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2535 "Grammar.cpp" /* yacc.c:1646  */
+#line 2536 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 282 "Grammar.y" /* yacc.c:1646  */
+#line 283 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2541 "Grammar.cpp" /* yacc.c:1646  */
+#line 2542 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 283 "Grammar.y" /* yacc.c:1646  */
+#line 284 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2547 "Grammar.cpp" /* yacc.c:1646  */
+#line 2548 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 284 "Grammar.y" /* yacc.c:1646  */
+#line 285 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(EmptyStmt, (yylsp[0])); }
-#line 2553 "Grammar.cpp" /* yacc.c:1646  */
+#line 2554 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 288 "Grammar.y" /* yacc.c:1646  */
+#line 289 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(ExprStmt, (yylsp[-1]), (yyvsp[-1].nval)); }
-#line 2559 "Grammar.cpp" /* yacc.c:1646  */
+#line 2560 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 293 "Grammar.y" /* yacc.c:1646  */
+#line 294 "Grammar.y" /* yacc.c:1646  */
     {
 			Node *s = mknode(NodeList, (yylsp[-1]));
 			(yyval.nval) = mknode(Block, (yylsp[-1]), s);
 		}
-#line 2568 "Grammar.cpp" /* yacc.c:1646  */
+#line 2569 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 297 "Grammar.y" /* yacc.c:1646  */
+#line 298 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Block, (yylsp[-2]), (yyvsp[-1].nval)); }
-#line 2574 "Grammar.cpp" /* yacc.c:1646  */
+#line 2575 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 301 "Grammar.y" /* yacc.c:1646  */
+#line 302 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Case, (yylsp[-2]), (yyvsp[-1].nval), nullptr); }
-#line 2580 "Grammar.cpp" /* yacc.c:1646  */
+#line 2581 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 302 "Grammar.y" /* yacc.c:1646  */
+#line 303 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Case, (yylsp[-3]), (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2586 "Grammar.cpp" /* yacc.c:1646  */
+#line 2587 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 303 "Grammar.y" /* yacc.c:1646  */
+#line 304 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Case, (yylsp[-1]), nullptr, nullptr); }
-#line 2592 "Grammar.cpp" /* yacc.c:1646  */
+#line 2593 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 304 "Grammar.y" /* yacc.c:1646  */
+#line 305 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Case, (yylsp[-2]), nullptr, (yyvsp[0].nval)); }
-#line 2598 "Grammar.cpp" /* yacc.c:1646  */
+#line 2599 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 308 "Grammar.y" /* yacc.c:1646  */
+#line 309 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(NodeList, (yylsp[0]), (yyvsp[0].nval)); }
-#line 2604 "Grammar.cpp" /* yacc.c:1646  */
+#line 2605 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 309 "Grammar.y" /* yacc.c:1646  */
+#line 310 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[-1].nval); list_append((yyvsp[-1].nval), (yyvsp[0].nval)); }
-#line 2610 "Grammar.cpp" /* yacc.c:1646  */
+#line 2611 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 313 "Grammar.y" /* yacc.c:1646  */
+#line 314 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(IfStmt, (yylsp[-4]), (yyvsp[-2].nval), (yyvsp[0].nval), nullptr); }
-#line 2616 "Grammar.cpp" /* yacc.c:1646  */
+#line 2617 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 314 "Grammar.y" /* yacc.c:1646  */
+#line 315 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(IfStmt, (yylsp[-6]), (yyvsp[-4].nval), (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2622 "Grammar.cpp" /* yacc.c:1646  */
+#line 2623 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 102:
-#line 315 "Grammar.y" /* yacc.c:1646  */
+#line 316 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Switch, (yylsp[-6]), (yyvsp[-4].nval), (yyvsp[-1].nval)); }
-#line 2628 "Grammar.cpp" /* yacc.c:1646  */
+#line 2629 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 103:
-#line 316 "Grammar.y" /* yacc.c:1646  */
+#line 317 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Switch, (yylsp[-5]), (yyvsp[-3].nval), nullptr); }
-#line 2634 "Grammar.cpp" /* yacc.c:1646  */
+#line 2635 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 104:
-#line 320 "Grammar.y" /* yacc.c:1646  */
+#line 321 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(While, (yylsp[-4]), (yyvsp[-2].nval), (yyvsp[0].nval)); }
-#line 2640 "Grammar.cpp" /* yacc.c:1646  */
+#line 2641 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 105:
-#line 321 "Grammar.y" /* yacc.c:1646  */
+#line 322 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Do, (yylsp[-5]), (yyvsp[-4].nval), (yyvsp[-1].nval)); }
-#line 2646 "Grammar.cpp" /* yacc.c:1646  */
+#line 2647 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 106:
-#line 325 "Grammar.y" /* yacc.c:1646  */
+#line 326 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Continue, (yylsp[-1])); }
-#line 2652 "Grammar.cpp" /* yacc.c:1646  */
+#line 2653 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 107:
-#line 326 "Grammar.y" /* yacc.c:1646  */
+#line 327 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Break, (yylsp[-1])); }
-#line 2658 "Grammar.cpp" /* yacc.c:1646  */
+#line 2659 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 108:
-#line 327 "Grammar.y" /* yacc.c:1646  */
+#line 328 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Return, (yylsp[-1]), nullptr); }
-#line 2664 "Grammar.cpp" /* yacc.c:1646  */
+#line 2665 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 109:
-#line 328 "Grammar.y" /* yacc.c:1646  */
+#line 329 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Return, (yylsp[-2]), (yyvsp[-1].nval)); }
-#line 2670 "Grammar.cpp" /* yacc.c:1646  */
+#line 2671 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 110:
-#line 332 "Grammar.y" /* yacc.c:1646  */
+#line 333 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2676 "Grammar.cpp" /* yacc.c:1646  */
+#line 2677 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 111:
-#line 333 "Grammar.y" /* yacc.c:1646  */
+#line 334 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[0].nval); }
-#line 2682 "Grammar.cpp" /* yacc.c:1646  */
+#line 2683 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 112:
-#line 337 "Grammar.y" /* yacc.c:1646  */
+#line 338 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(NodeList, (yylsp[0]), (yyvsp[0].nval));}
-#line 2688 "Grammar.cpp" /* yacc.c:1646  */
+#line 2689 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 113:
-#line 338 "Grammar.y" /* yacc.c:1646  */
+#line 339 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = (yyvsp[-1].nval); list_append((yyval.nval), (yyvsp[0].nval)); }
-#line 2694 "Grammar.cpp" /* yacc.c:1646  */
+#line 2695 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 114:
-#line 343 "Grammar.y" /* yacc.c:1646  */
+#line 344 "Grammar.y" /* yacc.c:1646  */
     {
 			Node *m = mknode(NodeList, (yylsp[-1]));
 			(yyval.nval) = mknode(Class, (yylsp[-3]), (yyvsp[-2].sval), m);
 			free((yyvsp[-2].sval));
 		}
-#line 2704 "Grammar.cpp" /* yacc.c:1646  */
+#line 2705 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 115:
-#line 349 "Grammar.y" /* yacc.c:1646  */
+#line 350 "Grammar.y" /* yacc.c:1646  */
     {
 			(yyval.nval) = mknode(Class, (yylsp[-4]), (yyvsp[-3].sval), (yyvsp[-1].nval));
 			free((yyvsp[-3].sval));
 		}
-#line 2713 "Grammar.cpp" /* yacc.c:1646  */
+#line 2714 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 116:
-#line 357 "Grammar.y" /* yacc.c:1646  */
+#line 358 "Grammar.y" /* yacc.c:1646  */
     {
 			Node *body = mknode(NodeList, (yylsp[-1]));
 			Node *fnc = mknode(Function, (yylsp[-6]), (yyvsp[-3].nval), body);
 			(yyval.nval) = mknode(Variable, (yylsp[-6]), (yyvsp[-5].sval), fnc);
 			free((yyvsp[-5].sval));
 		}
-#line 2724 "Grammar.cpp" /* yacc.c:1646  */
+#line 2725 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 117:
-#line 364 "Grammar.y" /* yacc.c:1646  */
+#line 365 "Grammar.y" /* yacc.c:1646  */
     {
 			Node *params = mknode(NodeList, (yylsp[-4]));
 			Node *fnc = mknode(Function, (yylsp[-6]), params, (yyvsp[-1].nval));
 			(yyval.nval) = mknode(Variable, (yylsp[-6]), (yyvsp[-5].sval), fnc);
 			free((yyvsp[-5].sval));
 		}
-#line 2735 "Grammar.cpp" /* yacc.c:1646  */
+#line 2736 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 118:
-#line 371 "Grammar.y" /* yacc.c:1646  */
+#line 372 "Grammar.y" /* yacc.c:1646  */
     {
 			Node *fnc = mknode(Function, (yylsp[-7]), (yyvsp[-4].nval), (yyvsp[-1].nval));
 			(yyval.nval) = mknode(Variable, (yylsp[-7]), (yyvsp[-6].sval), fnc);
 			free((yyvsp[-6].sval));
 		}
-#line 2745 "Grammar.cpp" /* yacc.c:1646  */
+#line 2746 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 119:
-#line 377 "Grammar.y" /* yacc.c:1646  */
+#line 378 "Grammar.y" /* yacc.c:1646  */
     {
 			Node *params = mknode(NodeList, (yylsp[-3]));
 			Node *body = mknode(NodeList, (yylsp[-1]));
@@ -2753,23 +2754,23 @@ yyreduce:
 			(yyval.nval) = mknode(Variable, (yylsp[-5]), (yyvsp[-4].sval), fnc);
 			free((yyvsp[-4].sval));
 		}
-#line 2757 "Grammar.cpp" /* yacc.c:1646  */
+#line 2758 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 120:
-#line 387 "Grammar.y" /* yacc.c:1646  */
+#line 388 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Variable, (yylsp[-1]), (yyvsp[0].sval), nullptr); free((yyvsp[0].sval)); }
-#line 2763 "Grammar.cpp" /* yacc.c:1646  */
+#line 2764 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
   case 121:
-#line 388 "Grammar.y" /* yacc.c:1646  */
+#line 389 "Grammar.y" /* yacc.c:1646  */
     { (yyval.nval) = mknode(Variable, (yylsp[-4]), (yyvsp[-3].sval), (yyvsp[-1].nval)); free((yyvsp[-3].sval)); }
-#line 2769 "Grammar.cpp" /* yacc.c:1646  */
+#line 2770 "Grammar.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 2773 "Grammar.cpp" /* yacc.c:1646  */
+#line 2774 "Grammar.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
