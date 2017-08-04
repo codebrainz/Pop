@@ -7,7 +7,11 @@
 /Pop/AST.hpp
 /Pop/DefineSymbols.cpp
 /Pop/DOT.cpp
+/Pop/Grammar.cpp
+/Pop/Grammar.hpp
 /Pop/Instructions.hpp
+/Pop/Lexer.cpp
+/Pop/Lexer.hpp
 /Pop/LinkParents.cpp
 /Pop/LocationPatcher.cpp
 /Pop/Operators.cpp
@@ -15,5 +19,6 @@
 /Pop/ResolveSymbols.cpp
 /Pop/Transformer.cpp
 /Pop/Transformer.hpp
+/Pop/Validate.cpp
 /Pop/Visitor.cpp
 /Pop/Visitor.hpp
