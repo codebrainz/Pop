@@ -4,6 +4,7 @@
 #include <Pop/AST.hpp>
 #include <cstdint>
 #include <memory>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -39,6 +40,10 @@ namespace Pop {
       if (ast_node)
         return ast_node->column();
       return -1;
+    }
+    template< class T >
+    T *checked_cast() {
+      return dynamic_cast<T*>(this);
     }
 
   protected:
@@ -97,6 +102,8 @@ namespace Pop {
 {% endfor %}
 
   void resolve_instructions(InstructionList &instructions);
+  void dump_instructions(const InstructionList &instructions,
+                         std::ostream &os);
 
 // namespace Pop
 }

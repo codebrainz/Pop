@@ -2,6 +2,7 @@
 #include <Pop/DefineSymbols.hpp>
 #include <Pop/DOT.hpp>
 #include <Pop/Grammar.hpp>
+#include <Pop/Instructions.hpp>
 #include <Pop/Lexer.hpp>
 #include <Pop/LinkParents.hpp>
 #include <Pop/LocationPatcher.hpp>
@@ -62,6 +63,13 @@ namespace Pop {
   void Compiler::generate_dot(std::ostream &os,
                               const std::string &indent_token) {
     Pop::generate_dot(program, os, indent_token);
+  }
+
+  void Compiler::compile_instructions() {
+  }
+
+  void Compiler::dump_instructions(std::ostream &out) {
+    Pop::dump_instructions(instructions, out);
   }
 
   int Compiler::report_diagnostics(int max_errors) {

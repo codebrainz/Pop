@@ -46,20 +46,20 @@
     <operator id="xor_assign" name="bitwise XOR assignment" token="~=" arity="2" />
   </operators>
   <nodes>
-    <node name="Null" />
-    <node name="Bool">
+    <node name="Null" atom="true" />
+    <node name="Bool" atom="true">
       <field name="value" type="bool" default="false" />
     </node>
-    <node name="Int">
+    <node name="Int" atom="true">
       <field name="value" type="long long int" default="0" />
     </node>
-    <node name="Float">
+    <node name="Float" atom="true">
       <field name="value" type="long double" default="0.0" />
     </node>
-    <node name="String">
+    <node name="String" atom="true">
       <field name="value" type="std::string" />
     </node>
-    <node name="Symbol">
+    <node name="Symbol" atom="true">
       <field name="value" type="std::string" />
       <field name="symbol" type="SymbolEntry*" construct="false" default="nullptr" />
     </node>

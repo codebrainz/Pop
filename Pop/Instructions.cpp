@@ -17,14 +17,14 @@ namespace Pop {
     int offset = 0;
 
     // calculate offsets
-    for (auto &instruction : instructions) {
-      instruction->offset = offset;
-      offset += instruction->size();
+    for (auto &inst : instructions) {
+      inst->offset = offset;
+      offset += inst->size();
     }
 
     // stash label offsets while removing label pseudo-instructions
     for (auto it = instructions.begin(); it != instructions.end();) {
-      if (auto label = dynamic_cast< LabelInstruction * >((*it).get())) {
+      if (auto label = (*it)->checked_cast< LabelInstruction >()) {
         label_offsets.emplace(label->name, label->offset);
         it = instructions.erase(it);
       } else {
@@ -33,19 +33,26 @@ namespace Pop {
     }
 
     // resolve instructions which refer to labels
-    for (auto &instruction : instructions) {
-      if (auto closure =
-              dynamic_cast< ClosureInstruction * >(instruction.get())) {
+    for (auto &inst : instructions) {
+      if (auto closure = inst->checked_cast< ClosureInstruction >()) {
         closure->target = address_of(label_offsets, closure->name);
-      } else if (auto jmp =
-                     dynamic_cast< JumpInstruction * >(instruction.get())) {
+      } else if (auto jmp = inst->checked_cast< JumpInstruction >()) {
         jmp->target = address_of(label_offsets, jmp->label);
-      } else if (auto jmpt = dynamic_cast< JumpIfTrueInstruction * >(
-                     instruction.get())) {
+      } else if (auto jmpt = inst->checked_cast< JumpIfTrueInstruction >()) {
         jmpt->target = address_of(label_offsets, jmpt->label);
-      } else if (auto jmpf = dynamic_cast< JumpIfFalseInstruction * >(
-                     instruction.get())) {
+      } else if (auto jmpf = inst->checked_cast< JumpIfFalseInstruction >()) {
         jmpf->target = address_of(label_offsets, jmpf->label);
+      }
+    }
+  }
+
+  void dump_instructions(const InstructionList &instructions,
+                         std::ostream &os) {
+    for (auto &inst : instructions) {
+      if (auto label = inst->checked_cast< LabelInstruction >()) {
+        os << label->name << ":\n";
+      } else {
+        os << '\t' << inst->mnemonic() << '\n';
       }
     }
   }

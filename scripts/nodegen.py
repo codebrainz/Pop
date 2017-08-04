@@ -16,9 +16,10 @@ class Operator:
     self.suffix = suffix
 
 class Node:
-  def __init__(self, name, fields=[]):
+  def __init__(self, name, fields=[], is_atom=False):
     self.name = name
     self.fields = fields
+    self.is_atom = is_atom
   @property
   def child_fields(self):
     return [ field for field in self.fields if field.child ]
@@ -90,7 +91,9 @@ def parse_nodes(root):
           else field_elem.attrib.get('type', 'Node*') == 'Node*',
         field_elem.attrib.get('default', None)
       ))
-    nodes.append(Node(name, fields))
+    nodes.append(Node(name, fields,
+      True if node_elem.attrib.get('atom', 'false')
+        in [ 'yes', 'true' ] else False))
   return nodes
 
 def parse_instructions(root):

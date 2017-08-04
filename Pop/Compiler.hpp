@@ -2,6 +2,7 @@
 #define POP_COMPILER_HPP
 
 #include <Pop/AST.hpp>
+#include <Pop/Instructions.hpp>
 #include <Pop/Logger.hpp>
 #include <ostream>
 #include <string>
@@ -23,12 +24,15 @@ namespace Pop {
     void patch_locations(bool verify = false);
     void validate();
     void generate_dot(std::ostream &os, const std::string &indent_token = "  ");
+    void compile_instructions();
+    void dump_instructions(std::ostream &out);
     int report_diagnostics(int max_errors = -1);
     int report_diagnostics(std::ostream &os, int max_errors = -1);
 
   private:
     Program *program;
     std::vector< char * > filenames;
+    InstructionList instructions;
     const char *add_fn(const std::string &fn);
   };
 

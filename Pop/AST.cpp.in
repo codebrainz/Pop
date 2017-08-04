@@ -1,6 +1,125 @@
 #include <Pop/AST.hpp>
+#include <typeinfo>
 
 namespace Pop {
+
+  template <class T>
+  static inline void hash_combine(std::size_t& seed, const T& v) {
+    std::hash<T> hasher;
+    seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+  }
+
+  size_t NodeList::hash() const {
+    size_t seed = typeid(NodeList).hash_code();
+    for (auto elem : elements) {
+      if (elem)
+        hash_combine(seed, elem);
+    }
+    return seed;
+  }
+
+  bool NodeList::operator==(const Node *n) const {
+    if (auto nn = dynamic_cast<const NodeList*>(n)) {
+      if (nn->elements.size() != elements.size())
+        return false;
+      for (size_t i = 0; i < elements.size(); i++) {
+        if (!(elements[i]->operator==(nn->elements[i])))
+          return false;
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+{% for node in nodes %}
+
+  {%- if node.name == "Null" %}
+  size_t {{ node.name }}::hash() const {
+    return typeid({{ node.name }}).hash_code();
+  }
+
+  bool {{ node.name }}::operator==(const Node *n) const {
+    return (dynamic_cast<const {{ node.name }}*>(n) != nullptr);
+  }
+  {%- elif node.name == "Bool" %}
+  size_t {{ node.name }}::hash() const {
+    size_t seed = typeid({{ node.name }}).hash_code();
+    hash_combine(seed, value);
+    return seed;
+  }
+
+  bool {{ node.name }}::operator==(const Node *n) const {
+    if (auto nn = dynamic_cast<const {{ node.name }}*>(n)) {
+      return (nn->value == value);
+    }
+    return false;
+  }
+  {%- elif node.name == "Int" %}
+  size_t {{ node.name }}::hash() const {
+    size_t seed = typeid({{ node.name }}).hash_code();
+    hash_combine(seed, value);
+    return seed;
+  }
+
+  bool {{ node.name }}::operator==(const Node *n) const {
+    if (auto nn = dynamic_cast<const {{ node.name }}*>(n)) {
+      return (nn->value == value);
+    }
+    return false;
+  }
+  {%- elif node.name == "Float" %}
+  size_t {{ node.name }}::hash() const {
+    size_t seed = typeid({{ node.name }}).hash_code();
+    hash_combine(seed, value);
+    return seed;
+  }
+
+  bool {{ node.name }}::operator==(const Node *n) const {
+    if (auto nn = dynamic_cast<const {{ node.name }}*>(n)) {
+      return (nn->value == value);
+    }
+    return false;
+  }
+  {%- elif node.name == "String" %}
+  size_t {{ node.name }}::hash() const {
+    size_t seed = typeid({{ node.name }}).hash_code();
+    hash_combine(seed, value);
+    return seed;
+  }
+
+  bool {{ node.name }}::operator==(const Node *n) const {
+    if (auto nn = dynamic_cast<const {{ node.name }}*>(n)) {
+      return (nn->value == value);
+    }
+    return false;
+  }
+  {%- elif node.name == "Symbol" %}
+  size_t {{ node.name }}::hash() const {
+    size_t seed = typeid({{ node.name }}).hash_code();
+    hash_combine(seed, value);
+    return seed;
+  }
+
+  bool {{ node.name }}::operator==(const Node *n) const {
+    if (auto nn = dynamic_cast<const {{ node.name }}*>(n)) {
+      return (nn->value == value);
+    }
+    return false;
+  }
+  {%- else %}
+  size_t {{ node.name }}::hash() const {
+    size_t seed = typeid({{ node.name }}).hash_code();
+    hash_combine(seed, static_cast<const void*>(this));
+    return seed;
+  }
+
+  bool {{ node.name }}::operator==(const Node *n) const {
+    return (n == this);
+  }
+  {%- endif %}
+
+{% endfor %}
 
 // namespace Pop
 }

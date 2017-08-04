@@ -54,7 +54,9 @@ GEN_FILES = $(GEN_SOURCES) $(GEN_HEADERS)
 
 SOURCES = \
 	Compiler.cpp \
+	ConstantsTable.cpp \
 	Instructions.cpp \
+	InstructionCompiler.cpp \
 	Logger.cpp \
 	Main.cpp \
 	ParseState.cpp \
@@ -65,9 +67,11 @@ SOURCES = \
 TIDY_SOURCES = \
 	AST.cpp \
 	Compiler.cpp \
+	ConstantsTable.cpp \
 	DefineSymbols.cpp \
 	DOT.cpp \
 	Instructions.cpp \
+	InstructionCompiler.cpp \
 	LinkParents.cpp \
 	LocationPatcher.cpp \
 	Logger.cpp \
