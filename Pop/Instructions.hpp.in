@@ -10,6 +10,10 @@
 
 namespace Pop {
 
+{% for instruction in instructions -%}
+  struct {{ instruction.name }}Instruction;
+{%- endfor %}
+
   enum class OpCode : std::uint8_t {
 {%- for instruction in instructions %}
     {{ instruction.mnemonic }},
@@ -102,8 +106,11 @@ namespace Pop {
 {% endfor %}
 
   void resolve_instructions(InstructionList &instructions);
+  void optimize_instructions(InstructionList &instructions);
+
+  class ConstantsTable;
   void dump_instructions(const InstructionList &instructions,
-                         std::ostream &os);
+      ConstantsTable &const_tab, std::ostream &os);
 
 // namespace Pop
 }

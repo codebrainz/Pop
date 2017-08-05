@@ -12,7 +12,9 @@ int main() {
   cmp.define_symbols();
   cmp.resolve_symbols();
   cmp.validate();
-  cmp.generate_dot(std::cout);
+  cmp.compile_instructions();
+  cmp.dump_instructions(std::cout);
+  // cmp.generate_dot(std::cout);
   assert(cmp.report_diagnostics(std::cerr) == 0);
   return 0;
 }

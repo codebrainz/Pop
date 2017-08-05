@@ -70,8 +70,12 @@ namespace Pop {
     Pop::compile_instructions(program, const_tab, instructions);
   }
 
+  void Compiler::optimize_instructions() {
+    Pop::optimize_instructions(instructions);
+  }
+
   void Compiler::dump_instructions(std::ostream &out) {
-    Pop::dump_instructions(instructions, out);
+    Pop::dump_instructions(instructions, const_tab, out);
   }
 
   int Compiler::report_diagnostics(int max_errors) {

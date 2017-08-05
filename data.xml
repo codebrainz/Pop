@@ -161,10 +161,13 @@
       <field name="const_id" type="int" construct="true" />
     </node>
     <node name="Pop" mnemonic="POP" />
+    <node name="DuplicateTop" menmonic="DUP" />
+    <node name="Duplicate2ndTop" mnemonic="DUP2" />
+    <node name="SwapTop" mnemonic="SWAP" />
 
     <!-- Environments -->
     <node name="Closure" mnemonic="CLSR" size="5">
-      <field name="name" type="std::string" />
+      <field name="name" type="std::string" construct="true" />
       <field name="target" type="int" construct="false" default="-1" />
     </node>
     <node name="OpenEnvironment" mnemonic="OENV" />
@@ -204,6 +207,8 @@
     <node name="Modulo" mnemonic="MOD" />
     <node name="LeftShift" mnemonic="LSH" />
     <node name="RightShift" mnemonic="RSH" />
+    <node name="LogicalAnd" mnemonic="LAND" />
+    <node name="LogicalOr" mnemonic="LOR" />
     <node name="BitwiseAnd" mnemonic="AND" />
     <node name="BitwiseOr" mnemonic="OR" />
     <node name="BitwiseXor" mnemonic="XOR" />
