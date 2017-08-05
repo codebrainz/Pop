@@ -2,7 +2,7 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir)
 
 bin_PROGRAMS = popc
 
-BUILT_SOURCES = \
+NODEGEN_SOURCES = \
 	AST.cpp \
 	AST.hpp \
 	DefineSymbols.cpp \
@@ -25,10 +25,8 @@ BUILT_SOURCES = \
 	Visitor.cpp \
 	Visitor.hpp
 
-CLEANFILES = $(BUILT_SOURCES)
-
 popc_SOURCES = \
-	$(BUILT_SOURCES) \
+	$(NODEGEN_SOURCES) \
 	Compiler.cpp \
 	Compiler.hpp \
 	ConstantsTable.cpp \
@@ -88,6 +86,12 @@ EXTRA_DIST = \
 	Validate.cpp.in \
 	Visitor.cpp.in \
 	Visitor.hpp.in
+
+if MAINTAINER_MODE
+
+BUILT_SOURCES = $(NODEGEN_SOURCES)
+
+DISTCLEANFILES = $(BUILT_SOURCES)
 
 #
 # Lex/YACC grammars
@@ -157,3 +161,6 @@ Visitor.cpp: $(srcdir)/Visitor.cpp.in $(NODEGEN_DEPS)
 
 Visitor.hpp: $(srcdir)/Visitor.hpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/Visitor.hpp.in
+
+# MAINTAINER_MODE
+endif
