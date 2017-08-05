@@ -1,4 +1,4 @@
-AC_INIT([pop], [0.1])
+AC_INIT([pop], [0.1], [https://github.com/codebrainz/pop/issues])
 
 AC_CONFIG_HEADERS([Pop/Config.h])
 AC_CONFIG_MACRO_DIR([m4])
