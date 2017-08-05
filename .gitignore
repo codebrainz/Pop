@@ -1,8 +1,12 @@
-*.d
-*.o
-*.pro.user
+# Generic built files
+*.[ao]
+*.so
+*.dll
+*.lib
+*.dylib
 
-/Pop/pop
+# Pop built files
+/Pop/popc
 /Pop/AST.cpp
 /Pop/AST.hpp
 /Pop/DefineSymbols.cpp
@@ -24,3 +28,19 @@
 /Pop/Validate.cpp
 /Pop/Visitor.cpp
 /Pop/Visitor.hpp
+
+# Autotools built files
+*.lo
+*.la
+Makefile
+Makefile.in
+.deps/
+.libs/
+/aclocal.m4
+/autom4te.cache/
+/build-aux/
+/config.*
+/configure
+/pop*.tar.gz
+/Pop/Config.h*
+/Pop/stamp-h1
