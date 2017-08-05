@@ -4,6 +4,7 @@
 #include <Pop/Operators.hpp>
 #include <Pop/SymbolTable.hpp>
 #include <Pop/Transformer.hpp>
+#include <Pop/TypeInfo.hpp>
 #include <Pop/Visitor.hpp>
 #include <cstdint>
 #include <string>
@@ -11,6 +12,13 @@
 #include <vector>
 
 namespace Pop {
+
+  enum NodeKind : std::uint8_t {
+    NK_NODELIST,
+{%- for node in nodes %}
+    NK_{{ node.name | upper }},
+{%- endfor %}
+  };
 
   struct Node;
   typedef std::vector<Node*> NodeVector;
@@ -24,6 +32,7 @@ namespace Pop {
   };
 
   struct Node {
+    NodeKind kind;
     Node *parent;
     SymbolTable *enclosing_scope;
     Node(const Node&) = delete;
@@ -56,8 +65,9 @@ namespace Pop {
     virtual bool equal(const Node *n) const = 0;
     virtual bool is_atom() const { return false; }
   protected:
-    Node(const char *fn="", int line=-1, int column=-1)
-      : parent(nullptr), enclosing_scope(nullptr), ref_count(1), location(fn, line, column) {
+    Node(NodeKind kind, const char *fn="", int line=-1, int column=-1)
+      : kind(kind), parent(nullptr), enclosing_scope(nullptr),
+        ref_count(1), location(fn, line, column) {
     }
   private:
     unsigned long long int ref_count;
@@ -85,10 +95,10 @@ namespace Pop {
     NodeList& operator=(const NodeList&) = delete;
     NodeList& operator=(NodeList&&) = delete;
     NodeList(const char *fn="", int line=-1, int column=-1)
-      : Node(fn, line, column) {
+      : Node(NK_NODELIST, fn, line, column) {
     }
     NodeList(const char *fn, int line, int column, Node *first)
-      : Node(fn, line, column) {
+      : Node(NK_NODELIST, fn, line, column) {
       append_take(first);
     }
     ~NodeList() final {
@@ -113,6 +123,9 @@ namespace Pop {
     }
     size_t hash() const final;
     bool equal(const Node *n) const;
+    static bool classof(const Node *n) {
+      return (n->kind == NK_NODELIST);
+    }
   };
 {% for node in nodes %}
   struct {{ node.name }} final : public Node {
@@ -124,7 +137,7 @@ namespace Pop {
   {{ node.name }}& operator=(const {{ node.name }}&) = delete;
   {{ node.name }}& operator=({{ node.name }}&&) = delete;
   {{ node.name }}(const char *fn="", int line=-1, int column=-1)
-    : Node(fn, line, column){% for field in node.fields -%}
+    : Node(NK_{{ node.name | upper }}, fn, line, column){% for field in node.fields -%}
         {%- if field.default is not none -%}
           ,{{ field.name }}({{ field.default }})
         {%- elif field.child -%}
@@ -137,7 +150,7 @@ namespace Pop {
         {{ field.type }} {{ field.name }}
         {%- if loop.index < node.construct_fields | length %}, {% endif %}
       {%- endfor %})
-    : Node(fn, line, column), {% for field in node.construct_fields -%}
+    : Node(NK_{{ node.name | upper }}, fn, line, column), {% for field in node.construct_fields -%}
         {%- if field.type == "std::string" -%}
           {{ field.name }}(std::move({{ field.name }}))
         {%- else -%}
@@ -148,7 +161,7 @@ namespace Pop {
   }
   {% if node.construct_fields | length == 1 %}explicit {% endif -%}
   {{ node.name }}({% for field in node.construct_fields %}{{ field.type }} {{ field.name }}{% if loop.index < node.construct_fields | length %}, {% endif %}{% endfor %})
-    : Node(nullptr, -1, -1), {% for field in node.construct_fields -%}
+    : Node(NK_{{ node.name | upper }}, nullptr, -1, -1), {% for field in node.construct_fields -%}
         {%- if field.type == "std::string" -%}
           {{ field.name }}(std::move({{ field.name }}))
         {%- else -%}
@@ -180,6 +193,9 @@ namespace Pop {
   {%- if node.is_atom %}
     bool is_atom() const { return true; }
   {%- endif %}
+    static bool classof(const Node *n) {
+      return (n->kind == NK_{{ node.name | upper }});
+    }
   };
 {% endfor %}
 

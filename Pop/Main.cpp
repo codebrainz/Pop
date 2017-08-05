@@ -13,6 +13,7 @@ int main() {
   cmp.resolve_symbols();
   cmp.validate();
   cmp.compile_instructions();
+  cmp.optimize_instructions();
   cmp.dump_instructions(std::cout);
   // cmp.generate_dot(std::cout);
   assert(cmp.report_diagnostics(std::cerr) == 0);

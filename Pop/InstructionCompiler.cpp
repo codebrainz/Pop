@@ -374,10 +374,9 @@ namespace Pop {
       auto name = new_name("if");
       n.predicate->accept(*this);
       add_instruction< JumpIfTrueInstruction >(name + "_cons", &n);
-      if (n.alternative) {
+      if (n.alternative)
         n.alternative->accept(*this);
-        add_instruction< JumpInstruction >(name + "_end", &n);
-      }
+      add_instruction< JumpInstruction >(name + "_end", &n);
       add_instruction< LabelInstruction >(name + "_cons", &n);
       n.consequence->accept(*this);
       add_instruction< LabelInstruction >(name + "_end", &n);

@@ -2,6 +2,7 @@
 #define POP_INSTRUCTIONS_HPP
 
 #include <Pop/AST.hpp>
+#include <Pop/TypeInfo.hpp>
 #include <cstdint>
 #include <memory>
 #include <ostream>
@@ -22,12 +23,12 @@ namespace Pop {
 
   class Instruction {
   public:
+    OpCode code;
     int offset;
 
     virtual ~Instruction() {
       node_unref(ast_node);
     }
-    virtual OpCode op_code() const = 0;
     virtual const std::string &mnemonic() const = 0;
     virtual int size() const = 0;
     const char *file() const {
@@ -52,7 +53,8 @@ namespace Pop {
 
   protected:
     Node *ast_node;
-    Instruction(Node *ast_node) : offset(-1), ast_node(node_ref(ast_node)) {
+    Instruction(OpCode oc, Node *ast_node)
+      : code(oc), offset(-1), ast_node(node_ref(ast_node)) {
     }
   };
 
@@ -70,7 +72,7 @@ namespace Pop {
         {{ field.type }} {{ field.name }},
       {%- endfor -%}
     {%- endif -%} Node* ast_node=nullptr)
-      : Instruction(ast_node)
+      : Instruction(OpCode::{{ instruction.mnemonic }}, ast_node)
     {%- for field in instruction.fields -%}
       {%- if field.construct %}
         {%- if field.type == "std::string" -%}
@@ -92,15 +94,15 @@ namespace Pop {
     {%- endfor %}
     }
   {%- endif %}
-    OpCode op_code() const final {
-      return OpCode::{{ instruction.mnemonic }};
-    }
     const std::string &mnemonic() const final {
       static const std::string mn = "{{ instruction.mnemonic }}";
       return mn;
     }
     int size() const final {
       return {{ instruction.size }};
+    }
+    static bool classof(const Instruction *n) {
+      return (n->code == OpCode::{{ instruction.mnemonic }});
     }
   };
 {% endfor %}
