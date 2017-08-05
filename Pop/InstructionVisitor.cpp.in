@@ -1,0 +1,13 @@
+#include <Pop/InstructionVisitor.hpp>
+#include <Pop/Instructions.hpp>
+
+namespace Pop {
+
+{% for instruction in instructions %}
+  void InstructionVisitor::visit({{ instruction.name }}Instruction &inst) {
+    visit_default(inst);
+  }
+{% endfor %}
+
+ // namespace Pop
+}

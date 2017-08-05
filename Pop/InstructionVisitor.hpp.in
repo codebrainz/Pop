@@ -1,0 +1,24 @@
+#ifndef POP_INSTRUCTION_VISITOR_HPP
+#define POP_INSTRUCTION_VISITOR_HPP
+
+namespace Pop {
+
+  struct Instruction;
+{%- for instruction in instructions %}
+  struct {{ instruction.name }}Instruction;
+{%- endfor %}
+
+  class InstructionVisitor {
+  public:
+    virtual ~InstructionVisitor() {
+    }
+    virtual void visit_default(Instruction &) = 0;
+{%- for instruction in instructions %}
+    virtual void visit({{ instruction.name }}Instruction &inst);
+{%- endfor %}
+  };
+
+// namespace Pop
+}
+
+#endif // POP_INSTUCTION_VISITOR_HPP

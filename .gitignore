@@ -10,6 +10,8 @@
 /Pop/Grammar.cpp
 /Pop/Grammar.hpp
 /Pop/Instructions.hpp
+/Pop/InstructionVisitor.cpp
+/Pop/InstructionVisitor.hpp
 /Pop/Lexer.cpp
 /Pop/Lexer.hpp
 /Pop/LinkParents.cpp

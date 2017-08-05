@@ -1,6 +1,7 @@
 #include <Pop/InstructionCompiler.hpp>
 #include <Pop/AST.hpp>
 #include <Pop/ConstantsTable.hpp>
+#include <Pop/Instructions.hpp>
 #include <Pop/Visitor.hpp>
 #include <cassert>
 #include <stack>

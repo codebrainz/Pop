@@ -2,6 +2,8 @@
 #define POP_INSTRUCTIONS_HPP
 
 #include <Pop/AST.hpp>
+#include <Pop/InstructionList.hpp>
+#include <Pop/InstructionVisitor.hpp>
 #include <Pop/TypeInfo.hpp>
 #include <cstdint>
 #include <memory>
@@ -10,10 +12,6 @@
 #include <vector>
 
 namespace Pop {
-
-{% for instruction in instructions -%}
-  struct {{ instruction.name }}Instruction;
-{%- endfor %}
 
   enum class OpCode : std::uint8_t {
 {%- for instruction in instructions %}
@@ -31,6 +29,7 @@ namespace Pop {
     }
     virtual const std::string &mnemonic() const = 0;
     virtual int size() const = 0;
+    virtual void accept(InstructionVisitor&) = 0;
     const char *file() const {
       if (ast_node)
         return ast_node->file();
@@ -46,10 +45,6 @@ namespace Pop {
         return ast_node->column();
       return -1;
     }
-    template< class T >
-    T *checked_cast() {
-      return dynamic_cast<T*>(this);
-    }
 
   protected:
     Node *ast_node;
@@ -57,9 +52,6 @@ namespace Pop {
       : code(oc), offset(-1), ast_node(node_ref(ast_node)) {
     }
   };
-
-  typedef std::unique_ptr<Instruction> InstructionPtr;
-  typedef std::vector<InstructionPtr> InstructionList;
 
 {% for instruction in instructions %}
   struct {{ instruction.name }}Instruction final : public Instruction {
@@ -101,13 +93,15 @@ namespace Pop {
     int size() const final {
       return {{ instruction.size }};
     }
+    void accept(InstructionVisitor &v) final {
+      v.visit(*this);
+    }
     static bool classof(const Instruction *n) {
       return (n->code == OpCode::{{ instruction.mnemonic }});
     }
   };
 {% endfor %}
 
-  void resolve_instructions(InstructionList &instructions);
   void optimize_instructions(InstructionList &instructions);
 
   class ConstantsTable;

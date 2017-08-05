@@ -3,6 +3,9 @@
 #include <Pop/DOT.hpp>
 #include <Pop/Grammar.hpp>
 #include <Pop/InstructionCompiler.hpp>
+#include <Pop/InstructionDumper.hpp>
+#include <Pop/InstructionOptimizer.hpp>
+#include <Pop/InstructionResolver.hpp>
 #include <Pop/Instructions.hpp>
 #include <Pop/Lexer.hpp>
 #include <Pop/LinkParents.hpp>

@@ -31,6 +31,7 @@ GEN_SOURCES = \
 	DefineSymbols.cpp \
 	DOT.cpp \
 	Grammar.cpp \
+	InstructionVisitor.cpp \
 	Lexer.cpp \
 	LinkParents.cpp \
 	LocationPatcher.cpp \
@@ -45,6 +46,7 @@ GEN_HEADERS = \
 	AST.cpp \
 	Grammar.hpp \
 	Instructions.hpp \
+	InstructionVisitor.hpp \
 	Lexer.hpp \
 	Operators.hpp \
 	Transformer.hpp \
@@ -57,6 +59,9 @@ SOURCES = \
 	ConstantsTable.cpp \
 	Instructions.cpp \
 	InstructionCompiler.cpp \
+	InstructionDumper.cpp \
+	InstructionOptimizer.cpp \
+	InstructionResolver.cpp \
 	Logger.cpp \
 	Main.cpp \
 	ParseState.cpp \
@@ -72,6 +77,10 @@ TIDY_SOURCES = \
 	DOT.cpp \
 	Instructions.cpp \
 	InstructionCompiler.cpp \
+	InstructionDumper.cpp \
+	InstructionOptimizer.cpp \
+	InstructionResolver.cpp \
+	InstructionVisitor.cpp \
 	LinkParents.cpp \
 	LocationPatcher.cpp \
 	Logger.cpp \
@@ -117,7 +126,6 @@ Grammar.hpp: Grammar.cpp
 ParseState.cpp: Lexer.hpp
 ParseState.cpp: Grammar.hpp
 Compiler.cpp: Grammar.hpp
-Instructions.cpp: Instructions.hpp
 
 AST.cpp: AST.cpp.in AST.hpp $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ AST.cpp.in
@@ -133,6 +141,12 @@ DOT.cpp: DOT.cpp.in $(NODEGEN_DEPS)
 
 Instructions.hpp: Instructions.hpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ Instructions.hpp.in
+
+InstructionVisitor.cpp: InstructionVisitor.cpp.in $(NODEGEN_DEPS)
+	$(vNODEGEN) -d $(DATAFILE) -o $@ InstructionVisitor.cpp.in
+
+InstructionVisitor.hpp: InstructionVisitor.hpp.in $(NODEGEN_DEPS)
+	$(vNODEGEN) -d $(DATAFILE) -o $@ InstructionVisitor.hpp.in
 
 LinkParents.cpp: LinkParents.cpp.in $(NODEGEN_DEPS)
 	$(vNODEGEN) -d $(DATAFILE) -o $@ LinkParents.cpp.in
