@@ -60,5 +60,26 @@ namespace Pop {
     return val;
   }
 
+  char *strdup(const char *s) {
+    if (!s)
+      return nullptr;
+    return Pop::strndup(s, strlen(s));
+  }
+
+  char *strndup(const char *s, size_t n) {
+    if (!s) {
+      return nullptr;
+    } else if (n == 0) {
+      return reinterpret_cast< char * >(std::calloc(1, sizeof(char)));
+    } else {
+      auto buf = reinterpret_cast< char * >(std::malloc(n + 1));
+      if (!buf)
+        return nullptr;
+      std::memcpy(buf, s, n);
+      buf[n] = '\0';
+      return buf;
+    }
+  }
+
   // namespace Pop
 }

@@ -12,6 +12,7 @@
 #include <Pop/LocationPatcher.hpp>
 #include <Pop/ParseState.hpp>
 #include <Pop/ResolveSymbols.hpp>
+#include <Pop/Utils.hpp>
 #include <Pop/Validate.hpp>
 #include <cstdlib>
 #include <cstring>
@@ -94,7 +95,7 @@ namespace Pop {
       if (std::strcmp(f, fn.c_str()) == 0)
         return f;
     }
-    auto f = strdup(fn.c_str());
+    auto f = Pop::strdup(fn.c_str());
     filenames.push_back(f);
     return f;
   }

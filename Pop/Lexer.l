@@ -50,10 +50,11 @@ WS  [ \t\v\n\f]
 
 
 #define SAVE_STR() \
-  do { yylval->sval = strndup(yytext, yyleng); } while (0)
+  do { yylval->sval = Pop::strndup(yytext, yyleng); } while (0)
 
 #include <Pop/ParseState.hpp>
 #include <Pop/Grammar.hpp>
+#include <Pop/Utils.hpp>
 #include <cstdio>
 #include <cstring>
 
