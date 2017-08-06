@@ -8,23 +8,13 @@
 #include <Pop/Instructions.hpp>
 #include <Pop/InstructionVisitor.hpp>
 #include <Pop/Serialization.hpp>
+#include <Pop/TypeCode.hpp>
 #include <Pop/Visitor.hpp>
 #include <cassert>
 #include <cstdint>
 #include <sstream>
 
-#define MAGIC_BYTES "\xAA\x55POP"
-
 namespace Pop {
-
-  enum class TC : std::uint8_t {
-    NIL = 1,
-    BLN,
-    INT,
-    FLT,
-    STR,
-    SYM,
-  };
 
   struct ConstSerializeVisitor final : public DefaultPostOrderVisitor {
     std::ostream &os;
@@ -56,7 +46,7 @@ namespace Pop {
   };
 
   static void serialize_magic(std::ostream &os) {
-    static const std::string magic = MAGIC_BYTES;
+    static const std::string magic = POP_MAGIC_BYTES;
     for (auto ch : magic)
       serialize8(os, ch);
   }

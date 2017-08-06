@@ -58,6 +58,7 @@ popc_SOURCES = \
 	Serialization.hpp \
 	SymbolTable.cpp \
 	SymbolTable.hpp \
+	TypeCode.hpp \
 	TypeInfo.hpp \
 	Utils.cpp \
 	Utils.hpp \
@@ -67,7 +68,8 @@ popdis_SOURCES = \
 	Disassembler.cpp \
 	Disassembler.hpp \
 	DisMain.cpp \
-	Serialization.hpp
+	Serialization.hpp \
+	TypeCode.hpp
 
 NODEGEN_DATA_FILE = $(srcdir)/data.xml
 NODEGEN_SCRIPT = $(top_srcdir)/scripts/nodegen.py

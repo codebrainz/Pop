@@ -24,11 +24,13 @@ int main(int argc, char **argv) {
   }
 
   if (input_filenames.empty() || input_filenames[0] == "-") {
-    disassemble(std::cin, std::cout);
+    if (!disassemble(std::cin, std::cout, std::cerr))
+      return 1;
   } else {
     for (const auto &fn : input_filenames) {
       std::ifstream f(fn);
-      disassemble(f, std::cout);
+      if (!disassemble(f, std::cout, std::cerr))
+        return 1;
     }
   }
 

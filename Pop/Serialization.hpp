@@ -6,6 +6,8 @@
 #include <ostream>
 #include <string>
 
+#define POP_MAGIC_BYTES "\xAA\x55POP"
+
 namespace Pop {
 
   template < class ValueT >
@@ -110,6 +112,13 @@ namespace Pop {
       u.buffer[i] = deserialize8(is);
     }
     v = u.value;
+  }
+
+  template < class ValueT >
+  inline ValueT deserialize_raw(std::istream &is) {
+    ValueT v;
+    deserialize_raw(is, v);
+    return v;
   }
 
   inline void serialize_str(std::ostream &os, const std::string &s) {

@@ -6,7 +6,7 @@
 
 namespace Pop {
 
-  void disassemble(std::istream &is, std::ostream &os);
+  bool disassemble(std::istream &is, std::ostream &os, std::ostream &err);
 
   // namespace Pop
 }
