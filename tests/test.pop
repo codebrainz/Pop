@@ -1,3 +1,9 @@
-let x = 42;
-if (x > 42)
-  print("foo");
+function do_something() {
+  let x = 42;
+  if (x > 42)
+    print("foo");
+  return;
+  print("bar");
+}
+
+do_something();

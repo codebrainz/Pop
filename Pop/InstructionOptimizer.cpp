@@ -19,6 +19,18 @@ namespace Pop {
           else if (isa< JumpInstruction * >(next.get())) {
             instructions[i] = nullptr;
           }
+          // discard instruction following an unconditional jump which
+          // preceed a label, as they're unreachable
+          else {
+            size_t j;
+            for (j = i + 1; j < instructions.size(); j++) {
+              auto &in = instructions[j];
+              if (!isa< LabelInstruction * >(in.get()))
+                instructions[j] = nullptr;
+            }
+            i = j;
+            continue;
+          }
         } else if (isa< PushConstInstruction * >(inst.get())) {
           auto &next = instructions[i + 1];
           // if a push const is followed by a pop, remove both
