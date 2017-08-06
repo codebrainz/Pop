@@ -11,11 +11,13 @@ AM_MAINTAINER_MODE
 AX_CXX_COMPILE_STDCXX_14([noext], [mandatory])
 
 AS_IF([test "x$enable_maintainer_mode" = "xyes"], [
-  AC_PATH_PROG([FLEX], [flex], [
-    AC_MSG_ERROR([unable to find flex, is it installed?])
+  AC_PATH_PROG([FLEX], [flex], [no])
+  AS_IF([test "x$FLEX" = "xno"], [
+    AC_MSG_ERROR([unable to locate flex, is it installed?])
   ])
-  AC_PATH_PROG([BISON], [bison], [
-    AC_MSG_ERROR([unable to find bison, is it installed?])
+  AC_PATH_PROG([BISON], [bison], [no])
+  AS_IF([test "x$BISON" = "xno"], [
+    AC_MSG_ERROR([unable to locate bison, is it installed?])
   ])
   AM_PATH_PYTHON([3.0])
   AX_PYTHON_MODULE([jinja2])
