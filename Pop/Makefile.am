@@ -19,8 +19,6 @@ NODEGEN_SOURCES = \
 	Operators.cpp \
 	Operators.hpp \
 	ResolveSymbols.cpp \
-	Transformer.cpp \
-	Transformer.hpp \
 	Validate.cpp \
 	Visitor.cpp \
 	Visitor.hpp
@@ -81,8 +79,6 @@ EXTRA_DIST = \
 	Operators.cpp.in \
 	Operators.hpp.in \
 	ResolveSymbols.cpp.in \
-	Transformer.cpp.in \
-	Transformer.hpp.in \
 	Validate.cpp.in \
 	Visitor.cpp.in \
 	Visitor.hpp.in
@@ -146,12 +142,6 @@ Operators.hpp: $(srcdir)/Operators.hpp.in $(NODEGEN_DEPS)
 
 ResolveSymbols.cpp: $(srcdir)/ResolveSymbols.cpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/ResolveSymbols.cpp.in
-
-Transformer.cpp: $(srcdir)/Transformer.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/Transformer.cpp.in
-
-Transformer.hpp: $(srcdir)/Transformer.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/Transformer.hpp.in
 
 Validate.cpp: $(srcdir)/Validate.cpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/Validate.cpp.in

@@ -3,7 +3,6 @@
 
 #include <Pop/Operators.hpp>
 #include <Pop/SymbolTable.hpp>
-#include <Pop/Transformer.hpp>
 #include <Pop/TypeInfo.hpp>
 #include <Pop/Visitor.hpp>
 #include <cstdint>
@@ -59,7 +58,6 @@ namespace Pop {
       return this;
     }
     virtual void accept(VisitorBase&) = 0;
-    virtual Node *transform(TransformerBase&) = 0;
     virtual const std::string &type_name() const = 0;
     virtual size_t hash() const = 0;
     virtual bool equal(const Node *n) const = 0;
@@ -113,9 +111,6 @@ namespace Pop {
     }
     void accept(VisitorBase &v) final {
       v.visit(*this);
-    }
-    Node *transform(TransformerBase &t) final {
-      return t.transform(this);
     }
     const std::string &type_name() const final {
       static const std::string s = "NodeList";
@@ -180,9 +175,6 @@ namespace Pop {
   {%- endif %}
     void accept(VisitorBase &v) final {
       v.visit(*this);
-    }
-    Node *transform(TransformerBase &t) final {
-      return t.transform(this);
     }
     const std::string &type_name() const final {
       static const std::string s = "{{ node.name }}";
