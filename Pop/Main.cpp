@@ -1,6 +1,7 @@
 #include <Pop/Pop.hpp>
 #include <cassert>
 #include <iostream>
+#include <string>
 
 using namespace Pop;
 
@@ -24,7 +25,8 @@ int main(int argc, char **argv) {
   cmp.compile_instructions();
   cmp.resolve_instructions();
   cmp.optimize_instructions();
-  cmp.dump_instructions(std::cout);
+  // cmp.dump_instructions(std::cout);
+  cmp.compile_bytecode(std::cout);
 
   assert(cmp.report_diagnostics(std::cerr) == 0);
   return 0;
