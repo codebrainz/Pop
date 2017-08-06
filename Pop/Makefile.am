@@ -29,6 +29,7 @@ popc_SOURCES = \
 	ByteCodeCompiler.hpp \
 	Compiler.cpp \
 	Compiler.hpp \
+	CompMain.cpp \
 	ConstantsTable.cpp \
 	ConstantsTable.hpp \
 	DefineSymbols.hpp \
@@ -48,7 +49,6 @@ popc_SOURCES = \
 	LocationPatcher.hpp \
 	Logger.cpp \
 	Logger.hpp \
-	Main.cpp \
 	OptionParser.cpp \
 	OptionParser.hpp \
 	ParseState.cpp \
