@@ -77,6 +77,10 @@ namespace Pop {
     Pop::compile_instructions(program, const_tab, instructions);
   }
 
+  void Compiler::resolve_instructions(bool prune_labels) {
+    Pop::resolve_instructions(instructions, prune_labels);
+  }
+
   void Compiler::optimize_instructions() {
     Pop::optimize_instructions(instructions);
   }

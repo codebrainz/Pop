@@ -59,10 +59,10 @@ namespace Pop {
 
   static void serialize_constants(std::ostream &os, ConstantsTable &const_tab) {
     serialize32(os, static_cast< std::uint32_t >(const_tab.size()));
-    for (const auto nptr : const_tab) {
-      assert(nptr);
-      ConstSerializeVisitor visitor(os);
-      nptr->accept(visitor);
+    ConstSerializeVisitor visitor(os);
+    for (const auto n : const_tab) {
+      assert(n);
+      n->accept(visitor);
     }
   }
 

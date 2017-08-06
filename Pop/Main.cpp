@@ -22,6 +22,7 @@ int main(int argc, char **argv) {
   cmp.resolve_symbols();
   cmp.validate();
   cmp.compile_instructions();
+  cmp.resolve_instructions();
   cmp.optimize_instructions();
   cmp.dump_instructions(std::cout);
 
