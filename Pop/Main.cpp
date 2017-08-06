@@ -1,21 +1,23 @@
 #include <Pop/Pop.hpp>
-#include <cassert>
+#include <fstream>
 #include <iostream>
 #include <string>
 
 using namespace Pop;
 
 int main(int argc, char **argv) {
-
-  if (argc < 2) {
-    std::cerr << "error: not enough arguments" << std::endl;
-    return 1;
-  }
-
   Compiler cmp;
+  Options opts;
 
-  for (int i = 1; i < argc; i++)
-    cmp.parse_file(argv[i]);
+  if (!opts.parse(argc, argv))
+    return opts.exit_code;
+
+  if (opts.input_filenames[0] == "-") {
+    cmp.parse_file("<stdin>", std::cin);
+  } else {
+    for (const auto &input_file : opts.input_filenames)
+      cmp.parse_file(input_file);
+  }
 
   cmp.patch_locations(true);
   cmp.link_parents(true);
@@ -25,9 +27,29 @@ int main(int argc, char **argv) {
   cmp.compile_instructions();
   cmp.resolve_instructions();
   cmp.optimize_instructions();
-  // cmp.dump_instructions(std::cout);
-  cmp.compile_bytecode(std::cout);
 
-  assert(cmp.report_diagnostics(std::cerr) == 0);
-  return 0;
+  if (opts.dump_ast_dot) {
+    if (opts.output_filename == "-") {
+      cmp.generate_dot(std::cout);
+    } else {
+      std::ofstream f(opts.output_filename);
+      cmp.generate_dot(f);
+    }
+  } else if (opts.dump_instructions) {
+    if (opts.output_filename == "-") {
+      cmp.dump_instructions(std::cout);
+    } else {
+      std::ofstream f(opts.output_filename);
+      cmp.dump_instructions(f);
+    }
+  } else {
+    if (opts.output_filename == "-") {
+      cmp.compile_bytecode(std::cout);
+    } else {
+      std::ofstream f(opts.output_filename);
+      cmp.compile_bytecode(f);
+    }
+  }
+
+  return cmp.report_diagnostics(std::cerr);
 }

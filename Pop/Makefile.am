@@ -49,6 +49,8 @@ popc_SOURCES = \
 	Logger.cpp \
 	Logger.hpp \
 	Main.cpp \
+	OptionParser.cpp \
+	OptionParser.hpp \
 	ParseState.cpp \
 	ParseState.hpp \
 	Pop.hpp \

@@ -10,6 +10,7 @@
 #include <Pop/LocationPatcher.hpp>
 #include <Pop/Logger.hpp>
 #include <Pop/Operators.hpp>
+#include <Pop/OptionParser.hpp>
 #include <Pop/ResolveSymbols.hpp>
 #include <Pop/SymbolTable.hpp>
 #include <Pop/Utils.hpp>
