@@ -1,3 +1,7 @@
+#ifdef HAVE_CONFIG_H
+#include <Pop/Config.h>
+#endif
+
 #include <Pop/Compiler.hpp>
 #include <Pop/ByteCodeCompiler.hpp>
 #include <Pop/DefineSymbols.hpp>

@@ -1,3 +1,7 @@
+#ifdef HAVE_CONFIG_H
+#include <Pop/Config.h>
+#endif
+
 #include <Pop/InstructionOptimizer.hpp>
 #include <Pop/Instructions.hpp>
 

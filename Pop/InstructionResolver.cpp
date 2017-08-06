@@ -1,3 +1,7 @@
+#ifdef HAVE_CONFIG_H
+#include <Pop/Config.h>
+#endif
+
 #include <Pop/InstructionResolver.hpp>
 #include <Pop/Instructions.hpp>
 #include <Pop/InstructionVisitor.hpp>

@@ -1,3 +1,7 @@
+#ifdef HAVE_CONFIG_H
+#include <Pop/Config.h>
+#endif
+
 #include <Pop/DefineSymbols.hpp>
 #include <Pop/AST.hpp>
 #include <Pop/Logger.hpp>
