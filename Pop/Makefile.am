@@ -1,6 +1,6 @@
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir)
 
-bin_PROGRAMS = popc
+bin_PROGRAMS = popc popdis
 
 NODEGEN_SOURCES = \
 	AST.cpp \
@@ -62,6 +62,12 @@ popc_SOURCES = \
 	Utils.cpp \
 	Utils.hpp \
 	Validate.hpp
+
+popdis_SOURCES = \
+	Disassembler.cpp \
+	Disassembler.hpp \
+	DisMain.cpp \
+	Serialization.hpp
 
 NODEGEN_DATA_FILE = $(srcdir)/data.xml
 NODEGEN_SCRIPT = $(top_srcdir)/scripts/nodegen.py
