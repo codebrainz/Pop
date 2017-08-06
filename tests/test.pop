@@ -1,9 +1,10 @@
-function do_something() {
-  let x = 42;
-  if (x > 42)
-    print("foo");
-  return;
-  print("bar");
+function makeAdder(x) {
+  let y = x;
+  function adder(z) {
+    return y + z;
+  }
+  return adder;
 }
-
-do_something();
+let adder = makeAdder(1);
+adder(1);
+adder(2);

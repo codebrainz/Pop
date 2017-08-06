@@ -493,7 +493,8 @@ namespace Pop {
     }
     void visit(Module &n) final {
       add_instruction< OpenEnvironmentInstruction >(&n);
-      n.body->accept(*this);
+      if (n.body)
+        n.body->accept(*this);
       add_instruction< CloseEnvironmentInstruction >(&n);
     }
     void visit(Program &n) final {
