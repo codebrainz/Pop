@@ -25,6 +25,8 @@ NODEGEN_SOURCES = \
 
 popc_SOURCES = \
 	$(NODEGEN_SOURCES) \
+	ByteCodeCompiler.cpp \
+	ByteCodeCompiler.hpp \
 	Compiler.cpp \
 	Compiler.hpp \
 	ConstantsTable.cpp \
@@ -51,6 +53,7 @@ popc_SOURCES = \
 	ParseState.hpp \
 	Pop.hpp \
 	ResolveSymbols.hpp \
+	Serialization.hpp \
 	SymbolTable.cpp \
 	SymbolTable.hpp \
 	TypeInfo.hpp \

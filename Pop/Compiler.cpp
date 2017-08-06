@@ -1,4 +1,5 @@
 #include <Pop/Compiler.hpp>
+#include <Pop/ByteCodeCompiler.hpp>
 #include <Pop/DefineSymbols.hpp>
 #include <Pop/DOT.hpp>
 #include <Pop/Grammar.hpp>
@@ -14,10 +15,12 @@
 #include <Pop/ResolveSymbols.hpp>
 #include <Pop/Utils.hpp>
 #include <Pop/Validate.hpp>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 namespace Pop {
 
@@ -76,6 +79,10 @@ namespace Pop {
 
   void Compiler::optimize_instructions() {
     Pop::optimize_instructions(instructions);
+  }
+
+  void Compiler::compile_bytecode(std::ostream &out) {
+    Pop::compile_bytecode(instructions, const_tab, out);
   }
 
   void Compiler::dump_instructions(std::ostream &out) {

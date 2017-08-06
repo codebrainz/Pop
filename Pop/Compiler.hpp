@@ -27,6 +27,7 @@ namespace Pop {
     void generate_dot(std::ostream &os, const std::string &indent_token = "  ");
     void compile_instructions();
     void optimize_instructions();
+    void compile_bytecode(std::ostream &out);
     void dump_instructions(std::ostream &out);
     int report_diagnostics(int max_errors = -1);
     int report_diagnostics(std::ostream &os, int max_errors = -1);

@@ -10,6 +10,8 @@ namespace Pop {
 
   class ConstantsTable {
 
+    typedef std::vector< Node * > NodeVec;
+
     struct NodeHasher {
       size_t operator()(const Node *n) const {
         return n->hash();
@@ -28,13 +30,31 @@ namespace Pop {
   public:
     ConstantsTable();
     ~ConstantsTable();
+
     int intern(Node *n);
     Node *node(int id);
+
+    size_t size() const {
+      return node_vec.size();
+    }
+
+    NodeVec::iterator begin() {
+      return node_vec.begin();
+    }
+    NodeVec::iterator end() {
+      return node_vec.end();
+    }
+    NodeVec::const_iterator begin() const {
+      return node_vec.begin();
+    }
+    NodeVec::const_iterator end() const {
+      return node_vec.end();
+    }
 
   private:
     int count;
     NodeIdMap node_to_id;
-    std::vector< Node * > node_vec;
+    NodeVec node_vec;
   };
 
   // namespace Pop
