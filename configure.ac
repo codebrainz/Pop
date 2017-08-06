@@ -8,6 +8,8 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE
 
+AC_PROG_RANLIB
+AM_PROG_AR
 AX_CXX_COMPILE_STDCXX_14([noext], [mandatory])
 
 AS_IF([test "x$enable_maintainer_mode" = "xyes"], [
@@ -26,6 +28,8 @@ AS_IF([test "x$enable_maintainer_mode" = "xyes"], [
 AC_CONFIG_FILES([
  Makefile
  Pop/Makefile
+ Compiler/Makefile
+ Disassembler/Makefile
  scripts/Makefile
  tests/Makefile
 ])

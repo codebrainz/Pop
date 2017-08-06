@@ -1,6 +1,6 @@
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir)
 
-bin_PROGRAMS = popc popdis
+noinst_LIBRARIES = libpop.a
 
 NODEGEN_SOURCES = \
 	AST.cpp \
@@ -23,16 +23,17 @@ NODEGEN_SOURCES = \
 	Visitor.cpp \
 	Visitor.hpp
 
-popc_SOURCES = \
+libpop_a_SOURCES = \
 	$(NODEGEN_SOURCES) \
 	ByteCodeCompiler.cpp \
 	ByteCodeCompiler.hpp \
 	Compiler.cpp \
 	Compiler.hpp \
-	CompMain.cpp \
 	ConstantsTable.cpp \
 	ConstantsTable.hpp \
 	DefineSymbols.hpp \
+	Disassembler.cpp \
+	Disassembler.hpp \
 	DOT.hpp \
 	Formatter.hpp \
 	InstructionCompiler.cpp \
@@ -63,13 +64,6 @@ popc_SOURCES = \
 	Utils.cpp \
 	Utils.hpp \
 	Validate.hpp
-
-popdis_SOURCES = \
-	Disassembler.cpp \
-	Disassembler.hpp \
-	DisMain.cpp \
-	Serialization.hpp \
-	TypeCode.hpp
 
 NODEGEN_DATA_FILE = $(srcdir)/data.xml
 NODEGEN_SCRIPT = $(top_srcdir)/scripts/nodegen.py
