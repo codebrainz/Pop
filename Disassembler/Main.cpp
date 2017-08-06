@@ -1,4 +1,4 @@
-#include <Pop/Disassembler.hpp>
+#include <Pop/Pop.hpp>
 #include <fstream>
 #include <iostream>
 #include <string>
