@@ -16,35 +16,6 @@
 
 namespace Pop {
 
-  struct ConstSerializeVisitor final : public DefaultPostOrderVisitor {
-    std::ostream &os;
-    ConstSerializeVisitor(std::ostream &os) : os(os) {
-    }
-    void process(Null &n) final {
-      serialize8(os, TC::NIL);
-    }
-    void process(Bool &n) final {
-      serialize8(os, TC::BLN);
-      serialize8(os, n.value ? 1 : 0);
-    }
-    void process(Int &n) final {
-      serialize8(os, TC::INT);
-      serialize64(os, n.value);
-    }
-    void process(Float &n) final {
-      serialize8(os, TC::FLT);
-      serialize_raw(os, n.value);
-    }
-    void process(String &n) final {
-      serialize8(os, TC::STR);
-      serialize_str(os, n.value);
-    }
-    void process(Symbol &n) final {
-      serialize8(os, TC::SYM);
-      serialize_str(os, n.value);
-    }
-  };
-
   static void serialize_magic(std::ostream &os) {
     static const std::string magic = POP_MAGIC_BYTES;
     for (auto ch : magic)
@@ -53,11 +24,8 @@ namespace Pop {
 
   static void serialize_constants(std::ostream &os, ConstantsTable &const_tab) {
     serialize32(os, static_cast< std::uint32_t >(const_tab.size()));
-    ConstSerializeVisitor visitor(os);
-    for (const auto n : const_tab) {
-      assert(n);
-      n->accept(visitor);
-    }
+    for (const auto &c : const_tab)
+      c->serialize(os);
   }
 
   static void serialize_header(std::ostream &os, ConstantsTable &const_tab) {

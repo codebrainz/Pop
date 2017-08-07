@@ -12,46 +12,9 @@
 
 namespace Pop {
 
-  struct ConstantStringVisitor : public DefaultPreOrderVisitor {
-    std::string &str;
-    ConstantStringVisitor(std::string &str) : str(str) {
-    }
-    void process(Null &) final {
-      str = "null";
-    }
-    void process(Bool &n) final {
-      str = n.value ? "true" : "false";
-    }
-    void process(Int &n) final {
-      str = std::to_string(n.value);
-    }
-    void process(Float &n) final {
-      str = std::to_string(n.value);
-    }
-    void process(String &n) final {
-      str = n.value;
-    }
-    void process(Symbol &n) final {
-      str = n.value;
-    }
-  };
-
-  static std::string constant_string(Node &n) {
-    std::string str;
-    ConstantStringVisitor visitor(str);
-    n.accept(visitor);
-    assert(!str.empty());
-    return str;
-  }
-
   static void dump_constants(ConstantsTable &const_tab, std::ostream &os) {
-    int i = 0;
-    while (1) {
-      auto n = const_tab.node(i);
-      if (!n)
-        break;
-      os << "; " << i << ": " << constant_string(*n) << '\n';
-      i++;
+    for (size_t i = 0; i < const_tab.size(); i++) {
+      os << "; " << i << ": " << *(const_tab.constant(i)) << '\n';
     }
   }
 

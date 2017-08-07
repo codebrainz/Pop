@@ -3,8 +3,10 @@
 
 #include <Pop/TypeCode.hpp>
 #include <istream>
+#include <memory>
 #include <ostream>
 #include <string>
+#include <vector>
 
 namespace Pop {
 
@@ -53,6 +55,9 @@ namespace Pop {
       return os;
     }
   };
+
+  typedef std::unique_ptr< Constant > ConstantPtr;
+  typedef std::vector< ConstantPtr > ConstantList;
 
   // namespace Pop
 }

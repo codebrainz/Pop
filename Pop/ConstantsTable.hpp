@@ -1,8 +1,8 @@
 #ifndef POP_CONSTANTS_TABLE_HPP
 #define POP_CONSTANTS_TABLE_HPP
 
-#include <Pop/AST.hpp>
-#include <functional>
+#include <Pop/Constant.hpp>
+#include <cassert>
 #include <unordered_map>
 #include <vector>
 
@@ -10,51 +10,50 @@ namespace Pop {
 
   class ConstantsTable {
 
-    typedef std::vector< Node * > NodeVec;
-
-    struct NodeHasher {
-      size_t operator()(const Node *n) const {
-        return n->hash();
+    struct Hasher {
+      size_t operator()(const Constant *cptr) const {
+        assert(cptr);
+        return cptr->hash();
       }
     };
 
-    struct NodeComparator {
-      size_t operator()(const Node *lhs, const Node *rhs) const {
-        return lhs->equal(rhs);
+    struct Comparator {
+      bool operator()(const Constant *cp1, const Constant *cp2) const {
+        assert(cp1);
+        assert(cp2);
+        return cp1->operator==(*cp2);
       }
     };
 
-    typedef std::unordered_map< Node *, int, NodeHasher, NodeComparator >
-        NodeIdMap;
+    typedef std::unordered_map< Constant *, int, Hasher, Comparator >
+        ConstantIdMap;
 
   public:
-    ConstantsTable();
-    ~ConstantsTable();
-
-    int intern(Node *n);
-    Node *node(int id);
+    int intern(const Constant &c);
+    int intern(Constant &&c);
+    Constant *constant(int id);
 
     size_t size() const {
-      return node_vec.size();
+      return constants.size();
     }
 
-    NodeVec::iterator begin() {
-      return node_vec.begin();
+    ConstantList::iterator begin() {
+      return constants.begin();
     }
-    NodeVec::iterator end() {
-      return node_vec.end();
+    ConstantList::iterator end() {
+      return constants.end();
     }
-    NodeVec::const_iterator begin() const {
-      return node_vec.begin();
+    ConstantList::const_iterator begin() const {
+      return constants.begin();
     }
-    NodeVec::const_iterator end() const {
-      return node_vec.end();
+    ConstantList::const_iterator end() const {
+      return constants.end();
     }
 
   private:
-    int count;
-    NodeIdMap node_to_id;
-    NodeVec node_vec;
+    int count = 0;
+    ConstantIdMap constants_map;
+    ConstantList constants;
   };
 
   // namespace Pop

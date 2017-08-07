@@ -7,32 +7,25 @@
 
 namespace Pop {
 
-  ConstantsTable::ConstantsTable() : count(0) {
+  int ConstantsTable::intern(const Constant &c) {
+    return intern(Constant(c));
   }
 
-  ConstantsTable::~ConstantsTable() {
-    for (auto &pair : node_to_id)
-      node_unref(pair.first);
-    for (auto node : node_vec)
-      node_unref(node);
-  }
-
-  int ConstantsTable::intern(Node *n) {
-    assert(n);
-    assert(n->is_atom());
-    auto found = node_to_id.find(n);
-    if (found != node_to_id.end())
+  int ConstantsTable::intern(Constant &&c) {
+    auto cc = std::move(c);
+    auto found = constants_map.find(&cc);
+    if (found != constants_map.end())
       return found->second;
-    int c = count;
-    count++;
-    node_to_id.emplace(n->ref(), c);
-    node_vec.emplace_back(n->ref());
-    return c;
+    int id = count++;
+    auto ncc = new Constant(std::move(cc));
+    constants.emplace_back(ncc);
+    constants_map.emplace(ncc, id);
+    return id;
   }
 
-  Node *ConstantsTable::node(int id) {
-    if (id >= 0 && size_t(id) < node_vec.size())
-      return node_vec[id];
+  Constant *ConstantsTable::constant(int id) {
+    if (id >= 0 && size_t(id) < constants.size())
+      return constants[id].get();
     return nullptr;
   }
 

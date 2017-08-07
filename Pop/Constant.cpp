@@ -1,3 +1,7 @@
+#ifdef HAVE_CONFIG_H
+#include <Pop/Config.h>
+#endif
+
 #include <Pop/Constant.hpp>
 #include <Pop/Serialization.hpp>
 #include <Pop/Utils.hpp>
@@ -132,7 +136,7 @@ namespace Pop {
           ss << *u.as_str;
         break;
     }
-    return ss.as_str();
+    return ss.str();
   }
 
   size_t Constant::hash() const {

@@ -13,7 +13,32 @@
 
 namespace Pop {
 
-  struct InstructionCompiler : public VisitorBase {
+  struct InstructionCompiler final : public VisitorBase {
+
+    struct AtomToConstVisitor final : public DefaultPostOrderVisitor {
+      Constant constant;
+      AtomToConstVisitor() {
+      }
+      void process(Null &) final {
+        constant = Constant::new_nil();
+      }
+      void process(Bool &n) final {
+        constant = Constant::new_bool(n.value);
+      }
+      void process(Int &n) final {
+        constant = Constant::new_int(n.value);
+      }
+      void process(Float &n) final {
+        constant = Constant::new_float(n.value);
+      }
+      void process(String &n) final {
+        constant = Constant::new_string(n.value);
+      }
+      void process(Symbol &n) final {
+        constant = Constant::new_symbol(n.value);
+      }
+    };
+
     int count;
     ConstantsTable &const_tab;
     std::stack< InstructionList * > inst_stack;
@@ -103,7 +128,9 @@ namespace Pop {
       return inst;
     }
     int intern(Node &n) {
-      return const_tab.intern(&n);
+      AtomToConstVisitor visitor;
+      n.accept(visitor);
+      return const_tab.intern(std::move(visitor.constant));
     }
     void add_constant(Node &n) {
       add_instruction< PushConstInstruction >(intern(n), &n);
