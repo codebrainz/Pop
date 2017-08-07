@@ -1,0 +1,62 @@
+#ifdef HAVE_CONFIG_H
+#include <Pop/Config.h>
+#endif
+
+#include <Pop/Instructions.hpp>
+#include <Pop/Serialization.hpp>
+#include <cassert>
+
+namespace Pop {
+
+  void Instruction::serialize(std::ostream &os) const {
+    serialize8(os, code);
+  }
+{% for instruction in instructions %}
+  {%- if instruction.name in ["Jump", "JumpIfTrue", "JumpIfFalse", "Closure" ] %}
+  void {{ instruction.name }}Instruction::serialize(std::ostream &os) const {
+    Instruction::serialize(os);
+    serialize32(os, target);
+  }
+  {%- elif instruction.name in ["PushConst"] %}
+  void {{ instruction.name }}Instruction::serialize(std::ostream &os) const {
+    Instruction::serialize(os);
+    serialize32(os, const_id);
+  }
+  {%- endif %}
+{% endfor %}
+
+  InstructionPtr Instruction::deserialize(std::istream &is) {
+    auto code = static_cast<OpCode>(deserialize8(is));
+    switch (code) {
+{%- for instruction in instructions %}
+  {%- if instruction.name in [ "Jump", "JumpIfTrue", "JumpIfFalse", "Closure" ] %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        auto inst = std::make_unique<{{ instruction.name }}Instruction>("");
+        inst->target = deserialize32(is);
+        inst->offset = is.tellg();
+        return inst;
+      }
+  {%- elif instruction.name in [ "PushConst" ] %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        auto inst = std::make_unique<{{ instruction.name }}Instruction>(deserialize32(is));
+        inst->offset = is.tellg();
+        return inst;
+      }
+  {%- elif instruction.name in [ "Label" ] %}
+      case OpCode::{{ instruction.mnemonic }}:
+        assert(false);
+        return InstructionPtr(nullptr);
+  {%- else %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        auto inst = std::make_unique<{{ instruction.name }}Instruction>();
+        inst->offset = is.tellg();
+        return inst;
+      }
+  {%- endif %}
+{%- endfor %}
+    }
+    return InstructionPtr(nullptr);
+  }
+
+// namespace Pop
+}

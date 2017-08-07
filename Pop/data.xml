@@ -161,7 +161,7 @@
       <field name="const_id" type="int" construct="true" />
     </node>
     <node name="Pop" mnemonic="POP" />
-    <node name="DuplicateTop" menmonic="DUP" />
+    <node name="DuplicateTop" mnemonic="DUP" />
     <node name="Duplicate2ndTop" mnemonic="DUP2" />
     <node name="SwapTop" mnemonic="SWAP" />
 

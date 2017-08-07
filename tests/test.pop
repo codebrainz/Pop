@@ -1,10 +1,1 @@
-function makeAdder(x) {
-  let y = x;
-  function adder(z) {
-    return y + z;
-  }
-  return adder;
-}
-let adder = makeAdder(1);
-adder(1);
-adder(2);
+1;

@@ -6,6 +6,7 @@
 #include <Pop/InstructionVisitor.hpp>
 #include <Pop/TypeInfo.hpp>
 #include <cstdint>
+#include <istream>
 #include <memory>
 #include <ostream>
 #include <string>
@@ -18,6 +19,9 @@ namespace Pop {
     {{ instruction.mnemonic }},
 {%- endfor %}
   };
+
+  class Instruction;
+  typedef std::unique_ptr<Instruction> InstructionPtr;
 
   class Instruction {
   public:
@@ -45,6 +49,9 @@ namespace Pop {
         return ast_node->column();
       return -1;
     }
+
+    virtual void serialize(std::ostream &os) const;
+    static InstructionPtr deserialize(std::istream &is);
 
   protected:
     Node *ast_node;
@@ -96,6 +103,11 @@ namespace Pop {
     void accept(InstructionVisitor &v) final {
       v.visit(*this);
     }
+  {%- if instruction.name in ["Jump", "JumpIfTrue", "JumpIfFalse", "Closure" ] %}
+    void serialize(std::ostream &os) const final;
+  {%- elif instruction.name in ["PushConst"] %}
+    void serialize(std::ostream &os) const final;
+  {%- endif %}
     static bool classof(const Instruction *n) {
       return (n->code == OpCode::{{ instruction.mnemonic }});
     }

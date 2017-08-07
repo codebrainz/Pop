@@ -3,10 +3,13 @@
 
 #include <istream>
 #include <ostream>
+#include <string>
 
 namespace Pop {
 
   bool disassemble(std::istream &is, std::ostream &os, std::ostream &err);
+  bool disassemble(const std::string &fn, std::istream &is, std::ostream &os,
+                   std::ostream &err);
 
   // namespace Pop
 }

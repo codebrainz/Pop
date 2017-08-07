@@ -8,6 +8,7 @@ NODEGEN_SOURCES = \
 	DOT.cpp \
 	Grammar.cpp \
 	Grammar.hpp \
+	Instructions.cpp \
 	Instructions.hpp \
 	InstructionVisitor.cpp \
 	InstructionVisitor.hpp \
@@ -78,6 +79,7 @@ EXTRA_DIST = \
 	DefineSymbols.cpp.in \
 	DOT.cpp.in \
 	Grammar.y \
+	Instructions.cpp.in \
 	Instructions.hpp.in \
 	InstructionVisitor.cpp.in \
 	InstructionVisitor.hpp.in \
@@ -123,6 +125,9 @@ DefineSymbols.cpp: $(srcdir)/DefineSymbols.cpp.in $(NODEGEN_DEPS)
 
 DOT.cpp: $(srcdir)/DOT.cpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/DOT.cpp.in
+
+Instructions.cpp: $(srcdir)/Instructions.cpp.in $(NODEGEN_DEPS)
+	$(NODEGEN) -o $@ $(srcdir)/Instructions.cpp.in
 
 Instructions.hpp: $(srcdir)/Instructions.hpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/Instructions.hpp.in

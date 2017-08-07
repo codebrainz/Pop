@@ -39,57 +39,21 @@ namespace Pop {
     auto str_const = ss_const.str();
 
     std::uint32_t bc_offset =
-        str_magic.size() + str_const.size() + sizeof(std::uint64_t);
+        str_magic.size() + str_const.size() + (2 * sizeof(std::uint32_t));
 
     os.write(str_magic.data(), str_magic.size());
     serialize32(os, bc_offset);
     os.write(str_const.data(), str_const.size());
   }
 
-  struct ByteCodeCompileVisitor : public InstructionVisitor {
-    std::ostream &os;
-    ByteCodeCompileVisitor(std::ostream &os) : os(os) {
-    }
-    void write_code(Instruction &inst) {
-      serialize8(os, static_cast< std::uint8_t >(inst.code));
-    }
-    void visit_default(Instruction &inst) final {
-      assert(inst.size() == 1);
-      write_code(inst);
-    }
-    void visit(PushConstInstruction &inst) final {
-      write_code(inst);
-      serialize32(os, inst.const_id);
-    }
-    void visit(ClosureInstruction &inst) final {
-      write_code(inst);
-      serialize32(os, inst.target);
-    }
-    void visit(JumpInstruction &inst) final {
-      write_code(inst);
-      serialize32(os, inst.target);
-    }
-    void visit(JumpIfTrueInstruction &inst) final {
-      write_code(inst);
-      serialize32(os, inst.target);
-    }
-    void visit(JumpIfFalseInstruction &inst) final {
-      write_code(inst);
-      serialize32(os, inst.target);
-    }
-    void visit(LabelInstruction &) final {
-    }
-  };
-
   static void serialize_instructions(std::ostream &os,
                                      const InstructionList &instructions) {
     std::stringstream ss;
-    ByteCodeCompileVisitor visitor(ss);
     for (auto &inst : instructions)
-      inst->accept(visitor);
+      inst->serialize(ss);
     auto inst_str = ss.str();
-    serialize_str(os, inst_str);
     serialize32(os, crc32(0, inst_str));
+    serialize_str(os, inst_str);
   }
 
   void compile_bytecode(const InstructionList &instructions,
