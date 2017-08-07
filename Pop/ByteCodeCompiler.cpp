@@ -9,6 +9,7 @@
 #include <Pop/InstructionVisitor.hpp>
 #include <Pop/Serialization.hpp>
 #include <Pop/TypeCode.hpp>
+#include <Pop/Utils.hpp>
 #include <Pop/Visitor.hpp>
 #include <cassert>
 #include <cstdint>
@@ -82,9 +83,13 @@ namespace Pop {
 
   static void serialize_instructions(std::ostream &os,
                                      const InstructionList &instructions) {
-    ByteCodeCompileVisitor visitor(os);
+    std::stringstream ss;
+    ByteCodeCompileVisitor visitor(ss);
     for (auto &inst : instructions)
       inst->accept(visitor);
+    auto inst_str = ss.str();
+    serialize_str(os, inst_str);
+    serialize32(os, crc32(0, inst_str));
   }
 
   void compile_bytecode(const InstructionList &instructions,
