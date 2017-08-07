@@ -29,6 +29,8 @@ libpop_a_SOURCES = \
 	ByteCodeCompiler.hpp \
 	Compiler.cpp \
 	Compiler.hpp \
+	Constant.cpp \
+	Constant.hpp \
 	ConstantsTable.cpp \
 	ConstantsTable.hpp \
 	DefineSymbols.hpp \

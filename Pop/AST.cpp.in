@@ -3,16 +3,10 @@
 #endif
 
 #include <Pop/AST.hpp>
+#include <Pop/Utils.hpp>
 #include <typeinfo>
-#include <utility>
 
 namespace Pop {
-
-  template <class T>
-  static inline void hash_combine(std::size_t& seed, const T& v) {
-    std::hash<T> hasher;
-    seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
-  }
 
   size_t NodeList::hash() const {
     size_t seed = typeid(NodeList).hash_code();
