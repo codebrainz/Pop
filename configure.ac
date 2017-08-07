@@ -30,6 +30,7 @@ AC_CONFIG_FILES([
  Pop/Makefile
  Compiler/Makefile
  Disassembler/Makefile
+ docs/Makefile
  scripts/Makefile
  tests/Makefile
 ])
