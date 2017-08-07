@@ -5,6 +5,7 @@
 #include <Pop/ByteCodeCompiler.hpp>
 #include <Pop/Compiler.hpp>
 #include <Pop/ConstantsTable.hpp>
+#include <Pop/CRC32.hpp>
 #include <Pop/DefineSymbols.hpp>
 #include <Pop/Disassembler.hpp>
 #include <Pop/DOT.hpp>

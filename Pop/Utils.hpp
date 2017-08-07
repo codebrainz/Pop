@@ -1,6 +1,7 @@
 #ifndef POP_UTILS_HPP
 #define POP_UTILS_HPP
 
+#include <Pop/CRC32.hpp>
 #include <cstddef>
 #include <string>
 #include <utility>

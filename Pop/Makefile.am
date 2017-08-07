@@ -32,6 +32,8 @@ libpop_a_SOURCES = \
 	Constant.hpp \
 	ConstantsTable.cpp \
 	ConstantsTable.hpp \
+	CRC32.cpp \
+	CRC32.hpp \
 	DefineSymbols.hpp \
 	Disassembler.cpp \
 	Disassembler.hpp \
