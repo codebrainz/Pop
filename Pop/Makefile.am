@@ -3,7 +3,6 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir)
 noinst_LIBRARIES = libpop.a
 
 NODEGEN_SOURCES = \
-	AST.cpp \
 	AST.hpp \
 	DefineSymbols.cpp \
 	DOT.cpp \
@@ -47,7 +46,6 @@ libpop_a_SOURCES = \
 	InstructionOptimizer.hpp \
 	InstructionResolver.cpp \
 	InstructionResolver.hpp \
-	Instructions.cpp \
 	LinkParents.hpp \
 	LocationPatcher.hpp \
 	Logger.cpp \
@@ -74,7 +72,6 @@ NODEGEN = $(AM_V_GEN)$(PYTHON) $(NODEGEN_SCRIPT) -d $(NODEGEN_DATA_FILE)
 
 EXTRA_DIST = \
 	$(NODEGEN_DATA_FILE) \
-	AST.cpp.in \
 	AST.hpp.in \
 	DefineSymbols.cpp.in \
 	DOT.cpp.in \
@@ -115,9 +112,6 @@ Grammar.hpp: Grammar.cpp
 #
 # Generated C++ files
 #
-
-AST.cpp: $(srcdir)/AST.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/AST.cpp.in
 
 AST.hpp: $(srcdir)/AST.hpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/AST.hpp.in
