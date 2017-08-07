@@ -59,9 +59,6 @@ namespace Pop {
     }
     virtual void accept(VisitorBase&) = 0;
     virtual const std::string &type_name() const = 0;
-    virtual size_t hash() const = 0;
-    virtual bool equal(const Node *n) const = 0;
-    virtual bool is_atom() const { return false; }
   protected:
     Node(NodeKind kind, const char *fn="", int line=-1, int column=-1)
       : kind(kind), parent(nullptr), enclosing_scope(nullptr),
@@ -116,8 +113,6 @@ namespace Pop {
       static const std::string s = "NodeList";
       return s;
     }
-    size_t hash() const final;
-    bool equal(const Node *n) const;
     static bool classof(const Node *n) {
       return (n->kind == NK_NODELIST);
     }
@@ -180,11 +175,6 @@ namespace Pop {
       static const std::string s = "{{ node.name }}";
       return s;
     }
-    size_t hash() const final;
-    bool equal(const Node *n) const;
-  {%- if node.is_atom %}
-    bool is_atom() const { return true; }
-  {%- endif %}
     static bool classof(const Node *n) {
       return (n->kind == NK_{{ node.name | upper }});
     }
