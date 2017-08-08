@@ -1,34 +1,32 @@
 POP BYTECODE FORMAT
 ===================
 
-      FIELD                          SIZE    NOTES
-      -----                          ----    -----
+  OFFSET  FIELD                          SIZE    NOTES
+  ------  -----                          ----    -----
 
-  0   MAGIC BYTES                    4       \xAAPOP
+  0       MAGIC BYTES                    4       \xAAPOP
+  4       VERSION NUMBER                 4       Reserved for future use
+  8       FILES TABLE OFFSET             4       Reserved for future use
+  12      SYMBOL TABLE OFFSET            4       Reserved for future use
+  16      RESERVED WORD                  4       Reserved for future use
+  20      RESERVED WORD                  4       Reserved for future use
+  24      CONSTANT TABLE OFFSET          4
+  28      BYTECODE INSTRUCTIONS OFFSET   4
 
-  4   CRC32 OF REST OF FILE          4
-  8   VERSION NUMBER                 4
-  12  FILES TABLE OFFSET             4
-  16  SYMBOL TABLE OFFSET            4
-  20  CONSTANT TABLE OFFSET          4
-  24  BYTECODE INSTRUCTIONS OFFSET   4
+  ...     FILES COUNT                    4
+            FILE NAME LENGTH             2
+            FILE NAME BYTES              ...
 
-  ... FILES COUNT                    4
+          SYMBOLS COUNT                  4
+            FILE NAME INDEX              4
+            SYMBOL LINE NUMBER           4
+            SYMBOL COLUMN NUMBER         4
+            SYMBOL NAME LENGTH           2
+            SYMBOL NAME BYTES            ...
 
-        FILE NAME LENGTH             2
-        FILE NAME BYTES              ...
+          CONSTANTS COUNT                4
+            CONSTANT TYPE                1
+            CONSTANT BYTES               ...
 
-      SYMBOLS COUNT                  4
-
-        FILE NAME INDEX              4
-        SYMBOL LINE NUMBER           4
-        SYMBOL COLUMN NUMBER         4
-        SYMBOL NAME LENGTH           2
-        SYMBOL NAME BYTES            ...
-
-      CONSTANTS COUNT                4
-
-        CONSTANT TYPE                1
-        CONSTANT BYTES               ...
-
-      BYTE CODES...                  ...
+          BYTE CODES...                  ...
+          FILE CHECKSUM                  4       CRC32 of file data to here
