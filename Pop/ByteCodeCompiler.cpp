@@ -14,52 +14,78 @@
 #include <cassert>
 #include <cstdint>
 #include <sstream>
+#include <string>
 
 namespace Pop {
 
-  static void serialize_magic(std::ostream &os) {
-    static const std::string magic = POP_MAGIC_BYTES;
-    for (auto ch : magic)
-      serialize8(os, ch);
-  }
+  struct ByteCodeData {
+    const InstructionList &instructions;
+    const ConstantsTable &constants;
+    std::ostream &output;
+    uint32_t constants_offset;
+    uint32_t bytecode_offset;
+    uint32_t total_size;
+    uint32_t checksum;
 
-  static void serialize_constants(std::ostream &os, ConstantsTable &const_tab) {
-    serialize32(os, static_cast< std::uint32_t >(const_tab.size()));
-    for (const auto &c : const_tab)
-      c->serialize(os);
-  }
+    ByteCodeData(const InstructionList &instructions,
+                 const ConstantsTable &constants, std::ostream &output)
+        : instructions(instructions), constants(constants), output(output),
+          constants_offset(0), bytecode_offset(0), total_size(0), checksum(0) {
+    }
 
-  static void serialize_header(std::ostream &os, ConstantsTable &const_tab) {
-    std::stringstream ss_magic;
-    serialize_magic(ss_magic);
-    auto str_magic = ss_magic.str();
+    void serialize_pre(std::ostream &os) {
+      for (const auto b : POP_MAGIC_BYTES)
+        serialize8(os, b);
+      serialize32(os, POP_BYTECODE_VERSION);
+      for (auto i = 0; i < 4; i++) // 4x reserved
+        serialize32(os, 0);
+    }
 
-    std::stringstream ss_const;
-    serialize_constants(ss_const, const_tab);
-    auto str_const = ss_const.str();
+    void serialize_constants(std::ostream &os) {
+      serialize32(os, static_cast< uint32_t >(constants.size()));
+      for (const auto &c : constants)
+        c->serialize(os);
+    }
 
-    std::uint32_t bc_offset =
-        str_magic.size() + str_const.size() + (2 * sizeof(std::uint32_t));
+    void serialize_instructions(std::ostream &os) {
+      for (const auto &iptr : instructions)
+        iptr->serialize(os);
+    }
 
-    os.write(str_magic.data(), str_magic.size());
-    serialize32(os, bc_offset);
-    os.write(str_const.data(), str_const.size());
-  }
+    void pass1() {
+      std::stringstream ss;
+      serialize_pre(ss);
+      serialize32(ss, 0); // constants offset
+      serialize32(ss, 0); // bytecodes offset
+      constants_offset = ss.tellg();
+      serialize_constants(ss);
+      bytecode_offset = ss.tellg();
+      serialize_instructions(ss);
+      total_size = ss.str().size() + sizeof(uint32_t) /*crc32*/;
+    }
 
-  static void serialize_instructions(std::ostream &os,
-                                     const InstructionList &instructions) {
-    std::stringstream ss;
-    for (auto &inst : instructions)
-      inst->serialize(ss);
-    auto inst_str = ss.str();
-    serialize32(os, crc32(0, inst_str));
-    serialize_str(os, inst_str);
-  }
+    void pass2() {
+      std::stringstream ss;
+      serialize_pre(ss);
+      serialize32(ss, constants_offset);
+      serialize32(ss, bytecode_offset);
+      assert(constants_offset == ss.tellg());
+      serialize_constants(ss);
+      assert(bytecode_offset == ss.tellg());
+      serialize_instructions(ss);
+      auto bc_str = ss.str();
+      auto crc = crc32(0, bc_str);
+      output.write(bc_str.data(), bc_str.size());
+      serialize32(output, checksum);
+      assert(total_size == output.tellp());
+    }
+  };
 
   void compile_bytecode(const InstructionList &instructions,
                         ConstantsTable &const_tab, std::ostream &out) {
-    serialize_header(out, const_tab);
-    serialize_instructions(out, instructions);
+    ByteCodeData bcd(instructions, const_tab, out);
+    bcd.pass1();
+    bcd.pass2();
   }
 
   // namespace Pop
