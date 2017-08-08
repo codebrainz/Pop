@@ -26,6 +26,7 @@ namespace Pop {
 {% endfor %}
 
   InstructionPtr Instruction::deserialize(std::istream &is) {
+    InstructionPtr result;
     auto code = static_cast<OpCode>(deserialize8(is));
     switch (code) {
 {%- for instruction in instructions %}
@@ -34,28 +35,31 @@ namespace Pop {
         auto inst = std::make_unique<{{ instruction.name }}Instruction>("");
         inst->target = deserialize32(is);
         inst->offset = is.tellg();
-        return inst;
+        result = std::move(inst);
+        break;
       }
   {%- elif instruction.name in [ "PushConst" ] %}
       case OpCode::{{ instruction.mnemonic }}: {
         auto inst = std::make_unique<{{ instruction.name }}Instruction>(deserialize32(is));
         inst->offset = is.tellg();
-        return inst;
+        result = std::move(inst);
+        break;
       }
   {%- elif instruction.name in [ "Label" ] %}
       case OpCode::{{ instruction.mnemonic }}:
         assert(false);
-        return InstructionPtr(nullptr);
+        break;
   {%- else %}
       case OpCode::{{ instruction.mnemonic }}: {
         auto inst = std::make_unique<{{ instruction.name }}Instruction>();
         inst->offset = is.tellg();
-        return inst;
+        result = std::move(inst);
+        break;
       }
   {%- endif %}
 {%- endfor %}
     }
-    return InstructionPtr(nullptr);
+    return result;
   }
 
 // namespace Pop
