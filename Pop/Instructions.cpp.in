@@ -5,6 +5,7 @@
 #include <Pop/Instructions.hpp>
 #include <Pop/Serialization.hpp>
 #include <cassert>
+#include <cstring>
 #include <sstream>
 
 namespace Pop {
@@ -22,7 +23,9 @@ namespace Pop {
   {%- if instruction.name in ["Jump", "JumpIfTrue", "JumpIfFalse", "Closure" ] %}
   std::string {{ instruction.name }}Instruction::to_string() const {
     std::stringstream ss;
-    ss << '\t' << mnemonic() << ' ' << target << '\n';
+    char buf[32] = {0};
+    std::snprintf(buf, 31, "%04XH", target);
+    ss << '\t' << mnemonic() << ' ' << buf << '\n';
     return ss.str();
   }
 
@@ -57,31 +60,31 @@ namespace Pop {
 {%- for instruction in instructions %}
   {%- if instruction.name in [ "Jump", "JumpIfTrue", "JumpIfFalse", "Closure" ] %}
       case OpCode::{{ instruction.mnemonic }}: {
+        auto offset = is.tellg();
         auto inst = std::make_unique<{{ instruction.name }}Instruction>("");
         inst->target = deserialize32(is);
-        inst->offset = is.tellg();
+        inst->offset = offset;
         result = std::move(inst);
         break;
       }
   {%- elif instruction.name in [ "PushConst" ] %}
       case OpCode::{{ instruction.mnemonic }}: {
+        auto offset = is.tellg();
         auto inst = std::make_unique<{{ instruction.name }}Instruction>(deserialize32(is));
-        inst->offset = is.tellg();
+        inst->offset = offset;
         result = std::move(inst);
         break;
       }
   {%- elif instruction.name in [ "Label" ] %}
       case OpCode::{{ instruction.mnemonic }}: {
-        // assert(false);
-        auto inst = std::make_unique<{{ instruction.name }}Instruction>("<invalid code detected>");
-        inst->offset = is.tellg();
-        result = std::move(inst);
+        assert(false);
         break;
       }
   {%- else %}
       case OpCode::{{ instruction.mnemonic }}: {
+        auto offset = is.tellg();
         auto inst = std::make_unique<{{ instruction.name }}Instruction>();
-        inst->offset = is.tellg();
+        inst->offset = offset;
         result = std::move(inst);
         break;
       }

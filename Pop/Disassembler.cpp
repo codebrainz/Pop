@@ -79,11 +79,10 @@ namespace Pop {
 
       for (size_t i = ss.tellp(); i < s_size; i++) {
         if (auto instruction = Instruction::deserialize(ss)) {
-          if (instruction->code == OpCode::LBL)
-            continue;
-          char buf[32] = { 0 };
-          std::snprintf(buf, 31, "%8d", instruction->offset - instr_offset);
-          out << buf << '\t' << instruction->to_string();
+          char buf1[32] = { 0 };
+          std::snprintf(buf1, 31, "  %04XH",
+                        instruction->offset - instr_offset);
+          out << buf1 << '\t' << instruction->to_string();
         }
       }
     }
