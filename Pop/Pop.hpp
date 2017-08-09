@@ -3,6 +3,7 @@
 
 #include <Pop/AST.hpp>
 #include <Pop/ByteCodeCompiler.hpp>
+#include <Pop/ByteCodeFile.hpp>
 #include <Pop/Compiler.hpp>
 #include <Pop/ConstantsTable.hpp>
 #include <Pop/CRC32.hpp>

@@ -27,6 +27,7 @@ libpop_a_SOURCES = \
 	$(NODEGEN_SOURCES) \
 	ByteCodeCompiler.cpp \
 	ByteCodeCompiler.hpp \
+	ByteCodeFile.hpp \
 	Compiler.cpp \
 	Compiler.hpp \
 	Constant.cpp \
