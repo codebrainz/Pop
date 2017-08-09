@@ -192,7 +192,7 @@ namespace Pop {
         return Constant::new_bool(static_cast< bool >(deserialize8(is)));
       case TC::INT:
         return Constant::new_int(
-            static_cast< long long int >(deserialize8(is)));
+            static_cast< long long int >(deserialize64(is)));
       case TC::FLT:
         return Constant::new_float(deserialize_raw< long double >(is));
       case TC::STR:

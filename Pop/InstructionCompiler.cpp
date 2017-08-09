@@ -531,6 +531,7 @@ namespace Pop {
     void visit(Program &n) final {
       n.modules->accept(*this);
       // TODO: main, jump to start, etc.
+      add_instruction< HaltInstruction >(&n);
     }
   };
 

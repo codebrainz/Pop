@@ -13,6 +13,7 @@
 #include <Pop/Visitor.hpp>
 #include <cassert>
 #include <cstdint>
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -25,17 +26,17 @@ namespace Pop {
     uint32_t constants_offset;
     uint32_t bytecode_offset;
     uint32_t total_size;
-    uint32_t checksum;
 
     ByteCodeData(const InstructionList &instructions,
                  const ConstantsTable &constants, std::ostream &output)
         : instructions(instructions), constants(constants), output(output),
-          constants_offset(0), bytecode_offset(0), total_size(0), checksum(0) {
+          constants_offset(0), bytecode_offset(0), total_size(0) {
     }
 
     void serialize_pre(std::ostream &os) {
-      for (const auto b : POP_MAGIC_BYTES)
-        serialize8(os, b);
+      static const std::string magic = POP_MAGIC_BYTES;
+      for (size_t i = 0; i < magic.size(); i++)
+        serialize8(os, magic[i]);
       serialize32(os, POP_BYTECODE_VERSION);
       for (auto i = 0; i < 4; i++) // 4x reserved
         serialize32(os, 0);
@@ -57,9 +58,9 @@ namespace Pop {
       serialize_pre(ss);
       serialize32(ss, 0); // constants offset
       serialize32(ss, 0); // bytecodes offset
-      constants_offset = ss.tellg();
+      constants_offset = ss.tellp();
       serialize_constants(ss);
-      bytecode_offset = ss.tellg();
+      bytecode_offset = ss.tellp();
       serialize_instructions(ss);
       total_size = ss.str().size() + sizeof(uint32_t) /*crc32*/;
     }
@@ -69,14 +70,14 @@ namespace Pop {
       serialize_pre(ss);
       serialize32(ss, constants_offset);
       serialize32(ss, bytecode_offset);
-      assert(constants_offset == ss.tellg());
+      assert(constants_offset == ss.tellp());
       serialize_constants(ss);
-      assert(bytecode_offset == ss.tellg());
+      assert(bytecode_offset == ss.tellp());
       serialize_instructions(ss);
       auto bc_str = ss.str();
       auto crc = crc32(0, bc_str);
       output.write(bc_str.data(), bc_str.size());
-      serialize32(output, checksum);
+      serialize32(output, crc);
       assert(total_size == output.tellp());
     }
   };

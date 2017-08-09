@@ -5,22 +5,47 @@
 #include <Pop/Instructions.hpp>
 #include <Pop/Serialization.hpp>
 #include <cassert>
+#include <sstream>
 
 namespace Pop {
+
+  std::string Instruction::to_string() const {
+    std::stringstream ss;
+    ss << '\t' << mnemonic() << '\n';
+    return ss.str();
+  }
 
   void Instruction::serialize(std::ostream &os) const {
     serialize8(os, code);
   }
 {% for instruction in instructions %}
   {%- if instruction.name in ["Jump", "JumpIfTrue", "JumpIfFalse", "Closure" ] %}
+  std::string {{ instruction.name }}Instruction::to_string() const {
+    std::stringstream ss;
+    ss << '\t' << mnemonic() << ' ' << target << '\n';
+    return ss.str();
+  }
+
   void {{ instruction.name }}Instruction::serialize(std::ostream &os) const {
     Instruction::serialize(os);
     serialize32(os, target);
   }
   {%- elif instruction.name in ["PushConst"] %}
+  std::string {{ instruction.name }}Instruction::to_string() const {
+    std::stringstream ss;
+    ss << '\t' << mnemonic() << ' ' << const_id << '\n';
+    return ss.str();
+  }
+
   void {{ instruction.name }}Instruction::serialize(std::ostream &os) const {
     Instruction::serialize(os);
     serialize32(os, const_id);
+  }
+  {%- elif instruction.name in ["Label"] %}
+  std::string {{ instruction.name }}Instruction::to_string() const {
+    std::stringstream ss;
+    ss << name << ":\n";
+    return ss.str();
   }
   {%- endif %}
 {% endfor %}
@@ -46,9 +71,13 @@ namespace Pop {
         break;
       }
   {%- elif instruction.name in [ "Label" ] %}
-      case OpCode::{{ instruction.mnemonic }}:
-        assert(false);
+      case OpCode::{{ instruction.mnemonic }}: {
+        // assert(false);
+        auto inst = std::make_unique<{{ instruction.name }}Instruction>("<invalid code detected>");
+        inst->offset = is.tellg();
+        result = std::move(inst);
         break;
+      }
   {%- else %}
       case OpCode::{{ instruction.mnemonic }}: {
         auto inst = std::make_unique<{{ instruction.name }}Instruction>();
