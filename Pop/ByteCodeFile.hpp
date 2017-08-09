@@ -6,9 +6,25 @@
 #include <cstdint>
 #include <cstring>
 #include <fstream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
+
+#define POP_MAGIC_BYTES "\xAAPOP"
+#define POP_BYTECODE_VERSION 1
+
+#define POP_BYTECODE_MAGIC_OFFSET 0
+#define POP_BYTECODE_VERSION_OFFSET 4
+#define POP_BYTECODE_RESERVED_OFFSET(n) (8 + ((n) * sizeof(std::uint32_t)))
+#define POP_BYTECODE_RESERVED_OFFSET_1 POP_BYTECODE_RESERVED_OFFSET(0)
+#define POP_BYTECODE_RESERVED_OFFSET_2 POP_BYTECODE_RESERVED_OFFSET(1)
+#define POP_BYTECODE_RESERVED_OFFSET_3 POP_BYTECODE_RESERVED_OFFSET(2)
+#define POP_BYTECODE_RESERVED_OFFSET_4 POP_BYTECODE_RESERVED_OFFSET(3)
+#define POP_BYTECODE_CONSTANTS_OFFSET \
+  (POP_BYTECODE_RESERVED_OFFSET_4 + sizeof(std::uint32_t))
+#define POP_BYTECODE_BYTECODE_OFFSET \
+  (POP_BYTECODE_CONSTANTS_OFFSET + sizeof(std::uint32_t))
 
 namespace Pop {
 
@@ -51,6 +67,10 @@ namespace Pop {
       is.seekg(0, std::ios_base::beg);
       is.read(reinterpret_cast< char * >(buf.data()), buf.size());
       return is.good();
+    }
+
+    size_t size() const {
+      return buf.size();
     }
 
     void reserve(U32 size) {
@@ -97,9 +117,11 @@ namespace Pop {
     }
 
     U8 get_u8() {
-      if (off > 0 && off <= buf.size())
-        return buf[--off];
-      throw std::runtime_error("invalid offset in ByteCodeFile");
+      if (off >= 0 && off < buf.size())
+        return buf[off++];
+      std::stringstream ss;
+      ss << "invalid offset '" << off << "' in bytecode file";
+      throw std::runtime_error(ss.str());
       return 0;
     }
 

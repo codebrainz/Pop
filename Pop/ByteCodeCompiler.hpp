@@ -9,7 +9,7 @@ namespace Pop {
   class ConstantsTable;
 
   void compile_bytecode(const InstructionList &instructions,
-                        ConstantsTable &const_tab, std::ostream &out);
+                        const ConstantsTable &const_tab, std::ostream &out);
 
   // namespace Pop
 }

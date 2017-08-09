@@ -6,9 +6,6 @@
 #include <ostream>
 #include <string>
 
-#define POP_MAGIC_BYTES "\xAAPOP"
-#define POP_BYTECODE_VERSION 1
-
 namespace Pop {
 
   template < class ValueT >

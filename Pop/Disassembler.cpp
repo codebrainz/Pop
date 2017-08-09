@@ -16,75 +16,84 @@
 namespace Pop {
 
   struct DisData {
+    ByteCodeFile bcf;
     const std::string &in_fn;
-    std::istream &in;
     std::ostream &out;
     std::ostream &err;
-    uint32_t constants_offset;
-    uint32_t bytecode_offset;
-    uint32_t checksum;
 
     DisData(const std::string &in_fn, std::istream &in, std::ostream &out,
             std::ostream &err)
-        : in_fn(in_fn), in(in), out(out), err(err), constants_offset(0),
-          bytecode_offset(0) {
+        : in_fn(in_fn), out(out), err(err) {
       assert(in.good());
       assert(out.good());
       assert(err.good());
+      bcf.load(in);
+      err << "Size: " << bcf.size() << '\n';
+    }
+
+    void get_magic(std::string &s) {
+      s.reserve(s.size() + sizeof(POP_MAGIC_BYTES));
+      bcf.seek(POP_BYTECODE_MAGIC_OFFSET);
+      s.push_back(bcf.get_u8());
+      s.push_back(bcf.get_u8());
+      s.push_back(bcf.get_u8());
+      s.push_back(bcf.get_u8());
     }
 
     void dump() {
-      std::string as_str(std::istreambuf_iterator< char >(in), {});
-      std::stringstream ss(as_str);
 
-      uint32_t crc_in = 0;
-      uint32_t s_size = as_str.size();
-      crc_in |= uint32_t(uint8_t(as_str.back()));
-      as_str.pop_back();
-      crc_in |= uint32_t(uint8_t(as_str.back())) << 8;
-      as_str.pop_back();
-      crc_in |= uint32_t(uint8_t(as_str.back())) << 16;
-      as_str.pop_back();
-      crc_in |= uint32_t(uint8_t(as_str.back())) << 24;
-      as_str.pop_back();
-      s_size = as_str.size();
+      // get magic bytes
+      std::string magic_str;
+      assert(bcf.tell() == POP_BYTECODE_MAGIC_OFFSET);
+      get_magic(magic_str);
+      out << ";\tMAGIC: " << magic_str << '\n';
 
-      auto crc = crc32(0, as_str);
-      assert(crc == crc_in);
+      // get bytecode version
+      assert(bcf.tell() == POP_BYTECODE_VERSION_OFFSET);
+      U32 version = bcf.get_u32();
+      out << ";\tVERSION: " << version << '\n';
 
-      out << "; MAGIC = ";
-      for (auto i = 0; i < 4; i++)
-        out << static_cast< char >(deserialize8(ss));
-      out << '\n';
+      // skip 4 reserved 32-bit fields
+      for (int i = 0; i < 4; i++)
+        bcf.get_u32();
 
-      out << "; VERSION = " << deserialize32(ss) << '\n';
+      // constants offset
+      assert(bcf.tell() == POP_BYTECODE_CONSTANTS_OFFSET);
+      U32 const_offset = bcf.get_u32();
+      out << ";\tCONSTANTS: " << const_offset << '\n';
 
-      for (auto i = 0; i < 4; i++) {
-        out << "; RESERVED #" << (i + 1) << " = " << deserialize32(ss) << '\n';
+      // bytecode offset
+      assert(bcf.tell() == POP_BYTECODE_BYTECODE_OFFSET);
+      U32 bc_offset = bcf.get_u32();
+      out << ";\tBYTECODE: " << bc_offset << '\n';
+
+      // constants table
+      assert(bcf.tell() == const_offset);
+      U32 n_constants = bcf.get_u32();
+      for (U32 i = 0; i < n_constants; i++) {
+        auto con = Constant::deserialize(bcf);
+        out << ";\t CONST " << i << ": " << con.to_string() << '\n';
       }
 
-      auto const_offset = deserialize32(ss);
-      auto instr_offset = deserialize32(ss);
-      out << "; CONSTANTS = " << const_offset << '\n';
-      out << "; BYTECODE = " << instr_offset << '\n';
-      out << ";\n";
+      // get the checksum
+      auto save_off = bcf.tell();
+      bcf.seek(4, ByteCodeFile::Origin::END);
+      U32 end = bcf.tell();
+      U32 checksum_in = bcf.get_u32();
+      bcf.resize(bcf.size() - 4);
+      bcf.seek(save_off);
+      U32 checksum_out = bcf.checksum_range(0, end);
 
-      auto n_constants = deserialize32(ss);
-      for (uint32_t i = 0; i < n_constants; i++) {
-        auto c = Constant::deserialize(ss);
-        out << "; CONST " << i << " = " << c << '\n';
+      // bytecode instructions
+      assert(bcf.tell() == bc_offset);
+      for (U32 i = bcf.tell(); i < end; i = bcf.tell()) {
+        auto inst = Instruction::deserialize(bcf);
+        assert(inst);
+        assert(inst->code != OpCode::LBL);
+        out << inst->to_string();
       }
 
-      out << "; CRC32 = in:" << crc_in << ", out:" << crc << '\n';
-
-      for (size_t i = ss.tellp(); i < s_size; i++) {
-        if (auto instruction = Instruction::deserialize(ss)) {
-          char buf1[32] = { 0 };
-          std::snprintf(buf1, 31, "  %04XH",
-                        instruction->offset - instr_offset);
-          out << buf1 << '\t' << instruction->to_string();
-        }
-      }
+      assert(checksum_in == checksum_out);
     }
   };
 
