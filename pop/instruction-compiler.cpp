@@ -11,10 +11,50 @@
 #include <cassert>
 #include <stack>
 #include <string>
+#include <vector>
 
 namespace Pop {
 
   struct InstructionCompiler final : public VisitorBase {
+
+    struct Context {
+      std::string name;
+      int scope_depth;
+      Context(const std::string &name) : name(name), scope_depth(0) {
+      }
+    };
+
+    struct ContextStack {
+      std::vector< Context > stack;
+      size_t size() const {
+        return stack.size();
+      }
+      bool empty() const {
+        return stack.empty();
+      }
+      void push(const std::string &name) {
+        stack.emplace_back(name);
+      }
+      int pop(const std::string &name) {
+        assert(!stack.empty());
+        assert(stack.back().name == name);
+        return pop();
+      }
+      int pop() {
+        assert(!stack.empty());
+        int depth = stack.back().scope_depth;
+        stack.pop_back();
+        return depth;
+      }
+      Context &top() {
+        assert(!stack.empty());
+        return stack.back();
+      }
+      const Context &top() const {
+        assert(!stack.empty());
+        return stack.back();
+      }
+    };
 
     struct AtomToConstVisitor final : public DefaultPostOrderVisitor {
       Constant constant;
@@ -41,18 +81,19 @@ namespace Pop {
     };
 
     int count;
+    int scope_depth;
     ConstantsTable &const_tab;
     std::stack< InstructionList * > inst_stack;
-    std::stack< std::string > return_stack;
-    std::stack< std::string > break_stack;
-    std::stack< std::string > continue_stack;
+    ContextStack return_stack;
+    ContextStack break_stack;
+    ContextStack continue_stack;
 
     InstructionCompiler(ConstantsTable &const_tab, InstructionList &list)
-        : count(0), const_tab(const_tab) {
+        : count(0), scope_depth(0), const_tab(const_tab) {
       inst_stack.push(&list);
-      return_stack.push(prefix_internal("invalid_return"));
-      break_stack.push(prefix_internal("invalid_break"));
-      continue_stack.push(prefix_internal("invalid_continue"));
+      begin_return_context(prefix_internal("invalid_return"));
+      begin_break_context(prefix_internal("invalid_break"));
+      begin_continue_context(prefix_internal("invalid_continue"));
     }
 
     ~InstructionCompiler() {
@@ -70,6 +111,9 @@ namespace Pop {
       return "__internal_" + name;
     }
 
+    //
+    // Instructions stack
+    //
     InstructionList &list() {
       assert(!inst_stack.empty());
       return *(inst_stack.top());
@@ -83,43 +127,65 @@ namespace Pop {
       inst_stack.pop();
     }
 
+    //
+    // Return context stack
+    //
     void begin_return_context(const std::string &name) {
       return_stack.push(name);
     }
     void end_return_context(const std::string &name) {
-      assert(!return_stack.empty());
-      assert(return_stack.top() == name);
-      return_stack.pop();
+      return_stack.pop(name);
     }
-    std::string current_return_context() const {
-      assert(!return_stack.empty());
+    Context &current_return_context() {
       return return_stack.top();
     }
 
+    //
+    // Break context stack
+    //
     void begin_break_context(const std::string &name) {
       break_stack.push(name);
     }
     void end_break_context(const std::string &name) {
-      assert(!break_stack.empty());
-      assert(break_stack.top() == name);
       break_stack.pop();
     }
-    std::string current_break_context() const {
-      assert(!break_stack.empty());
+    Context &current_break_context() {
       return break_stack.top();
     }
 
+    //
+    // Continue context stack
+    //
     void begin_continue_context(const std::string &name) {
       continue_stack.push(name);
     }
     void end_continue_context(const std::string &name) {
-      assert(!continue_stack.empty());
-      assert(continue_stack.top() == name);
       continue_stack.pop();
     }
-    std::string current_continue_context() const {
-      assert(!continue_stack.empty());
+    Context &current_continue_context() {
       return continue_stack.top();
+    }
+
+    //
+    // Scope management
+    //
+    void begin_scope(Node &n) {
+      add_instruction< OpenEnvironmentInstruction >(&n);
+      if (!break_stack.empty())
+        break_stack.top().scope_depth++;
+      if (!continue_stack.empty())
+        continue_stack.top().scope_depth++;
+      if (!return_stack.empty())
+        return_stack.top().scope_depth++;
+    }
+    void end_scope(Node &n) {
+      if (!return_stack.empty())
+        return_stack.top().scope_depth--;
+      if (!continue_stack.empty())
+        continue_stack.top().scope_depth--;
+      if (!break_stack.empty())
+        break_stack.top().scope_depth--;
+      add_instruction< CloseEnvironmentInstruction >(&n);
     }
 
     template < class T, class... Args >
@@ -347,7 +413,7 @@ namespace Pop {
       auto name = new_name("lambda");
       add_instruction< JumpInstruction >(name + "_after", &n);
       add_instruction< LabelInstruction >(name, &n);
-      add_instruction< OpenEnvironmentInstruction >(&n);
+      begin_scope(n);
       begin_return_context(name + "_return");
       // todo: use the argument count
       add_instruction< PopInstruction >(&n);
@@ -368,15 +434,16 @@ namespace Pop {
         n.body->accept(*this);
       end_return_context(name + "_return");
       add_instruction< LabelInstruction >(name + "_return", &n);
-      add_instruction< CloseEnvironmentInstruction >(&n);
+      end_scope(n);
       add_instruction< ReturnInstruction >(&n);
       add_instruction< LabelInstruction >(name + "_after", &n);
       add_instruction< ClosureInstruction >(name, &n);
     }
     void visit(Block &n) final {
-      add_instruction< OpenEnvironmentInstruction >(&n);
+      auto name = new_name("block");
+      begin_scope(n);
       n.statements->accept(*this);
-      add_instruction< CloseEnvironmentInstruction >(&n);
+      end_scope(n);
     }
     void visit(ExprStmt &n) final {
       n.expression->accept(*this);
@@ -385,10 +452,16 @@ namespace Pop {
     void visit(EmptyStmt &) final {
     }
     void visit(Continue &n) final {
-      add_instruction< JumpInstruction >(current_continue_context(), &n);
+      // int depth = current_continue_context().scope_depth;
+      // for (int i = 0; i < depth; i++)
+      //  add_instruction< CloseEnvironmentInstruction >(&n);
+      add_instruction< JumpInstruction >(current_continue_context().name, &n);
     }
     void visit(Break &n) final {
-      add_instruction< JumpInstruction >(current_break_context(), &n);
+      int depth = current_break_context().scope_depth;
+      for (int i = 0; i < depth; i++)
+        add_instruction< CloseEnvironmentInstruction >(&n);
+      add_instruction< JumpInstruction >(current_break_context().name, &n);
     }
     void visit(Return &n) final {
       if (n.expression) {
@@ -398,7 +471,10 @@ namespace Pop {
         add_constant(*nul);
         node_unref(nul);
       }
-      add_instruction< JumpInstruction >(current_return_context(), &n);
+      // int depth = current_return_context().scope_depth;
+      // for (int i = 0; i < depth; i++)
+      //  add_instruction< CloseEnvironmentInstruction >(&n);
+      add_instruction< JumpInstruction >(current_return_context().name, &n);
     }
     void visit(Goto &) final {
       // TODO
@@ -438,11 +514,11 @@ namespace Pop {
               add_instruction< EqualInstruction >(cse);
               add_instruction< JumpIfFalseInstruction >(
                   name + "_case_" + std::to_string(cnt + 1), cse);
-              add_instruction< OpenEnvironmentInstruction >(cse);
+              begin_scope(*cse);
               begin_break_context(case_name + "_break");
               cse->body->accept(*this);
               end_break_context(case_name + "_break");
-              add_instruction< CloseEnvironmentInstruction >(cse);
+              end_scope(*cse);
               add_instruction< JumpInstruction >(name + "_case_" +
                                                  std::to_string(cnt + 1));
               add_instruction< LabelInstruction >(case_name + "_break", cse);
@@ -452,11 +528,11 @@ namespace Pop {
               auto case_name = name + "_default_case";
               assert(!have_default);
               add_instruction< LabelInstruction >(case_name, cse);
-              add_instruction< OpenEnvironmentInstruction >(cse);
+              begin_scope(*cse);
               begin_break_context(case_name + "_break");
               cse->body->accept(*this);
               end_break_context(case_name + "_break");
-              add_instruction< CloseEnvironmentInstruction >(cse);
+              end_scope(*cse);
               add_instruction< JumpInstruction >(name + "_case_" +
                                                  std::to_string(cnt + 1));
               add_instruction< LabelInstruction >(case_name + "_break", cse);
@@ -524,10 +600,11 @@ namespace Pop {
       // TODO
     }
     void visit(Module &n) final {
-      add_instruction< OpenEnvironmentInstruction >(&n);
+      auto name = new_name("module");
+      begin_scope(n);
       if (n.body)
         n.body->accept(*this);
-      add_instruction< CloseEnvironmentInstruction >(&n);
+      end_scope(n);
     }
     void visit(Program &n) final {
       n.modules->accept(*this);

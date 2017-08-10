@@ -1,7 +1,7 @@
-let i = 0;
-while (i < 100) {
-  i++;
-  if (i == 50)
-    break;
+function addsub(a, b) {
+  if (a > b)
+    return a + b;
+  else
+    return a - b;
 }
-print(i);
+addsub(1, 2);
