@@ -2,10 +2,10 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/common/formatter.hpp>
-#include <pop/frontend/ast.hpp>
 #include <pop/frontend/dot.hpp>
-#include <pop/frontend/visitor.hpp>
+#include <pop/common/formatter.hpp>
+#include <pop/ir/ast.hpp>
+#include <pop/ir/ast-visitor.hpp>
 
 #include <cassert>
 #include <cstdint>

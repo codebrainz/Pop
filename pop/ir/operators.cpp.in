@@ -2,7 +2,7 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/frontend/operators.hpp>
+#include <pop/ir/operators.hpp>
 #include <cassert>
 
 #define ARR_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))

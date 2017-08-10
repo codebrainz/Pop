@@ -9,16 +9,16 @@
 #include <pop/frontend/dot.hpp>
 #include <pop/frontend/grammar.hpp>
 #include <pop/frontend/instruction-compiler.hpp>
-#include <pop/frontend/instruction-dumper.hpp>
-#include <pop/frontend/instruction-optimizer.hpp>
-#include <pop/frontend/instruction-resolver.hpp>
-#include <pop/frontend/instructions.hpp>
 #include <pop/frontend/lexer.hpp>
 #include <pop/frontend/link-parents.hpp>
 #include <pop/frontend/location-patcher.hpp>
 #include <pop/frontend/parse-state.hpp>
 #include <pop/frontend/resolve-symbols.hpp>
 #include <pop/frontend/validate.hpp>
+#include <pop/ir/instruction-dumper.hpp>
+#include <pop/ir/instruction-optimizer.hpp>
+#include <pop/ir/instruction-resolver.hpp>
+#include <pop/ir/instructions.hpp>
 
 #include <cstdint>
 #include <cstdlib>

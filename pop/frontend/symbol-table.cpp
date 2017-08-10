@@ -3,7 +3,7 @@
 #endif
 
 #include <pop/frontend/symbol-table.hpp>
-#include <pop/frontend/ast.hpp>
+#include <pop/ir/ast.hpp>
 
 namespace Pop {
 

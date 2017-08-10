@@ -5,7 +5,7 @@
 #ifndef POP_CONSTANTS_TABLE_HPP
 #define POP_CONSTANTS_TABLE_HPP
 
-#include <pop/frontend/constant.hpp>
+#include <pop/ir/constant.hpp>
 
 #include <cassert>
 #include <unordered_map>

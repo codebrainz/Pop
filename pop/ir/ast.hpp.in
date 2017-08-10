@@ -5,10 +5,10 @@
 #ifndef POP_AST_HPP
 #define POP_AST_HPP
 
-#include <pop/frontend/operators.hpp>
+#include <pop/common/type-info.hpp>
 #include <pop/frontend/symbol-table.hpp>
-#include <pop/frontend/type-info.hpp>
-#include <pop/frontend/visitor.hpp>
+#include <pop/ir/ast-visitor.hpp>
+#include <pop/ir/operators.hpp>
 
 #include <cstdint>
 #include <string>

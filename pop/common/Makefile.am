@@ -12,6 +12,7 @@ libpop_common_la_SOURCES = \
 	formatter.hpp \
 	logger.cpp \
 	logger.hpp \
+	type-info.hpp \
 	utils.cpp \
 	utils.hpp
 
@@ -20,4 +21,5 @@ popcommoninclude_HEADERS = \
 	crc32.hpp \
 	formatter.hpp \
 	logger.hpp \
+	type-info.hpp \
 	utils.hpp

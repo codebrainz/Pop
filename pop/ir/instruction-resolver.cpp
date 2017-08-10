@@ -2,9 +2,9 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/frontend/instruction-resolver.hpp>
-#include <pop/frontend/instructions.hpp>
-#include <pop/frontend/instruction-visitor.hpp>
+#include <pop/ir/instruction-resolver.hpp>
+#include <pop/ir/instructions.hpp>
+#include <pop/ir/instruction-visitor.hpp>
 
 #include <string>
 #include <unordered_map>

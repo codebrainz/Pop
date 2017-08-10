@@ -2,8 +2,8 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/frontend/visitor.hpp>
-#include <pop/frontend/ast.hpp>
+#include <pop/ir/ast-visitor.hpp>
+#include <pop/ir/ast.hpp>
 
 namespace Pop {
 

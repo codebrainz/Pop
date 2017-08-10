@@ -34,6 +34,7 @@ AC_CONFIG_FILES([
  pop/Makefile
  pop/common/Makefile
  pop/frontend/Makefile
+ pop/ir/Makefile
  scripts/Makefile
  tests/Makefile
 ])

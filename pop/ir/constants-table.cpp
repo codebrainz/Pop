@@ -2,7 +2,7 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/frontend/constants-table.hpp>
+#include <pop/ir/constants-table.hpp>
 #include <cassert>
 
 namespace Pop {

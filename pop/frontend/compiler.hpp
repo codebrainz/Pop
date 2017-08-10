@@ -6,9 +6,9 @@
 #define POP_COMPILER_HPP
 
 #include <pop/common/logger.hpp>
-#include <pop/frontend/ast.hpp>
-#include <pop/frontend/constants-table.hpp>
-#include <pop/frontend/instructions.hpp>
+#include <pop/ir/ast.hpp>
+#include <pop/ir/constants-table.hpp>
+#include <pop/ir/instructions.hpp>
 
 #include <ostream>
 #include <string>

@@ -5,7 +5,7 @@
 #ifndef POP_CONSTANT_HPP
 #define POP_CONSTANT_HPP
 
-#include <pop/frontend/type-code.hpp>
+#include <pop/ir/type-code.hpp>
 
 #include <istream>
 #include <memory>

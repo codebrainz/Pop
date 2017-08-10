@@ -5,7 +5,7 @@
 #ifndef POP_INSTRUCTION_COMPILER_HPP
 #define POP_INSTRUCTION_COMPILER_HPP
 
-#include <pop/frontend/instruction-list.hpp>
+#include <pop/ir/instruction-list.hpp>
 
 namespace Pop {
 

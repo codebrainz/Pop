@@ -2,12 +2,12 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/frontend/instruction-dumper.hpp>
-#include <pop/frontend/ast.hpp>
-#include <pop/frontend/constants-table.hpp>
-#include <pop/frontend/instructions.hpp>
-#include <pop/frontend/instruction-visitor.hpp>
-#include <pop/frontend/visitor.hpp>
+#include <pop/ir/instruction-dumper.hpp>
+#include <pop/ir/ast.hpp>
+#include <pop/ir/ast-visitor.hpp>
+#include <pop/ir/constants-table.hpp>
+#include <pop/ir/instructions.hpp>
+#include <pop/ir/instruction-visitor.hpp>
 
 #include <string>
 

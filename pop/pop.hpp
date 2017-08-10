@@ -5,6 +5,7 @@
 
 #include <pop/common.hpp>
 #include <pop/frontend.hpp>
+#include <pop/ir.hpp>
 
 #undef POP_INSIDE_MAIN_HEADER_
 

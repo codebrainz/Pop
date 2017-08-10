@@ -2,8 +2,8 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/frontend/instruction-optimizer.hpp>
-#include <pop/frontend/instructions.hpp>
+#include <pop/ir/instruction-optimizer.hpp>
+#include <pop/ir/instructions.hpp>
 
 namespace Pop {
 

@@ -6,6 +6,7 @@
 #include <pop/common/crc32.hpp>
 #include <pop/common/formatter.hpp>
 #include <pop/common/logger.hpp>
+#include <pop/common/type-info.hpp>
 #include <pop/common/utils.hpp>
 
 #undef POP_INSIDE_COMMON_HEADER_

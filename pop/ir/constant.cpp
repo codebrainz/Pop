@@ -2,7 +2,7 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/frontend/constant.hpp>
+#include <pop/ir/constant.hpp>
 #include <pop/common/utils.hpp>
 
 #include <cstring>

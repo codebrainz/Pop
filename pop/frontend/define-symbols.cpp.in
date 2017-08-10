@@ -3,10 +3,10 @@
 #endif
 
 #include <pop/common/logger.hpp>
-#include <pop/frontend/ast.hpp>
 #include <pop/frontend/define-symbols.hpp>
 #include <pop/frontend/symbol-table.hpp>
-#include <pop/frontend/visitor.hpp>
+#include <pop/ir/ast.hpp>
+#include <pop/ir/ast-visitor.hpp>
 
 #include <cassert>
 #include <vector>

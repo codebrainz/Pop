@@ -3,10 +3,10 @@
 #endif
 
 #include <pop/frontend/instruction-compiler.hpp>
-#include <pop/frontend/ast.hpp>
-#include <pop/frontend/constants-table.hpp>
-#include <pop/frontend/instructions.hpp>
-#include <pop/frontend/visitor.hpp>
+#include <pop/ir/ast.hpp>
+#include <pop/ir/ast-visitor.hpp>
+#include <pop/ir/constants-table.hpp>
+#include <pop/ir/instructions.hpp>
 
 #include <cassert>
 #include <stack>

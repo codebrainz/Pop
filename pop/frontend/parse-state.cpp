@@ -2,11 +2,11 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/frontend/parse-state.hpp>
-#include <pop/frontend/ast.hpp>
 #include <pop/frontend/compiler.hpp>
 #include <pop/frontend/grammar.hpp>
 #include <pop/frontend/lexer.hpp>
+#include <pop/frontend/parse-state.hpp>
+#include <pop/ir/ast.hpp>
 
 namespace Pop {
 

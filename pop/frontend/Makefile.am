@@ -7,44 +7,25 @@ AM_CPPFLAGS = \
 lib_LTLIBRARIES = libpop-frontend.la
 
 NODEGEN_SOURCES = \
-	ast.hpp \
 	define-symbols.cpp \
 	dot.cpp \
 	grammar.cpp \
 	grammar.hpp \
-	instructions.hpp \
-	instruction-visitor.cpp \
-	instruction-visitor.hpp \
 	lexer.cpp \
 	lexer.hpp \
 	link-parents.cpp \
 	location-patcher.cpp \
-	operators.cpp \
-	operators.hpp \
 	resolve-symbols.cpp \
-	validate.cpp \
-	visitor.cpp \
-	visitor.hpp
+	validate.cpp
 
 libpop_frontend_la_SOURCES = \
 	$(NODEGEN_SOURCES) \
 	compiler.cpp \
 	compiler.hpp \
-	constant.cpp \
-	constant.hpp \
-	constants-table.cpp \
-	constants-table.hpp \
 	define-symbols.hpp \
 	dot.hpp \
 	instruction-compiler.cpp \
 	instruction-compiler.hpp \
-	instruction-dumper.cpp \
-	instruction-dumper.hpp \
-	instruction-list.hpp \
-	instruction-optimizer.cpp \
-	instruction-optimizer.hpp \
-	instruction-resolver.cpp \
-	instruction-resolver.hpp \
 	link-parents.hpp \
 	location-patcher.hpp \
 	parse-state.cpp \
@@ -52,11 +33,11 @@ libpop_frontend_la_SOURCES = \
 	resolve-symbols.hpp \
 	symbol-table.cpp \
 	symbol-table.hpp \
-	type-code.hpp \
-	type-info.hpp \
 	validate.hpp
 
-libpop_frontend_la_LIBADD = $(top_builddir)/pop/common/libpop-common.la
+libpop_frontend_la_LIBADD = \
+	$(top_builddir)/pop/common/libpop-common.la \
+	$(top_builddir)/pop/ir/libpop-ir.la
 
 NODEGEN_DATA_FILE = $(top_srcdir)/pop/data.xml
 NODEGEN_SCRIPT = $(top_srcdir)/scripts/nodegen.py
@@ -65,47 +46,26 @@ NODEGEN = $(AM_V_GEN)$(PYTHON) $(NODEGEN_SCRIPT) -d $(NODEGEN_DATA_FILE)
 
 EXTRA_DIST = \
 	$(NODEGEN_DATA_FILE) \
-	ast.hpp.in \
 	define-symbols.cpp.in \
 	dot.cpp.in \
 	grammar.y \
-	instructions.hpp.in \
-	instruction-visitor.cpp.in \
-	instruction-visitor.hpp.in \
 	lexer.l \
 	link-parents.cpp.in \
 	location-patcher.cpp.in \
-	operators.cpp.in \
-	operators.hpp.in \
 	resolve-symbols.cpp.in \
-	validate.cpp.in \
-	visitor.cpp.in \
-	visitor.hpp.in
+	validate.cpp.in
 
 popfrontendincludedir = $(includedir)/pop/frontend
 popfrontendinclude_HEADERS = \
-	ast.hpp \
 	compiler.hpp \
-	constant.hpp \
-	constants-table.hpp \
 	define-symbols.hpp \
 	dot.hpp \
 	instruction-compiler.hpp \
-	instruction-dumper.hpp \
-	instruction-list.hpp \
-	instruction-optimizer.hpp \
-	instruction-resolver.hpp \
-	instructions.hpp \
-	instruction-visitor.hpp \
 	link-parents.hpp \
 	location-patcher.hpp \
-	operators.hpp \
 	resolve-symbols.hpp \
 	symbol-table.hpp \
-	type-code.hpp \
-	type-info.hpp \
-	validate.hpp \
-	visitor.hpp
+	validate.hpp
 
 if MAINTAINER_MODE
 
@@ -131,23 +91,11 @@ grammar.hpp: grammar.cpp
 # Generated C++ files
 #
 
-ast.hpp: $(srcdir)/ast.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/ast.hpp.in
-
 define-symbols.cpp: $(srcdir)/define-symbols.cpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/define-symbols.cpp.in
 
 dot.cpp: $(srcdir)/dot.cpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/dot.cpp.in
-
-instructions.hpp: $(srcdir)/instructions.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/instructions.hpp.in
-
-instruction-visitor.cpp: $(srcdir)/instruction-visitor.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/instruction-visitor.cpp.in
-
-instruction-visitor.hpp: $(srcdir)/instruction-visitor.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/instruction-visitor.hpp.in
 
 link-parents.cpp: $(srcdir)/link-parents.cpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/link-parents.cpp.in
@@ -155,23 +103,11 @@ link-parents.cpp: $(srcdir)/link-parents.cpp.in $(NODEGEN_DEPS)
 location-patcher.cpp: $(srcdir)/location-patcher.cpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/location-patcher.cpp.in
 
-operators.cpp: $(srcdir)/operators.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/operators.cpp.in
-
-operators.hpp: $(srcdir)/operators.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/operators.hpp.in
-
 resolve-symbols.cpp: $(srcdir)/resolve-symbols.cpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/resolve-symbols.cpp.in
 
 validate.cpp: $(srcdir)/validate.cpp.in $(NODEGEN_DEPS)
 	$(NODEGEN) -o $@ $(srcdir)/validate.cpp.in
-
-visitor.cpp: $(srcdir)/visitor.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/visitor.cpp.in
-
-visitor.hpp: $(srcdir)/visitor.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/visitor.hpp.in
 
 # MAINTAINER_MODE
 endif

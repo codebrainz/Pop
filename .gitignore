@@ -7,25 +7,25 @@
 
 # Pop built files
 /popc/popc
-/pop/frontend/ast.cpp
-/pop/frontend/ast.hpp
 /pop/frontend/define-symbols.cpp
 /pop/frontend/dot.cpp
 /pop/frontend/grammar.cpp
 /pop/frontend/grammar.hpp
-/pop/frontend/instructions.hpp
-/pop/frontend/instruction-visitor.cpp
-/pop/frontend/instruction-visitor.hpp
 /pop/frontend/lexer.cpp
 /pop/frontend/lexer.hpp
 /pop/frontend/link-parents.cpp
 /pop/frontend/location-patcher.cpp
-/pop/frontend/operators.cpp
-/pop/frontend/operators.hpp
 /pop/frontend/resolve-symbols.cpp
 /pop/frontend/validate.cpp
-/pop/frontend/visitor.cpp
-/pop/frontend/visitor.hpp
+/pop/ir/ast.cpp
+/pop/ir/ast.hpp
+/pop/ir/ast-visitor.cpp
+/pop/ir/ast-visitor.hpp
+/pop/ir/instructions.hpp
+/pop/ir/instruction-visitor.cpp
+/pop/ir/instruction-visitor.hpp
+/pop/ir/operators.cpp
+/pop/ir/operators.hpp
 
 # Autotools built files
 *.lo

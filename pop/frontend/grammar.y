@@ -68,7 +68,7 @@
 # error "Inclusion of private header, use '<pop/pop.hpp>' instead to include all public headers."
 #endif
 
-#include <pop/frontend/ast.hpp>
+#include <pop/ir/ast.hpp>
 #include <pop/frontend/parse-state.hpp>
 
 #define YY_EXTRA_TYPE Pop::ParseState*
@@ -83,7 +83,7 @@ using namespace Pop;
 
 #include <pop/common/utils.hpp>
 #include <pop/frontend/compiler.hpp>
-#include <pop/frontend/operators.hpp>
+#include <pop/ir/operators.hpp>
 
 extern int yylex(YYSTYPE *, YYLTYPE *, void*);
 
