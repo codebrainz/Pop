@@ -1,4 +1,7 @@
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir)
+AM_CPPFLAGS = \
+	-I$(top_srcdir) \
+	-I$(top_builddir) \
+	-DPOP_LIB_COMPILATION_=1
 
 noinst_LIBRARIES = libpop.a
 
