@@ -1,0 +1,63 @@
+#ifdef HAVE_CONFIG_H
+#include <pop/config.h>
+#endif
+
+#include <pop/operators.hpp>
+#include <cassert>
+
+#define ARR_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
+
+namespace Pop {
+
+  using UT = std::underlying_type< Operator >::type;
+
+  const std::string &operator_id(Operator op) {
+    static const std::string ids[] = {
+      "UNKNOWN",
+{%- for operator in operators %}
+      "{{ operator.id | upper }}",
+{%- endfor %}
+    };
+    auto index = static_cast<UT>(op);
+    assert(index < ARR_SIZE(ids));
+    return ids[index];
+  }
+
+  const std::string &operator_name(Operator op) {
+    static const std::string names[] = {
+      "unknown",
+{%- for operator in operators %}
+      "{{ operator.name }}",
+{%- endfor %}
+    };
+    auto index = static_cast<UT>(op);
+    assert(index < ARR_SIZE(names));
+    return names[index];
+  }
+
+  const std::string &operator_token(Operator op) {
+    static const std::string tokens[] = {
+      "unknown",
+{%- for operator in operators %}
+      "{{ operator.token }}",
+{%- endfor %}
+    };
+    auto index = static_cast<UT>(op);
+    assert(index < ARR_SIZE(tokens));
+    return tokens[index];
+  }
+
+  int operator_arity(Operator op) {
+    static const int arities[] = {
+      -1,
+{%- for operator in operators %}
+      {{ operator.arity }},
+{%- endfor %}
+    };
+    auto index = static_cast<UT>(op);
+    assert(index < ARR_SIZE(arities));
+    return arities[index];
+  }
+
+// namespace Pop
+}

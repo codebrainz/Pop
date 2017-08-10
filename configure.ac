@@ -1,6 +1,6 @@
 AC_INIT([pop], [0.1], [https://github.com/codebrainz/pop/issues])
 
-AC_CONFIG_HEADERS([Pop/Config.h])
+AC_CONFIG_HEADERS([pop/config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
 
@@ -27,10 +27,9 @@ AS_IF([test "x$enable_maintainer_mode" = "xyes"], [
 
 AC_CONFIG_FILES([
  Makefile
- Pop/Makefile
- Compiler/Makefile
- Disassembler/Makefile
  docs/Makefile
+ popc/Makefile
+ pop/Makefile
  scripts/Makefile
  tests/Makefile
 ])

@@ -1,0 +1,163 @@
+#ifdef HAVE_CONFIG_H
+#include <pop/config.h>
+#endif
+
+#include <pop/instructions.hpp>
+#include <pop/serialization.hpp>
+#include <pop/type-code.hpp>
+
+#include <cassert>
+#include <cstring>
+#include <sstream>
+
+namespace Pop {
+
+  std::string Instruction::to_string() const {
+    std::stringstream ss;
+    ss << '\t' << mnemonic() << '\n';
+    return ss.str();
+  }
+
+  void Instruction::serialize(ByteCodeFile &bcf) const {
+    bcf.set_u8(static_cast<U8>(code));
+  }
+
+  void Instruction::serialize(std::ostream &os) const {
+    serialize8(os, code);
+  }
+{% for instruction in instructions %}
+  {%- if instruction.name in ["Jump", "JumpIfTrue", "JumpIfFalse", "Closure" ] %}
+  std::string {{ instruction.name }}Instruction::to_string() const {
+    std::stringstream ss;
+    char buf[32] = {0};
+    std::snprintf(buf, 31, "%04XH", target);
+    ss << '\t' << mnemonic() << ' ' << buf << '\n';
+    return ss.str();
+  }
+
+  void {{ instruction.name }}Instruction::serialize(ByteCodeFile &bcf) const {
+    Instruction::serialize(bcf);
+    bcf.set_u32(target);
+  }
+
+  void {{ instruction.name }}Instruction::serialize(std::ostream &os) const {
+    Instruction::serialize(os);
+    serialize32(os, target);
+  }
+  {%- elif instruction.name in ["PushConst"] %}
+  std::string {{ instruction.name }}Instruction::to_string() const {
+    std::stringstream ss;
+    ss << '\t' << mnemonic() << ' ' << const_id << '\n';
+    return ss.str();
+  }
+
+  void {{ instruction.name }}Instruction::serialize(ByteCodeFile &bcf) const {
+    Instruction::serialize(bcf);
+    bcf.set_u32(const_id);
+  }
+
+  void {{ instruction.name }}Instruction::serialize(std::ostream &os) const {
+    Instruction::serialize(os);
+    serialize32(os, const_id);
+  }
+  {%- elif instruction.name in ["Label"] %}
+  void {{ instruction.name }}Instruction::serialize(ByteCodeFile&) const {
+    assert(false);
+  }
+
+  void {{ instruction.name }}Instruction::serialize(std::ostream&) const {
+    assert(false);
+  }
+
+  std::string {{ instruction.name }}Instruction::to_string() const {
+    std::stringstream ss;
+    ss << name << ":\n";
+    return ss.str();
+  }
+  {%- endif %}
+{% endfor %}
+
+  InstructionPtr Instruction::deserialize(ByteCodeFile &bcf) {
+    InstructionPtr result;
+    auto code = static_cast<OpCode>(bcf.get_u8());
+    switch (code) {
+{%- for instruction in instructions %}
+  {%- if instruction.name in [ "Jump", "JumpIfTrue", "JumpIfFalse", "Closure" ] %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        auto offset = bcf.tell();
+        auto inst = std::make_unique<{{ instruction.name }}Instruction>("");
+        inst->target = bcf.get_u32();
+        inst->offset = offset;
+        result = std::move(inst);
+        break;
+      }
+  {%- elif instruction.name in [ "PushConst" ] %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        auto offset = bcf.tell();
+        auto inst = std::make_unique<{{ instruction.name }}Instruction>(bcf.get_u32());
+        inst->offset = offset;
+        result = std::move(inst);
+        break;
+      }
+  {%- elif instruction.name in [ "Label" ] %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        assert(false);
+        break;
+      }
+  {%- else %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        auto offset = bcf.tell();
+        auto inst = std::make_unique<{{ instruction.name }}Instruction>();
+        inst->offset = offset;
+        result = std::move(inst);
+        break;
+      }
+  {%- endif %}
+{%- endfor %}
+    }
+    return result;
+  }
+
+  InstructionPtr Instruction::deserialize(std::istream &is) {
+    InstructionPtr result;
+    auto code = static_cast<OpCode>(deserialize8(is));
+    switch (code) {
+{%- for instruction in instructions %}
+  {%- if instruction.name in [ "Jump", "JumpIfTrue", "JumpIfFalse", "Closure" ] %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        auto offset = is.tellg();
+        auto inst = std::make_unique<{{ instruction.name }}Instruction>("");
+        inst->target = deserialize32(is);
+        inst->offset = offset;
+        result = std::move(inst);
+        break;
+      }
+  {%- elif instruction.name in [ "PushConst" ] %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        auto offset = is.tellg();
+        auto inst = std::make_unique<{{ instruction.name }}Instruction>(deserialize32(is));
+        inst->offset = offset;
+        result = std::move(inst);
+        break;
+      }
+  {%- elif instruction.name in [ "Label" ] %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        assert(false);
+        break;
+      }
+  {%- else %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        auto offset = is.tellg();
+        auto inst = std::make_unique<{{ instruction.name }}Instruction>();
+        inst->offset = offset;
+        result = std::move(inst);
+        break;
+      }
+  {%- endif %}
+{%- endfor %}
+    }
+    return result;
+  }
+
+// namespace Pop
+}

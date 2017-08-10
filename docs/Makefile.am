@@ -1,1 +1,1 @@
-EXTRA_DIST = BytecodeFormat.txt
+EXTRA_DIST = bytecode-format.txt
