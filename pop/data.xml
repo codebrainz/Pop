@@ -225,5 +225,8 @@
     <node name="Label" mnemonic="LBL" size="0">
       <field name="name" type="std::string" />
     </node>
+    <node name="Comment" mnemonic="COM" size="0">
+      <field name="text" type="std::string" />
+    </node>
   </instructions>
 </pop-data>
