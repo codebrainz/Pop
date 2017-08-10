@@ -6,27 +6,26 @@
 *.dylib
 
 # Pop built files
-/pop/popc
-/pop/ast.cpp
-/pop/ast.hpp
-/pop/config.h*
-/pop/define-symbols.cpp
-/pop/dot.cpp
-/pop/grammar.cpp
-/pop/grammar.hpp
-/pop/instructions.hpp
-/pop/instruction-visitor.cpp
-/pop/instruction-visitor.hpp
-/pop/lexer.cpp
-/pop/lexer.hpp
-/pop/link-parents.cpp
-/pop/location-patcher.cpp
-/pop/operators.cpp
-/pop/operators.hpp
-/pop/resolve-symbols.cpp
-/pop/validate.cpp
-/pop/visitor.cpp
-/pop/visitor.hpp
+/popc/popc
+/pop/frontend/ast.cpp
+/pop/frontend/ast.hpp
+/pop/frontend/define-symbols.cpp
+/pop/frontend/dot.cpp
+/pop/frontend/grammar.cpp
+/pop/frontend/grammar.hpp
+/pop/frontend/instructions.hpp
+/pop/frontend/instruction-visitor.cpp
+/pop/frontend/instruction-visitor.hpp
+/pop/frontend/lexer.cpp
+/pop/frontend/lexer.hpp
+/pop/frontend/link-parents.cpp
+/pop/frontend/location-patcher.cpp
+/pop/frontend/operators.cpp
+/pop/frontend/operators.hpp
+/pop/frontend/resolve-symbols.cpp
+/pop/frontend/validate.cpp
+/pop/frontend/visitor.cpp
+/pop/frontend/visitor.hpp
 
 # Autotools built files
 *.lo
@@ -40,6 +39,7 @@ Makefile.in
 /build-aux/
 /config.*
 /configure
+/libtool
 /pop*.tar.gz
-/pop/Config.h*
+/pop/config.h*
 /pop/stamp-h1
