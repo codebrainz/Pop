@@ -117,6 +117,9 @@ namespace Pop {
   {%- elif instruction.name in ["Comment"] %}
     void serialize(std::ostream&) const final;
     std::string to_string() const final;
+  {%- elif instruction.name in ["Line"] %}
+    void serialize(std::ostream&) const final;
+    std::string to_string() const final;
   {%- endif %}
     static bool classof(const Instruction *n) {
       return (n->code == OpCode::{{ instruction.mnemonic }});

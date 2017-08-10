@@ -66,6 +66,16 @@ namespace Pop {
     ss << "; " << text << '\n';
     return ss.str();
   }
+  {%- elif instruction.name in ["Line"] %}
+  void {{ instruction.name }}Instruction::serialize(std::ostream&) const {
+    assert(false);
+  }
+
+  std::string {{ instruction.name }}Instruction::to_string() const {
+    std::stringstream ss;
+    ss << "#line \"" << file << "\" " << line << " " << column << '\n';
+    return ss.str();
+  }
   {%- endif %}
 {% endfor %}
 
@@ -97,6 +107,11 @@ namespace Pop {
         break;
       }
   {%- elif instruction.name in [ "Comment" ] %}
+      case OpCode::{{ instruction.mnemonic }}: {
+        assert(false);
+        break;
+      }
+  {%- elif instruction.name in [ "Line" ] %}
       case OpCode::{{ instruction.mnemonic }}: {
         assert(false);
         break;

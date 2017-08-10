@@ -228,5 +228,10 @@
     <node name="Comment" mnemonic="COM" size="0">
       <field name="text" type="std::string" />
     </node>
+    <node name="Line" mnemonic="LINE" size="0">
+      <field name="file" type="std::string" />
+      <field name="line" type="int" />
+      <field name="column" type="int" />
+    </node>
   </instructions>
 </pop-data>
