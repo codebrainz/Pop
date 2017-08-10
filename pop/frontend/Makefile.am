@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	-DPOP_LIB_COMPILATION_=1 \
 	-DPOP_LIB_FRONTEND_COMPILATION_=1
 
-noinst_LIBRARIES = libpop-frontend.a
+noinst_LTLIBRARIES = libpop-frontend.la
 
 NODEGEN_SOURCES = \
 	ast.hpp \
@@ -26,7 +26,7 @@ NODEGEN_SOURCES = \
 	visitor.cpp \
 	visitor.hpp
 
-libpop_frontend_a_SOURCES = \
+libpop_frontend_la_SOURCES = \
 	$(NODEGEN_SOURCES) \
 	compiler.cpp \
 	compiler.hpp \
@@ -56,7 +56,7 @@ libpop_frontend_a_SOURCES = \
 	type-info.hpp \
 	validate.hpp
 
-libpop_frontend_a_LIBADD = $(top_builddir)/pop/common/libpop-common.a
+libpop_frontend_la_LIBADD = $(top_builddir)/pop/common/libpop-common.la
 
 NODEGEN_DATA_FILE = $(top_srcdir)/pop/data.xml
 NODEGEN_SCRIPT = $(top_srcdir)/scripts/nodegen.py

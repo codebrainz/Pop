@@ -4,9 +4,9 @@ AM_CPPFLAGS = \
 	-DPOP_LIB_COMPILATION_=1 \
 	-DPOP_LIB_COMMON_COMPILATION_=1
 
-noinst_LIBRARIES = libpop-common.a
+noinst_LTLIBRARIES = libpop-common.la
 
-libpop_common_a_SOURCES = \
+libpop_common_la_SOURCES = \
 	crc32.cpp \
 	crc32.hpp \
 	formatter.hpp \

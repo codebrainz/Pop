@@ -8,8 +8,10 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE
 
-AC_PROG_RANLIB
 AM_PROG_AR
+LT_INIT
+LT_LANG([C++])
+
 AX_CXX_COMPILE_STDCXX_14([noext], [mandatory])
 
 AS_IF([test "x$enable_maintainer_mode" = "xyes"], [
