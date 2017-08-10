@@ -1,1 +1,1 @@
-EXTRA_DIST = nodegen.py
+EXTRA_DIST = codegen.py codegen-data.xml

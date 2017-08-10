@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 
 lib_LTLIBRARIES = libpop-frontend.la
 
-NODEGEN_SOURCES = \
+CODEGEN_SOURCES = \
 	define-symbols.cpp \
 	dot.cpp \
 	grammar.cpp \
@@ -19,7 +19,7 @@ NODEGEN_SOURCES = \
 	validate.cpp
 
 libpop_frontend_la_SOURCES = \
-	$(NODEGEN_SOURCES) \
+	$(CODEGEN_SOURCES) \
 	compiler.cpp \
 	compiler.hpp \
 	define-symbols.hpp \
@@ -39,13 +39,13 @@ libpop_frontend_la_LIBADD = \
 	$(top_builddir)/pop/common/libpop-common.la \
 	$(top_builddir)/pop/ir/libpop-ir.la
 
-NODEGEN_DATA_FILE = $(top_srcdir)/pop/data.xml
-NODEGEN_SCRIPT = $(top_srcdir)/scripts/nodegen.py
-NODEGEN_DEPS = $(NODEGEN_DATA_FILE) $(NODEGEN_SCRIPT)
-NODEGEN = $(AM_V_GEN)$(PYTHON) $(NODEGEN_SCRIPT) -d $(NODEGEN_DATA_FILE)
+CODEGEN_DATA_FILE = $(top_srcdir)/scripts/codegen-data.xml
+CODEGEN_SCRIPT = $(top_srcdir)/scripts/codegen.py
+CODEGEN_DEPS = $(CODEGEN_DATA_FILE) $(CODEGEN_SCRIPT)
+CODEGEN = $(AM_V_GEN)$(PYTHON) $(CODEGEN_SCRIPT) -d $(CODEGEN_DATA_FILE)
 
 EXTRA_DIST = \
-	$(NODEGEN_DATA_FILE) \
+	$(CODEGEN_DATA_FILE) \
 	define-symbols.cpp.in \
 	dot.cpp.in \
 	grammar.y \
@@ -69,7 +69,7 @@ popfrontendinclude_HEADERS = \
 
 if MAINTAINER_MODE
 
-BUILT_SOURCES = $(NODEGEN_SOURCES)
+BUILT_SOURCES = $(CODEGEN_SOURCES)
 
 DISTCLEANFILES = $(BUILT_SOURCES)
 
@@ -91,23 +91,23 @@ grammar.hpp: grammar.cpp
 # Generated C++ files
 #
 
-define-symbols.cpp: $(srcdir)/define-symbols.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/define-symbols.cpp.in
+define-symbols.cpp: $(srcdir)/define-symbols.cpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/define-symbols.cpp.in
 
-dot.cpp: $(srcdir)/dot.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/dot.cpp.in
+dot.cpp: $(srcdir)/dot.cpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/dot.cpp.in
 
-link-parents.cpp: $(srcdir)/link-parents.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/link-parents.cpp.in
+link-parents.cpp: $(srcdir)/link-parents.cpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/link-parents.cpp.in
 
-location-patcher.cpp: $(srcdir)/location-patcher.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/location-patcher.cpp.in
+location-patcher.cpp: $(srcdir)/location-patcher.cpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/location-patcher.cpp.in
 
-resolve-symbols.cpp: $(srcdir)/resolve-symbols.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/resolve-symbols.cpp.in
+resolve-symbols.cpp: $(srcdir)/resolve-symbols.cpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/resolve-symbols.cpp.in
 
-validate.cpp: $(srcdir)/validate.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/validate.cpp.in
+validate.cpp: $(srcdir)/validate.cpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/validate.cpp.in
 
 # MAINTAINER_MODE
 endif

@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 
 lib_LTLIBRARIES = libpop-ir.la
 
-NODEGEN_SOURCES = \
+CODEGEN_SOURCES = \
 	ast.hpp \
 	ast-visitor.cpp \
 	ast-visitor.hpp \
@@ -17,7 +17,7 @@ NODEGEN_SOURCES = \
 	operators.hpp
 
 libpop_ir_la_SOURCES = \
-	$(NODEGEN_SOURCES) \
+	$(CODEGEN_SOURCES) \
 	constant.cpp \
 	constant.hpp \
 	constants-table.cpp \
@@ -33,13 +33,13 @@ libpop_ir_la_SOURCES = \
 
 libpop_ir_la_LIBADD = $(top_builddir)/pop/common/libpop-common.la
 
-NODEGEN_DATA_FILE = $(top_srcdir)/pop/data.xml
-NODEGEN_SCRIPT = $(top_srcdir)/scripts/nodegen.py
-NODEGEN_DEPS = $(NODEGEN_DATA_FILE) $(NODEGEN_SCRIPT)
-NODEGEN = $(AM_V_GEN)$(PYTHON) $(NODEGEN_SCRIPT) -d $(NODEGEN_DATA_FILE)
+CODEGEN_DATA_FILE = $(top_srcdir)/scripts/codegen-data.xml
+CODEGEN_SCRIPT = $(top_srcdir)/scripts/codegen.py
+CODEGEN_DEPS = $(CODEGEN_DATA_FILE) $(CODEGEN_SCRIPT)
+CODEGEN = $(AM_V_GEN)$(PYTHON) $(CODEGEN_SCRIPT) -d $(CODEGEN_DATA_FILE)
 
 EXTRA_DIST = \
-	$(NODEGEN_DATA_FILE) \
+	$(CODEGEN_DATA_FILE) \
 	ast.hpp.in \
 	ast-visitor.cpp.in \
 	ast-visitor.hpp.in \
@@ -66,7 +66,7 @@ popirinclude_HEADERS = \
 
 if MAINTAINER_MODE
 
-BUILT_SOURCES = $(NODEGEN_SOURCES)
+BUILT_SOURCES = $(CODEGEN_SOURCES)
 
 DISTCLEANFILES = $(BUILT_SOURCES)
 
@@ -74,29 +74,29 @@ DISTCLEANFILES = $(BUILT_SOURCES)
 # Generated C++ files
 #
 
-ast.hpp: $(srcdir)/ast.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/ast.hpp.in
+ast.hpp: $(srcdir)/ast.hpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/ast.hpp.in
 
-ast-visitor.cpp: $(srcdir)/ast-visitor.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/ast-visitor.cpp.in
+ast-visitor.cpp: $(srcdir)/ast-visitor.cpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/ast-visitor.cpp.in
 
-ast-visitor.hpp: $(srcdir)/ast-visitor.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/ast-visitor.hpp.in
+ast-visitor.hpp: $(srcdir)/ast-visitor.hpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/ast-visitor.hpp.in
 
-instructions.hpp: $(srcdir)/instructions.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/instructions.hpp.in
+instructions.hpp: $(srcdir)/instructions.hpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/instructions.hpp.in
 
-instruction-visitor.cpp: $(srcdir)/instruction-visitor.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/instruction-visitor.cpp.in
+instruction-visitor.cpp: $(srcdir)/instruction-visitor.cpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/instruction-visitor.cpp.in
 
-instruction-visitor.hpp: $(srcdir)/instruction-visitor.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/instruction-visitor.hpp.in
+instruction-visitor.hpp: $(srcdir)/instruction-visitor.hpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/instruction-visitor.hpp.in
 
-operators.cpp: $(srcdir)/operators.cpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/operators.cpp.in
+operators.cpp: $(srcdir)/operators.cpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/operators.cpp.in
 
-operators.hpp: $(srcdir)/operators.hpp.in $(NODEGEN_DEPS)
-	$(NODEGEN) -o $@ $(srcdir)/operators.hpp.in
+operators.hpp: $(srcdir)/operators.hpp.in $(CODEGEN_DEPS)
+	$(CODEGEN) -o $@ $(srcdir)/operators.hpp.in
 
 # MAINTAINER_MODE
 endif
