@@ -14,9 +14,12 @@
 namespace Pop {
 
   static void dump_constants(ConstantsTable &const_tab, std::ostream &os) {
+    os << ";===========================================================\n";
+    os << "; Constants Table:\n";
     for (size_t i = 0; i < const_tab.size(); i++) {
-      os << "; " << i << ": " << *(const_tab.constant(i)) << '\n';
+      os << ";   " << i << ": " << *(const_tab.constant(i)) << '\n';
     }
+    os << ";===========================================================\n";
   }
 
   struct InstructionDumper : public InstructionVisitor {
