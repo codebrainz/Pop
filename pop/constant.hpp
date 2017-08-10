@@ -48,8 +48,6 @@ namespace Pop {
 
     std::string to_string() const;
     size_t hash() const;
-    void serialize(std::ostream &os) const;
-    static Constant deserialize(std::istream &is);
 
     friend std::ostream &operator<<(std::ostream &os, const Constant &c) {
       os << c.to_string();

@@ -3,7 +3,6 @@
 #endif
 
 #include <pop/constant.hpp>
-#include <pop/serialization.hpp>
 #include <pop/utils.hpp>
 
 #include <cstring>
@@ -162,46 +161,6 @@ namespace Pop {
         break;
     }
     return seed;
-  }
-
-  void Constant::serialize(std::ostream &os) const {
-    serialize8(os, type);
-    switch (type) {
-      case TC::NIL:
-        break;
-      case TC::BLN:
-        serialize8(os, u.as_bool);
-        break;
-      case TC::INT:
-        serialize64(os, u.as_int);
-        break;
-      case TC::FLT:
-        serialize_raw(os, u.as_float);
-        break;
-      case TC::STR:
-      case TC::SYM:
-        serialize_str(os, *u.as_str);
-        break;
-    }
-  }
-
-  Constant Constant::deserialize(std::istream &is) {
-    switch (static_cast< TC >(deserialize8(is))) {
-      case TC::NIL:
-        return Constant::new_nil();
-      case TC::BLN:
-        return Constant::new_bool(static_cast< bool >(deserialize8(is)));
-      case TC::INT:
-        return Constant::new_int(
-            static_cast< long long int >(deserialize64(is)));
-      case TC::FLT:
-        return Constant::new_float(deserialize_raw< long double >(is));
-      case TC::STR:
-        return Constant::new_string(deserialize_str(is));
-      case TC::SYM:
-        return Constant::new_symbol(deserialize_str(is));
-    }
-    return Constant();
   }
 
   // namespace Pop
