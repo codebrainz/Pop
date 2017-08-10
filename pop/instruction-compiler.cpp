@@ -409,8 +409,14 @@ namespace Pop {
       n.callee->accept(*this);
       add_instruction< CallInstruction >(&n);
     }
+    std::string parent_name(Node &n) const {
+      if (auto var = dyn_cast< Variable * >(n.parent))
+        return var->name;
+      return "";
+    }
     void visit(Function &n) final {
-      auto name = new_name("lambda");
+      auto var_name = parent_name(n);
+      auto name = var_name.empty() ? new_name("lambda") : new_name(var_name);
       add_instruction< JumpInstruction >(name + "_after", &n);
       add_instruction< LabelInstruction >(name, &n);
       begin_scope(n);
