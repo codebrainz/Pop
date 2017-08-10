@@ -36,12 +36,14 @@ namespace Pop {
             continue;
           }
         } else if (isa< PushConstInstruction * >(inst.get())) {
-          auto &next = instructions[i + 1];
           // if a push const is followed by a pop, remove both
           if (isa< PopInstruction * >(next.get())) {
             instructions[i] = nullptr;
             instructions[i + 1] = nullptr;
           }
+        } else if (isa< LineInstruction * >(inst.get())) {
+          if (isa< LineInstruction * >(next.get()))
+            instructions[i] = nullptr;
         }
       }
     }

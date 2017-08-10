@@ -56,6 +56,29 @@ namespace Pop {
       }
     };
 
+    struct LineInfo {
+      std::string file;
+      int line;
+      int column;
+      LineInfo(const std::string &file = std::string(), int line = -1,
+               int column = -1)
+          : file(file), line(line), column(column) {
+      }
+      bool operator==(const LineInfo &other) const {
+        return (file == other.file && line == other.line &&
+                column == other.column);
+      }
+      bool operator!=(const LineInfo &other) const {
+        return !operator==(other);
+      }
+      bool operator!() const {
+        return (file.empty() && line < 0 && column < 0);
+      }
+      operator bool() const {
+        return !(operator!());
+      }
+    };
+
     struct AtomToConstVisitor final : public DefaultPostOrderVisitor {
       Constant constant;
       AtomToConstVisitor() {
@@ -82,14 +105,20 @@ namespace Pop {
 
     int count;
     int scope_depth;
+    bool line_control;
     ConstantsTable &const_tab;
     std::stack< InstructionList * > inst_stack;
     ContextStack return_stack;
     ContextStack break_stack;
     ContextStack continue_stack;
+    LineInfo last_line;
 
-    InstructionCompiler(ConstantsTable &const_tab, InstructionList &list)
-        : count(0), scope_depth(0), const_tab(const_tab) {
+    InstructionCompiler(ConstantsTable &const_tab, InstructionList &list,
+                        bool line_control = false)
+        : count(0),
+          scope_depth(0),
+          line_control(line_control),
+          const_tab(const_tab) {
       inst_stack.push(&list);
       begin_return_context(prefix_internal("invalid_return"));
       begin_break_context(prefix_internal("invalid_break"));
@@ -202,31 +231,48 @@ namespace Pop {
     void add_constant(Node &n) {
       add_instruction< PushConstInstruction >(intern(n), &n);
     }
+    void add_line_info(Node &n) {
+      if (line_control) {
+        const char *file = n.file() ? n.file() : "";
+        LineInfo line_info(file, n.line(), n.column());
+        if (last_line != line_info) {
+          add_instruction< LineInstruction >(file, n.line(), n.column());
+          last_line = std::move(line_info);
+        }
+      }
+    }
 
     void visit(NodeList &n) final {
       for (auto elem : n.elements)
         elem->accept(*this);
     }
     void visit(Null &n) final {
+      add_line_info(n);
       add_constant(n);
     }
     void visit(Bool &n) final {
+      add_line_info(n);
       add_constant(n);
     }
     void visit(Int &n) final {
+      add_line_info(n);
       add_constant(n);
     }
     void visit(Float &n) final {
+      add_line_info(n);
       add_constant(n);
     }
     void visit(String &n) final {
+      add_line_info(n);
       add_constant(n);
     }
     void visit(Symbol &n) final {
+      add_line_info(n);
       add_constant(n);
     }
     void visit(Unary &n) final {
       n.operand->accept(*this);
+      add_line_info(n);
       switch (n.op) {
         case Operator::POS:
           add_instruction< PositiveInstruction >(&n);
@@ -271,6 +317,7 @@ namespace Pop {
     void visit(Binary &n) final {
       n.left->accept(*this);
       n.right->accept(*this);
+      add_line_info(n);
       switch (n.op) {
         case Operator::ADD:
           add_instruction< AddInstruction >(&n);
@@ -372,6 +419,7 @@ namespace Pop {
       }
     }
     void visit(IfExpr &n) final {
+      add_line_info(n);
       auto name = new_name("ifexp");
       n.predicate->accept(*this);
       add_instruction< JumpIfTrueInstruction >(name + "_cons", &n);
@@ -407,6 +455,7 @@ namespace Pop {
         node_unref(cnt);
       }
       n.callee->accept(*this);
+      add_line_info(n);
       add_instruction< CallInstruction >(&n);
     }
     std::string parent_name(Node &n) const {
@@ -415,6 +464,7 @@ namespace Pop {
       return "";
     }
     void visit(Function &n) final {
+      add_line_info(n);
       auto var_name = parent_name(n);
       auto name = var_name.empty() ? new_name("lambda") : new_name(var_name);
       add_instruction< JumpInstruction >(name + "_after", &n);
@@ -443,33 +493,39 @@ namespace Pop {
       end_scope(n);
       add_instruction< ReturnInstruction >(&n);
       add_instruction< LabelInstruction >(name + "_after", &n);
+      add_line_info(n);
       add_instruction< ClosureInstruction >(name, &n);
     }
     void visit(Block &n) final {
+      add_line_info(n);
       auto name = new_name("block");
       begin_scope(n);
       n.statements->accept(*this);
       end_scope(n);
     }
     void visit(ExprStmt &n) final {
+      add_line_info(n);
       n.expression->accept(*this);
       add_instruction< PopInstruction >(&n);
     }
     void visit(EmptyStmt &) final {
     }
     void visit(Continue &n) final {
+      add_line_info(n);
       // int depth = current_continue_context().scope_depth;
       // for (int i = 0; i < depth; i++)
       //  add_instruction< CloseEnvironmentInstruction >(&n);
       add_instruction< JumpInstruction >(current_continue_context().name, &n);
     }
     void visit(Break &n) final {
+      add_line_info(n);
       int depth = current_break_context().scope_depth;
       for (int i = 0; i < depth; i++)
         add_instruction< CloseEnvironmentInstruction >(&n);
       add_instruction< JumpInstruction >(current_break_context().name, &n);
     }
     void visit(Return &n) final {
+      add_line_info(n);
       if (n.expression) {
         n.expression->accept(*this);
       } else {
@@ -486,6 +542,7 @@ namespace Pop {
       // TODO
     }
     void visit(IfStmt &n) final {
+      add_line_info(n);
       auto name = new_name("if");
       n.predicate->accept(*this);
       add_instruction< JumpIfTrueInstruction >(name + "_cons", &n);
@@ -500,6 +557,7 @@ namespace Pop {
       // see visit(Switch&)
     }
     void visit(Switch &n) final {
+      add_line_info(n);
       auto name = new_name("switch");
       auto switch_sym =
           new Symbol(n.file(), n.line(), n.column(), name + "_test");
@@ -512,6 +570,7 @@ namespace Pop {
       if (auto cases = dynamic_cast< NodeList * >(n.cases)) {
         for (auto celem : cases->elements) {
           if (auto cse = dynamic_cast< Case * >(celem)) {
+            add_line_info(*cse);
             if (cse->expression) {
               auto case_name = name + "_case_" + std::to_string(cnt);
               add_instruction< LabelInstruction >(case_name, cse);
@@ -558,6 +617,7 @@ namespace Pop {
       add_instruction< PopInstruction >(&n);
     }
     void visit(Do &n) final {
+      add_line_info(n);
       auto name = new_name("do");
       add_instruction< LabelInstruction >(name + "_continue", &n);
       begin_continue_context(name + "_continue");
@@ -571,6 +631,7 @@ namespace Pop {
       add_instruction< LabelInstruction >(name + "_break", &n);
     }
     void visit(While &n) final {
+      add_line_info(n);
       auto name = new_name("while");
       add_instruction< LabelInstruction >(name + "_continue", &n);
       n.expression->accept(*this);
@@ -590,6 +651,7 @@ namespace Pop {
       // TODO
     }
     void visit(Variable &n) final {
+      add_line_info(n);
       auto sym = new Symbol(n.file(), n.line(), n.column(), n.name);
       add_constant(*sym);
       node_unref(sym);
@@ -606,6 +668,7 @@ namespace Pop {
       // TODO
     }
     void visit(Module &n) final {
+      add_line_info(n);
       auto name = new_name("module");
       begin_scope(n);
       if (n.body)
@@ -622,7 +685,7 @@ namespace Pop {
   void compile_instructions(Node *root, ConstantsTable &const_tab,
                             InstructionList &list) {
     assert(root);
-    InstructionCompiler visitor(const_tab, list);
+    InstructionCompiler visitor(const_tab, list, true);
     root->accept(visitor);
   }
 

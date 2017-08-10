@@ -72,8 +72,18 @@ namespace Pop {
   }
 
   std::string {{ instruction.name }}Instruction::to_string() const {
+    if (file.empty() && line < 0)
+      return "";
     std::stringstream ss;
-    ss << "#line \"" << file << "\" " << line << " " << column << '\n';
+    ss << "#line";
+    if (!file.empty())
+      ss << " \"" << file << "\"";
+    if (line >= 0) {
+      ss << ' ' << line;
+      if (column >= 0)
+        ss << ' ' << column;
+    }
+    ss << '\n';
     return ss.str();
   }
   {%- endif %}

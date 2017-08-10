@@ -167,17 +167,17 @@ arg_list
 
 post_expr
 	: prim_expr                  { $$ = $1; }
-	| post_expr '[' expr ']'     { $$ = mknode(Binary, @1, Operator::INDEX, $1, $3); }
-	| post_expr '(' ')'          { $$ = mknode(Call, @1, $1, nullptr); }
-	| post_expr '(' arg_list ')' { $$ = mknode(Call, @1, $1, $3); }
+	| post_expr '[' expr ']'     { $$ = mknode(Binary, @2, Operator::INDEX, $1, $3); }
+	| post_expr '(' ')'          { $$ = mknode(Call, @2, $1, nullptr); }
+	| post_expr '(' arg_list ')' { $$ = mknode(Call, @2, $1, $3); }
 	| post_expr '.' T_IDENTIFIER
 		{
 			Node *id = mknode(Symbol, @3, $3);
-			$$ = mknode(Binary, @1, Operator::MEMBER, $1, id);
+			$$ = mknode(Binary, @2, Operator::MEMBER, $1, id);
 			free($3);
 		}
-	| post_expr T_INC_OP         { $$ = mknode(Unary, @1, Operator::POSTINC, $1); }
-	| post_expr T_DEC_OP         { $$ = mknode(Unary, @1, Operator::POSTDEC, $1); }
+	| post_expr T_INC_OP         { $$ = mknode(Unary, @2, Operator::POSTINC, $1); }
+	| post_expr T_DEC_OP         { $$ = mknode(Unary, @2, Operator::POSTDEC, $1); }
 	;
 
 unary_expr
@@ -192,80 +192,80 @@ unary_expr
 
 mul_expr
 	: unary_expr              { $$ = $1; }
-	| mul_expr '*' unary_expr { $$ = mknode(Binary, @1, Operator::MUL, $1, $3); }
-	| mul_expr '/' unary_expr { $$ = mknode(Binary, @1, Operator::DIV, $1, $3); }
-	| mul_expr '%' unary_expr { $$ = mknode(Binary, @1, Operator::MOD, $1, $3); }
+	| mul_expr '*' unary_expr { $$ = mknode(Binary, @2, Operator::MUL, $1, $3); }
+	| mul_expr '/' unary_expr { $$ = mknode(Binary, @2, Operator::DIV, $1, $3); }
+	| mul_expr '%' unary_expr { $$ = mknode(Binary, @2, Operator::MOD, $1, $3); }
 	;
 
 add_expr
 	: mul_expr              { $$ = $1; }
-	| add_expr '+' mul_expr { $$ = mknode(Binary, @1, Operator::ADD, $1, $3); }
-	| add_expr '-' mul_expr { $$ = mknode(Binary, @1, Operator::SUB, $1, $3); }
+	| add_expr '+' mul_expr { $$ = mknode(Binary, @2, Operator::ADD, $1, $3); }
+	| add_expr '-' mul_expr { $$ = mknode(Binary, @2, Operator::SUB, $1, $3); }
 	;
 
 shift_expr
 	: add_expr                       { $$ = $1; }
-	| shift_expr T_LEFT_OP add_expr  { $$ = mknode(Binary, @1, Operator::LSHIFT, $1, $3); }
-	| shift_expr T_RIGHT_OP add_expr { $$ = mknode(Binary, @1, Operator::RSHIFT, $1, $3); }
+	| shift_expr T_LEFT_OP add_expr  { $$ = mknode(Binary, @2, Operator::LSHIFT, $1, $3); }
+	| shift_expr T_RIGHT_OP add_expr { $$ = mknode(Binary, @2, Operator::RSHIFT, $1, $3); }
 	;
 
 rel_expr
 	: shift_expr                  { $$ = $1; }
-	| rel_expr '<' shift_expr     { $$ = mknode(Binary, @1, Operator::LT, $1, $3); }
-	| rel_expr '>' shift_expr     { $$ = mknode(Binary, @1, Operator::GT, $1, $3); }
-	| rel_expr T_LE_OP shift_expr { $$ = mknode(Binary, @1, Operator::LE, $1, $3); }
-	| rel_expr T_GE_OP shift_expr { $$ = mknode(Binary, @1, Operator::GE, $1, $3); }
+	| rel_expr '<' shift_expr     { $$ = mknode(Binary, @2, Operator::LT, $1, $3); }
+	| rel_expr '>' shift_expr     { $$ = mknode(Binary, @2, Operator::GT, $1, $3); }
+	| rel_expr T_LE_OP shift_expr { $$ = mknode(Binary, @2, Operator::LE, $1, $3); }
+	| rel_expr T_GE_OP shift_expr { $$ = mknode(Binary, @2, Operator::GE, $1, $3); }
 	;
 
 eq_expr
 	: rel_expr                 { $$ = $1; }
-	| eq_expr T_EQ_OP rel_expr { $$ = mknode(Binary, @1, Operator::EQ, $1, $3); }
-	| eq_expr T_NE_OP rel_expr { $$ = mknode(Binary, @1, Operator::NE, $1, $3); }
+	| eq_expr T_EQ_OP rel_expr { $$ = mknode(Binary, @2, Operator::EQ, $1, $3); }
+	| eq_expr T_NE_OP rel_expr { $$ = mknode(Binary, @2, Operator::NE, $1, $3); }
 	;
 
 and_expr
 	: eq_expr              { $$ = $1; }
-	| and_expr '&' eq_expr { $$ = mknode(Binary, @1, Operator::BAND, $1, $3); }
+	| and_expr '&' eq_expr { $$ = mknode(Binary, @2, Operator::BAND, $1, $3); }
 	;
 
 xor_expr
 	: and_expr              { $$ = $1; }
-	| xor_expr '^' and_expr { $$ = mknode(Binary, @1, Operator::BXOR, $1, $3); }
+	| xor_expr '^' and_expr { $$ = mknode(Binary, @2, Operator::BXOR, $1, $3); }
 	;
 
 or_expr
 	: xor_expr             { $$ = $1; }
-	| or_expr '|' xor_expr { $$ = mknode(Binary, @1, Operator::BOR, $1, $3); }
+	| or_expr '|' xor_expr { $$ = mknode(Binary, @2, Operator::BOR, $1, $3); }
 	;
 
 log_and_expr
 	: or_expr                       { $$ = $1; }
-	| log_and_expr T_AND_OP or_expr { $$ = mknode(Binary, @1, Operator::LAND, $1, $3); }
+	| log_and_expr T_AND_OP or_expr { $$ = mknode(Binary, @2, Operator::LAND, $1, $3); }
 	;
 
 log_or_expr
 	: log_and_expr                     { $$ = $1; }
-	| log_or_expr T_OR_OP log_and_expr { $$ = mknode(Binary, @1, Operator::LOR, $1, $3); }
+	| log_or_expr T_OR_OP log_and_expr { $$ = mknode(Binary, @2, Operator::LOR, $1, $3); }
 	;
 
 cond_expr
 	: log_or_expr                        { $$ = $1; }
-	| log_or_expr '?' expr ':' cond_expr { $$ = mknode(IfExpr, @1, $1, $3, $5); }
+	| log_or_expr '?' expr ':' cond_expr { $$ = mknode(IfExpr, @2, $1, $3, $5); }
 	;
 
 assign_expr
 	: cond_expr                             { $$ = $1; }
-	| unary_expr '=' assign_expr            { $$ = mknode(Binary, @1, Operator::ASSIGN, $1, $3); }
-	| unary_expr T_ADD_ASSIGN assign_expr   { $$ = mknode(Binary, @1, Operator::ADD_ASSIGN, $1, $3); }
-	| unary_expr T_SUB_ASSIGN assign_expr   { $$ = mknode(Binary, @1, Operator::SUB_ASSIGN, $1, $3); }
-	| unary_expr T_MUL_ASSIGN assign_expr   { $$ = mknode(Binary, @1, Operator::MUL_ASSIGN, $1, $3); }
-	| unary_expr T_DIV_ASSIGN assign_expr   { $$ = mknode(Binary, @1, Operator::DIV_ASSIGN, $1, $3); }
-	| unary_expr T_MOD_ASSIGN assign_expr   { $$ = mknode(Binary, @1, Operator::MOD_ASSIGN, $1, $3); }
-	| unary_expr T_LEFT_ASSIGN assign_expr  { $$ = mknode(Binary, @1, Operator::LSHIFT_ASSIGN, $1, $3); }
-	| unary_expr T_RIGHT_ASSIGN assign_expr { $$ = mknode(Binary, @1, Operator::RSHIFT_ASSIGN, $1, $3); }
-	| unary_expr T_AND_ASSIGN assign_expr   { $$ = mknode(Binary, @1, Operator::AND_ASSIGN, $1, $3); }
-	| unary_expr T_XOR_ASSIGN assign_expr   { $$ = mknode(Binary, @1, Operator::XOR_ASSIGN, $1, $3); }
-	| unary_expr T_OR_ASSIGN assign_expr    { $$ = mknode(Binary, @1, Operator::OR_ASSIGN, $1, $3); }
+	| unary_expr '=' assign_expr            { $$ = mknode(Binary, @2, Operator::ASSIGN, $1, $3); }
+	| unary_expr T_ADD_ASSIGN assign_expr   { $$ = mknode(Binary, @2, Operator::ADD_ASSIGN, $1, $3); }
+	| unary_expr T_SUB_ASSIGN assign_expr   { $$ = mknode(Binary, @2, Operator::SUB_ASSIGN, $1, $3); }
+	| unary_expr T_MUL_ASSIGN assign_expr   { $$ = mknode(Binary, @2, Operator::MUL_ASSIGN, $1, $3); }
+	| unary_expr T_DIV_ASSIGN assign_expr   { $$ = mknode(Binary, @2, Operator::DIV_ASSIGN, $1, $3); }
+	| unary_expr T_MOD_ASSIGN assign_expr   { $$ = mknode(Binary, @2, Operator::MOD_ASSIGN, $1, $3); }
+	| unary_expr T_LEFT_ASSIGN assign_expr  { $$ = mknode(Binary, @2, Operator::LSHIFT_ASSIGN, $1, $3); }
+	| unary_expr T_RIGHT_ASSIGN assign_expr { $$ = mknode(Binary, @2, Operator::RSHIFT_ASSIGN, $1, $3); }
+	| unary_expr T_AND_ASSIGN assign_expr   { $$ = mknode(Binary, @2, Operator::AND_ASSIGN, $1, $3); }
+	| unary_expr T_XOR_ASSIGN assign_expr   { $$ = mknode(Binary, @2, Operator::XOR_ASSIGN, $1, $3); }
+	| unary_expr T_OR_ASSIGN assign_expr    { $$ = mknode(Binary, @2, Operator::OR_ASSIGN, $1, $3); }
 	;
 
 expr
