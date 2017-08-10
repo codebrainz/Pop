@@ -64,6 +64,10 @@
 %nonassoc T_ELSE
 
 %code requires {
+#ifndef POP_LIB_COMPILATION_
+# error "Inclusion of private header, use '<pop/pop.hpp>' instead to include all public headers."
+#endif
+
 #include <pop/ast.hpp>
 #include <pop/parse-state.hpp>
 

@@ -1,5 +1,6 @@
-#if !defined(POP_INSIDE_MAIN_HEADER_) && !defined(POP_LIB_COMPILATION_)
-#error "Do not include this header directly, use '<pop/pop.hpp>' instead."
+#ifndef POP_LIB_COMPILATION_
+#error \
+    "Inclusion of private header, use '<pop/pop.hpp>' instead to include all public headers."
 #endif
 
 #ifndef POP_PARSE_STATE_HPP
