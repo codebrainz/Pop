@@ -23,7 +23,6 @@
 #include <pop/location-patcher.hpp>
 #include <pop/logger.hpp>
 #include <pop/operators.hpp>
-#include <pop/option-parser.hpp>
 #include <pop/parse-state.hpp>
 #include <pop/resolve-symbols.hpp>
 #include <pop/serialization.hpp>

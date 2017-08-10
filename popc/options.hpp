@@ -1,5 +1,4 @@
-#ifndef POP_OPTION_PARSER_HPP
-#define POP_OPTION_PARSER_HPP
+#ifndef POPC_OPTIONS_HPP
 
 #include <string>
 #include <vector>
@@ -26,4 +25,4 @@ namespace Pop {
   // namespace Pop
 }
 
-#endif // POP_OPTION_PARSER_HPP
+#endif // POPC_OPTIONS_HPP

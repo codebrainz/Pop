@@ -2,7 +2,7 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/option-parser.hpp>
+#include <popc/options.hpp>
 #include <iostream>
 
 namespace Pop {

@@ -54,8 +54,6 @@ libpop_a_SOURCES = \
 	location-patcher.hpp \
 	logger.cpp \
 	logger.hpp \
-	option-parser.cpp \
-	option-parser.hpp \
 	parse-state.cpp \
 	parse-state.hpp \
 	pop.hpp \
