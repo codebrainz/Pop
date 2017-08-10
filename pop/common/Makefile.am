@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	-DPOP_LIB_COMPILATION_=1 \
 	-DPOP_LIB_COMMON_COMPILATION_=1
 
-noinst_LTLIBRARIES = libpop-common.la
+lib_LTLIBRARIES = libpop-common.la
 
 libpop_common_la_SOURCES = \
 	crc32.cpp \
@@ -13,4 +13,11 @@ libpop_common_la_SOURCES = \
 	logger.cpp \
 	logger.hpp \
 	utils.cpp \
+	utils.hpp
+
+popcommonincludedir = $(includedir)/pop/common
+popcommoninclude_HEADERS = \
+	crc32.hpp \
+	formatter.hpp \
+	logger.hpp \
 	utils.hpp

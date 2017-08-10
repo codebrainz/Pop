@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	-DPOP_LIB_COMPILATION_=1 \
 	-DPOP_LIB_FRONTEND_COMPILATION_=1
 
-noinst_LTLIBRARIES = libpop-frontend.la
+lib_LTLIBRARIES = libpop-frontend.la
 
 NODEGEN_SOURCES = \
 	ast.hpp \
@@ -81,6 +81,31 @@ EXTRA_DIST = \
 	validate.cpp.in \
 	visitor.cpp.in \
 	visitor.hpp.in
+
+popfrontendincludedir = $(includedir)/pop/frontend
+popfrontendinclude_HEADERS = \
+	ast.hpp \
+	compiler.hpp \
+	constant.hpp \
+	constants-table.hpp \
+	define-symbols.hpp \
+	dot.hpp \
+	instruction-compiler.hpp \
+	instruction-dumper.hpp \
+	instruction-list.hpp \
+	instruction-optimizer.hpp \
+	instruction-resolver.hpp \
+	instructions.hpp \
+	instruction-visitor.hpp \
+	link-parents.hpp \
+	location-patcher.hpp \
+	operators.hpp \
+	resolve-symbols.hpp \
+	symbol-table.hpp \
+	type-code.hpp \
+	type-info.hpp \
+	validate.hpp \
+	visitor.hpp
 
 if MAINTAINER_MODE
 
