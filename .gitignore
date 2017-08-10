@@ -9,6 +9,7 @@
 /pop/popc
 /pop/ast.cpp
 /pop/ast.hpp
+/pop/config.h*
 /pop/define-symbols.cpp
 /pop/dot.cpp
 /pop/grammar.cpp
