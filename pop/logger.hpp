@@ -26,7 +26,10 @@ namespace Pop {
     int line, column;
     Message(MessageType ty, std::string text, const char *file, int line,
             int column)
-        : type(ty), text(std::move(text)), file(file), line(line),
+        : type(ty),
+          text(std::move(text)),
+          file(file),
+          line(line),
           column(column) {
     }
   };

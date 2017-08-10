@@ -10,7 +10,9 @@ namespace Pop {
   class Formatter {
   public:
     Formatter(std::ostream &os, std::string indent_token = "\t")
-        : os(os), indent_level(0), indent_token(std::move(indent_token)),
+        : os(os),
+          indent_level(0),
+          indent_token(std::move(indent_token)),
           indent_string("") {
     }
 
