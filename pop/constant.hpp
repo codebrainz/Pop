@@ -1,7 +1,6 @@
 #ifndef POP_CONSTANT_HPP
 #define POP_CONSTANT_HPP
 
-#include <pop/bytecode-file.hpp>
 #include <pop/type-code.hpp>
 
 #include <istream>
@@ -49,9 +48,7 @@ namespace Pop {
 
     std::string to_string() const;
     size_t hash() const;
-    void serialize(ByteCodeFile &bcf) const;
     void serialize(std::ostream &os) const;
-    static Constant deserialize(ByteCodeFile &bcf);
     static Constant deserialize(std::istream &is);
 
     friend std::ostream &operator<<(std::ostream &os, const Constant &c) {

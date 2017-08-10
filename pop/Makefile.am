@@ -25,9 +25,6 @@ NODEGEN_SOURCES = \
 
 libpop_a_SOURCES = \
 	$(NODEGEN_SOURCES) \
-	bytecode-compiler.cpp \
-	bytecode-compiler.hpp \
-	bytecode-file.hpp \
 	compiler.cpp \
 	compiler.hpp \
 	constant.cpp \
@@ -37,8 +34,6 @@ libpop_a_SOURCES = \
 	crc32.cpp \
 	crc32.hpp \
 	define-symbols.hpp \
-	disassembler.cpp \
-	disassembler.hpp \
 	dot.hpp \
 	formatter.hpp \
 	instruction-compiler.cpp \
@@ -58,8 +53,6 @@ libpop_a_SOURCES = \
 	parse-state.hpp \
 	pop.hpp \
 	resolve-symbols.hpp \
-	serialization.hpp \
-	serializer.hpp \
 	symbol-table.cpp \
 	symbol-table.hpp \
 	type-code.hpp \

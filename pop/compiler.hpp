@@ -29,7 +29,6 @@ namespace Pop {
     void compile_instructions();
     void resolve_instructions(bool prune_labels = false);
     void optimize_instructions();
-    void compile_bytecode(std::ostream &out);
 
     void generate_dot(std::ostream &os, const std::string &indent_token = "  ");
     void dump_instructions(std::ostream &out);

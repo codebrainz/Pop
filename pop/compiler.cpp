@@ -3,7 +3,6 @@
 #endif
 
 #include <pop/compiler.hpp>
-#include <pop/bytecode-compiler.hpp>
 #include <pop/define-symbols.hpp>
 #include <pop/dot.hpp>
 #include <pop/grammar.hpp>
@@ -88,10 +87,6 @@ namespace Pop {
 
   void Compiler::optimize_instructions() {
     Pop::optimize_instructions(instructions);
-  }
-
-  void Compiler::compile_bytecode(std::ostream &out) {
-    Pop::compile_bytecode(instructions, const_tab, out);
   }
 
   void Compiler::dump_instructions(std::ostream &out) {

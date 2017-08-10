@@ -12,11 +12,9 @@ namespace Pop {
     std::vector< std::string > input_filenames;
     bool dump_ast_dot;
     bool dump_instructions;
-    bool dump_bytecode;
     int exit_code;
 
-    Options()
-        : dump_ast_dot(false), dump_instructions(false), dump_bytecode(false) {
+    Options() : dump_ast_dot(false), dump_instructions(false) {
     }
 
     bool parse(int argc, char **argv);

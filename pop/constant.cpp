@@ -164,27 +164,6 @@ namespace Pop {
     return seed;
   }
 
-  void Constant::serialize(ByteCodeFile &bcf) const {
-    bcf.set_u8(static_cast< U8 >(type));
-    switch (type) {
-      case TC::NIL:
-        break;
-      case TC::BLN:
-        bcf.set_u8(!!u.as_bool);
-        break;
-      case TC::INT:
-        bcf.set_u64(u.as_int);
-        break;
-      case TC::FLT:
-        bcf.set_real(u.as_float);
-        break;
-      case TC::STR:
-      case TC::SYM:
-        bcf.set_string(*u.as_str);
-        break;
-    }
-  }
-
   void Constant::serialize(std::ostream &os) const {
     serialize8(os, type);
     switch (type) {
@@ -204,24 +183,6 @@ namespace Pop {
         serialize_str(os, *u.as_str);
         break;
     }
-  }
-
-  Constant Constant::deserialize(ByteCodeFile &bcf) {
-    switch (static_cast< TC >(bcf.get_u8())) {
-      case TC::NIL:
-        return Constant::new_nil();
-      case TC::BLN:
-        return Constant::new_bool(bcf.get_u8());
-      case TC::INT:
-        return Constant::new_int(bcf.get_u64());
-      case TC::FLT:
-        return Constant::new_float(bcf.get_real());
-      case TC::STR:
-        return Constant::new_string(bcf.get_string());
-      case TC::SYM:
-        return Constant::new_symbol(bcf.get_string());
-    }
-    return Constant();
   }
 
   Constant Constant::deserialize(std::istream &is) {

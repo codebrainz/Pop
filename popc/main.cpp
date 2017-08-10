@@ -44,13 +44,6 @@ int main(int argc, char **argv) {
       std::ofstream f(opts.output_filename);
       cmp.dump_instructions(f);
     }
-  } else {
-    if (opts.output_filename == "-") {
-      cmp.compile_bytecode(std::cout);
-    } else {
-      std::ofstream f(opts.output_filename);
-      cmp.compile_bytecode(f);
-    }
   }
 
   return cmp.report_diagnostics(std::cerr);
