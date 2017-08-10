@@ -1,0 +1,17 @@
+#ifdef HAVE_CONFIG_H
+#include <pop/config.h>
+#endif
+
+#include <pop/frontend/instruction-visitor.hpp>
+#include <pop/frontend/instructions.hpp>
+
+namespace Pop {
+
+{% for instruction in instructions %}
+  void InstructionVisitor::visit({{ instruction.name }}Instruction &inst) {
+    visit_default(inst);
+  }
+{% endfor %}
+
+ // namespace Pop
+}

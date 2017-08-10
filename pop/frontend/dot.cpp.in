@@ -1,0 +1,147 @@
+#ifdef HAVE_CONFIG_H
+#include <pop/config.h>
+#endif
+
+#include <pop/common/formatter.hpp>
+#include <pop/frontend/ast.hpp>
+#include <pop/frontend/dot.hpp>
+#include <pop/frontend/visitor.hpp>
+
+#include <cassert>
+#include <cstdint>
+#include <unordered_map>
+#include <vector>
+
+#define NODE_ID(nref) ((std::uintptr_t)(&(nref)))
+
+namespace Pop {
+
+  struct DotID {
+    int cnt;
+    std::unordered_map<std::uintptr_t, int> node_to_id;
+    DotID() : cnt(0) {
+    }
+    int node_id(Node &n) {
+      auto found = node_to_id.find(NODE_ID(n));
+      if (found != node_to_id.end()) {
+        return found->second;
+      } else {
+        auto id = cnt++;
+        node_to_id.emplace(NODE_ID(n), id);
+        return id;
+      }
+    }
+  };
+
+  struct DotVisitor : public VisitorBase {
+    Formatter &fmt;
+    DotID &id;
+    DotVisitor(Formatter &fmt, DotID &id) : fmt(fmt), id(id) {
+    }
+  };
+
+  struct DotNodeVisitor final : public DotVisitor {
+    DotNodeVisitor(Formatter &fmt, DotID &id) : DotVisitor(fmt, id) {
+    }
+    void write_value(Bool &n) {
+      fmt.write("\\n%", n.value ? "true" : "false");
+    }
+{%- for node in nodes %}
+  {%- if node.name in [ "Int", "Float", "String", "Symbol" ] %}
+    void write_value({{ node.name }} &n) {
+      fmt.write("\\n%", n.value);
+    }
+  {%- elif node.name == "Goto" %}
+    void write_value({{ node.name }} &n) {
+      fmt.write("\\n%", n.label);
+    }
+  {%- elif node.name in [ "Label", "Variable", "Class" ] %}
+    void write_value({{ node.name }} &n) {
+      fmt.write("\\n%", n.name);
+    }
+  {%- elif node.name != "Bool" %}
+    void write_value({{ node.name }}&) {
+    }
+  {%- endif %}
+{%- endfor %}
+    void write_location(Node &n) {
+      if (n.line() >= 0 && n.column() >= 0) {
+        if (dynamic_cast<Module*>(&n))
+          fmt.write("\\n[%:%:%]", n.file(), n.line(), n.column());
+        else
+          fmt.write("\\n[%:%]", n.line(), n.column());
+      }
+    }
+{%- for node in nodes %}
+    void visit({{ node.name }} &n) final {
+      auto nid = id.node_id(n);
+      fmt.iwrite("node_% [label=\"% (%)", nid, n.type_name(), nid);
+      write_location(n);
+      write_value(n);
+      fmt.writeln("\", shape=box];");
+  {%- for field in node.child_fields %}
+      if (n.{{ field.name }})
+        n.{{ field.name }}->accept(*this);
+  {%- endfor %}
+    }
+{%- endfor %}
+  };
+
+  struct DotEdgeVisitor final : public DotVisitor {
+    std::vector<int> node_ids;
+    DotEdgeVisitor(Formatter &fmt, DotID &id) : DotVisitor(fmt, id) {
+    }
+    void begin_parent(Node &n) {
+      node_ids.emplace_back(id.node_id(n));
+    }
+    void end_parent(Node &n) {
+      assert(!node_ids.empty());
+      (void)n;
+      assert(id.node_id(n) == node_ids.back());
+      node_ids.pop_back();
+    }
+    void write_edge(Node &n) {
+      if (node_ids.empty())
+        return;
+      fmt.iwrite("");
+      for (auto nid : node_ids)
+        fmt.write("node_% -- ", nid);
+      fmt.writeln("node_%;", id.node_id(n));
+    }
+{%- for node in nodes %}
+    void visit({{ node.name }} &n) final {
+      write_edge(n);
+  {%- if node.child_fields | length > 0 %}
+      begin_parent(n);
+    {%- for field in node.child_fields %}
+      if (n.{{ field.name }})
+        n.{{ field.name }}->accept(*this);
+    {%- endfor %}
+      end_parent(n);
+  {%- endif %}
+    }
+{%- endfor %}
+  };
+
+  void generate_dot(Node *root, std::ostream &os, const std::string &indent_token) {
+    assert(root);
+    DotID id;
+    Formatter fmt(os, indent_token);
+
+    fmt.iwriteln("strict graph AST {");
+    fmt.indent();
+
+    fmt.iwriteln("// Nodes");
+    DotNodeVisitor node_visitor(fmt, id);
+    root->accept(node_visitor);
+
+    fmt.iwriteln("// Edges");
+    DotEdgeVisitor edge_visitor(fmt, id);
+    root->accept(edge_visitor);
+
+    fmt.unindent();
+    fmt.iwriteln("}");
+  }
+
+  // namespace Pop
+}

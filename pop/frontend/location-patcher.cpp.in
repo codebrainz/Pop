@@ -1,0 +1,128 @@
+#ifdef HAVE_CONFIG_H
+#include <pop/config.h>
+#endif
+
+#include <pop/frontend/location-patcher.hpp>
+#include <pop/common/logger.hpp>
+#include <pop/frontend/ast.hpp>
+#include <pop/frontend/visitor.hpp>
+
+#include <cassert>
+#include <vector>
+
+namespace Pop {
+
+  struct FilePatchVisitor final : public VisitorBase {
+    std::vector<const char *> file_stack;
+
+    void begin_file(const char *fn) {
+      if (fn)
+        file_stack.emplace_back(fn);
+    }
+    void end_file(const char *fn) {
+      if (fn) {
+        assert(fn == file_stack.back());
+        file_stack.pop_back();
+      }
+    }
+    const char *current_file() const {
+      if (!file_stack.empty())
+        return file_stack.back();
+      return nullptr;
+    }
+{%- for node in nodes %}
+    void visit({{ node.name }} &n) final {
+  {%- if node.name != "Program" %}
+    {%- if node.child_fields | length > 0 %}
+      begin_file(n.file());
+      {%- for field in node.child_fields %}
+      if (n.{{ field.name }})
+        n.{{ field.name }}->accept(*this);
+      {%- endfor %}
+      end_file(n.file());
+    {%- else %}
+      (void)n;
+    {%- endif %}
+  {%- else %}
+    {%- for field in node.child_fields %}
+      if (n.{{ field.name }})
+        n.{{ field.name }}->accept(*this);
+    {%- endfor %}
+  {%- endif %}
+  }
+{%- endfor %}
+  };
+
+  struct LocationPatchVisitor final : public VisitorBase {
+{%- for node in nodes %}
+    void visit({{ node.name }} &n) final {
+  {%- if node.child_fields | length > 0 %}
+      if (n.line() < 0) {
+        bool have_line = false;
+    {%- for field in node.child_fields %}
+        if (!have_line && n.{{ field.name }} && n.{{ field.name }}->line() >= 0) {
+          n.line(n.{{ field.name }}->line());
+          have_line = true;
+        }
+    {%- endfor %}
+        (void)have_line;
+      }
+      if (n.column() < 0) {
+        bool have_column = false;
+    {%- for field in node.child_fields %}
+        if (!have_column && n.{{ field.name }} && n.{{ field.name }}->column() >= 0) {
+          n.column(n.{{ field.name }}->column());
+          have_column = true;
+        }
+    {%- endfor %}
+        (void)have_column;
+      }
+  {%- else %}
+      (void)n;
+  {%- endif %}
+    }
+{%- endfor %}
+  };
+
+  struct LocationVerifierVisitor final : public DefaultPostOrderVisitor {
+    Logger &log;
+    explicit LocationVerifierVisitor(Logger &log)
+      : log(log) {
+    }
+{%- for node in nodes %}
+  {%- if node.name != "Program" %}
+    void process({{ node.name }} &n) final {
+      if (!n.file()) {
+        log.debug(n.file(), n.line(), n.column(),
+          "Node '%' of type '%' is missing a filename",
+          (void*)&n, n.type_name());
+      }
+      if (n.line() < 0) {
+        log.debug(n.file(), n.line(), n.column(),
+          "Node '%' of type '%' is missing line number",
+          (void*)&n, n.type_name());
+      }
+      if (n.column() < 0) {
+        log.debug(n.file(), n.line(), n.column(),
+          "Node '%' of type '%' is missing column number",
+          (void*)&n, n.type_name());
+      }
+    }
+  {%- endif %}
+{%- endfor %}
+  };
+
+  void patch_locations(Node *root, Logger &log, bool verify) {
+    assert(root);
+    FilePatchVisitor file_visitor;
+    root->accept(file_visitor);
+    LocationPatchVisitor location_visitor;
+    root->accept(location_visitor);
+    if (verify) {
+      LocationVerifierVisitor verifier_visitor(log);
+      root->accept(verifier_visitor);
+    }
+  }
+
+  // namespace Pop
+}
