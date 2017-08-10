@@ -683,9 +683,9 @@ namespace Pop {
   };
 
   void compile_instructions(Node *root, ConstantsTable &const_tab,
-                            InstructionList &list) {
+                            InstructionList &list, bool line_directives) {
     assert(root);
-    InstructionCompiler visitor(const_tab, list, true);
+    InstructionCompiler visitor(const_tab, list, line_directives);
     root->accept(visitor);
   }
 

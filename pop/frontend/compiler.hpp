@@ -30,7 +30,7 @@ namespace Pop {
     void resolve_symbols();
     void patch_locations(bool verify = false);
     void validate();
-    void compile_instructions();
+    void compile_instructions(bool line_directives = true);
     void resolve_instructions(bool prune_labels = false);
     void optimize_instructions();
 

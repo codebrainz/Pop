@@ -13,7 +13,7 @@ namespace Pop {
   struct Node;
 
   void compile_instructions(Node *root, ConstantsTable &const_tab,
-                            InstructionList &list);
+                            InstructionList &list, bool line_directives = true);
 
   // namespace Pop
 }

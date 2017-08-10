@@ -20,6 +20,7 @@ namespace Pop {
       << "  -o FILE, --output=FILE  Write output to file (default '-' for stdout)\n"
       << "  --dump-dot              Write a Graphviz DOT graph of the AST\n"
       << "  --dump-asm              Write an ASM-like representation of the IR\n"
+      << "  --no-line-directives    Don't print #line directives in output\n"
       << "\n"
       << "Written and maintained by Matthew Brush <mbrush@codebrainz.ca>\n";
     // clang-format on
@@ -54,6 +55,8 @@ namespace Pop {
         dump_ast_dot = true;
       } else if (args[i] == "--dump-asm") {
         dump_instructions = true;
+      } else if (args[i] == "--no-line-directives") {
+        no_line_directives = true;
       } else {
         input_filenames.push_back(argv[i]);
       }

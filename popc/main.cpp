@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
   cmp.define_symbols();
   cmp.resolve_symbols();
   cmp.validate();
-  cmp.compile_instructions();
+  cmp.compile_instructions(!opts.no_line_directives);
   cmp.resolve_instructions();
   cmp.optimize_instructions();
 

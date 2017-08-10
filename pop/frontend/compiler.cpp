@@ -78,8 +78,9 @@ namespace Pop {
     Pop::generate_dot(program, os, indent_token);
   }
 
-  void Compiler::compile_instructions() {
-    Pop::compile_instructions(program, const_tab, instructions);
+  void Compiler::compile_instructions(bool line_directives) {
+    Pop::compile_instructions(program, const_tab, instructions,
+                              line_directives);
   }
 
   void Compiler::resolve_instructions(bool prune_labels) {
