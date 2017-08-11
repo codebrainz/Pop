@@ -199,7 +199,7 @@ namespace Pop {
     // Scope management
     //
     void begin_scope(Node &n) {
-      add_instruction< OpenEnvironmentInstruction >(&n);
+      add_instruction< OpenEnvironmentInstruction >(n);
       if (!break_stack.empty())
         break_stack.top().scope_depth++;
       if (!continue_stack.empty())
@@ -214,7 +214,7 @@ namespace Pop {
         continue_stack.top().scope_depth--;
       if (!break_stack.empty())
         break_stack.top().scope_depth--;
-      add_instruction< CloseEnvironmentInstruction >(&n);
+      add_instruction< CloseEnvironmentInstruction >(n);
     }
 
     template < class T, class... Args >
@@ -229,7 +229,7 @@ namespace Pop {
       return const_tab.intern(std::move(visitor.constant));
     }
     void add_constant(Node &n) {
-      add_instruction< PushConstInstruction >(intern(n), &n);
+      add_instruction< PushConstInstruction >(intern(n), n);
     }
     void add_line_info(Node &n) {
       if (line_control) {
@@ -275,32 +275,32 @@ namespace Pop {
       add_line_info(n);
       switch (n.op) {
         case Operator::POS:
-          add_instruction< PositiveInstruction >(&n);
+          add_instruction< PositiveInstruction >(n);
           break;
         case Operator::NEG:
-          add_instruction< NegativeInstruction >(&n);
+          add_instruction< NegativeInstruction >(n);
           break;
         case Operator::NOT:
-          add_instruction< LogicalNotInstruction >(&n);
+          add_instruction< LogicalNotInstruction >(n);
           break;
         case Operator::COMPL:
-          add_instruction< BitwiseNotInstruction >(&n);
+          add_instruction< BitwiseNotInstruction >(n);
           break;
         case Operator::PREINC:
-          add_instruction< IncrementInstruction >(&n);
+          add_instruction< IncrementInstruction >(n);
           break;
         case Operator::PREDEC:
-          add_instruction< DecrementInstruction >(&n);
+          add_instruction< DecrementInstruction >(n);
           break;
         case Operator::POSTINC:
-          add_instruction< DuplicateTopInstruction >(&n);
-          add_instruction< IncrementInstruction >(&n);
-          add_instruction< PopInstruction >(&n);
+          add_instruction< DuplicateTopInstruction >(n);
+          add_instruction< IncrementInstruction >(n);
+          add_instruction< PopInstruction >(n);
           break;
         case Operator::POSTDEC:
-          add_instruction< DuplicateTopInstruction >(&n);
-          add_instruction< DecrementInstruction >(&n);
-          add_instruction< PopInstruction >(&n);
+          add_instruction< DuplicateTopInstruction >(n);
+          add_instruction< DecrementInstruction >(n);
+          add_instruction< PopInstruction >(n);
           break;
         default:
           assert(false);
@@ -309,10 +309,10 @@ namespace Pop {
     }
     template < class T >
     void inplace_op(Node &n) {
-      add_instruction< Duplicate2ndTopInstruction >(&n);
-      add_instruction< SwapTopInstruction >(&n);
-      add_instruction< T >(&n);
-      add_instruction< BindInstruction >(&n);
+      add_instruction< Duplicate2ndTopInstruction >(n);
+      add_instruction< SwapTopInstruction >(n);
+      add_instruction< T >(n);
+      add_instruction< BindInstruction >(n);
     }
     void visit(Binary &n) final {
       n.left->accept(*this);
@@ -320,67 +320,67 @@ namespace Pop {
       add_line_info(n);
       switch (n.op) {
         case Operator::ADD:
-          add_instruction< AddInstruction >(&n);
+          add_instruction< AddInstruction >(n);
           break;
         case Operator::SUB:
-          add_instruction< SubtractInstruction >(&n);
+          add_instruction< SubtractInstruction >(n);
           break;
         case Operator::MUL:
-          add_instruction< MultiplyInstruction >(&n);
+          add_instruction< MultiplyInstruction >(n);
           break;
         case Operator::DIV:
-          add_instruction< DivideInstruction >(&n);
+          add_instruction< DivideInstruction >(n);
           break;
         case Operator::MOD:
-          add_instruction< ModuloInstruction >(&n);
+          add_instruction< ModuloInstruction >(n);
           break;
         case Operator::LSHIFT:
-          add_instruction< LeftShiftInstruction >(&n);
+          add_instruction< LeftShiftInstruction >(n);
           break;
         case Operator::RSHIFT:
-          add_instruction< RightShiftInstruction >(&n);
+          add_instruction< RightShiftInstruction >(n);
           break;
         case Operator::LAND:
-          add_instruction< LogicalAndInstruction >(&n);
+          add_instruction< LogicalAndInstruction >(n);
           break;
         case Operator::LOR:
-          add_instruction< LogicalOrInstruction >(&n);
+          add_instruction< LogicalOrInstruction >(n);
           break;
         case Operator::BAND:
-          add_instruction< BitwiseAndInstruction >(&n);
+          add_instruction< BitwiseAndInstruction >(n);
           break;
         case Operator::BOR:
-          add_instruction< BitwiseOrInstruction >(&n);
+          add_instruction< BitwiseOrInstruction >(n);
           break;
         case Operator::BXOR:
-          add_instruction< BitwiseXorInstruction >(&n);
+          add_instruction< BitwiseXorInstruction >(n);
           break;
         case Operator::LE:
-          add_instruction< LessOrEqualInstruction >(&n);
+          add_instruction< LessOrEqualInstruction >(n);
           break;
         case Operator::GE:
-          add_instruction< GreaterOrEqualInstruction >(&n);
+          add_instruction< GreaterOrEqualInstruction >(n);
           break;
         case Operator::LT:
-          add_instruction< LessThanInstruction >(&n);
+          add_instruction< LessThanInstruction >(n);
           break;
         case Operator::GT:
-          add_instruction< GreaterThanInstruction >(&n);
+          add_instruction< GreaterThanInstruction >(n);
           break;
         case Operator::EQ:
-          add_instruction< EqualInstruction >(&n);
+          add_instruction< EqualInstruction >(n);
           break;
         case Operator::NE:
-          add_instruction< NotEqualInstruction >(&n);
+          add_instruction< NotEqualInstruction >(n);
           break;
         case Operator::INDEX:
-          add_instruction< IndexInstruction >(&n);
+          add_instruction< IndexInstruction >(n);
           break;
         case Operator::MEMBER:
-          add_instruction< MemberInstruction >(&n);
+          add_instruction< MemberInstruction >(n);
           break;
         case Operator::ASSIGN:
-          add_instruction< BindInstruction >(&n);
+          add_instruction< BindInstruction >(n);
           break;
         case Operator::LSHIFT_ASSIGN:
           inplace_op< LeftShiftInstruction >(n);
@@ -422,22 +422,22 @@ namespace Pop {
       add_line_info(n);
       auto name = new_name("ifexp");
       n.predicate->accept(*this);
-      add_instruction< JumpIfTrueInstruction >(name + "_cons", &n);
+      add_instruction< JumpIfTrueInstruction >(name + "_cons", n);
       if (n.alternative) {
         auto sym = new Symbol(n.file(), n.line(), n.column(), name + "_result");
         add_constant(*sym);
         node_unref(sym);
         n.alternative->accept(*this);
-        add_instruction< BindInstruction >(&n);
+        add_instruction< BindInstruction >(n);
       }
-      add_instruction< JumpInstruction >(name + "_end", &n);
-      add_instruction< LabelInstruction >(name + "_cons", &n);
+      add_instruction< JumpInstruction >(name + "_end", n);
+      add_instruction< LabelInstruction >(name + "_cons", n);
       auto sym = new Symbol(n.file(), n.line(), n.column(), name + "_result");
       add_constant(*sym);
       node_unref(sym);
       n.consequence->accept(*this);
-      add_instruction< BindInstruction >(&n);
-      add_instruction< LabelInstruction >(name + "_end", &n);
+      add_instruction< BindInstruction >(n);
+      add_instruction< LabelInstruction >(name + "_end", n);
     }
     void visit(Call &n) final {
       if (auto arglist = dynamic_cast< NodeList * >(n.arguments)) {
@@ -456,7 +456,7 @@ namespace Pop {
       }
       n.callee->accept(*this);
       add_line_info(n);
-      add_instruction< CallInstruction >(&n);
+      add_instruction< CallInstruction >(n);
     }
     std::string parent_name(Node &n) const {
       if (auto var = dyn_cast< Variable * >(n.parent))
@@ -467,12 +467,12 @@ namespace Pop {
       add_line_info(n);
       auto var_name = parent_name(n);
       auto name = var_name.empty() ? new_name("lambda") : new_name(var_name);
-      add_instruction< JumpInstruction >(name + "_after", &n);
-      add_instruction< LabelInstruction >(name, &n);
+      add_instruction< JumpInstruction >(name + "_after", n);
+      add_instruction< LabelInstruction >(name, n);
       begin_scope(n);
       begin_return_context(name + "_return");
       // todo: use the argument count
-      add_instruction< PopInstruction >(&n);
+      add_instruction< PopInstruction >(n);
       if (auto params = dynamic_cast< NodeList * >(n.parameters)) {
         for (auto param : params->elements) {
           if (auto var = dynamic_cast< Variable * >(param)) {
@@ -480,7 +480,7 @@ namespace Pop {
                 new Symbol(var->file(), var->line(), var->column(), var->name);
             add_constant(*sym);
             node_unref(sym);
-            add_instruction< BindInstruction >(var);
+            add_instruction< BindInstruction >(*var);
           } else {
             assert(false);
           }
@@ -489,12 +489,12 @@ namespace Pop {
       if (n.body)
         n.body->accept(*this);
       end_return_context(name + "_return");
-      add_instruction< LabelInstruction >(name + "_return", &n);
+      add_instruction< LabelInstruction >(name + "_return", n);
       end_scope(n);
-      add_instruction< ReturnInstruction >(&n);
-      add_instruction< LabelInstruction >(name + "_after", &n);
+      add_instruction< ReturnInstruction >(n);
+      add_instruction< LabelInstruction >(name + "_after", n);
       add_line_info(n);
-      add_instruction< ClosureInstruction >(name, &n);
+      add_instruction< ClosureInstruction >(name, n);
     }
     void visit(Block &n) final {
       add_line_info(n);
@@ -506,7 +506,7 @@ namespace Pop {
     void visit(ExprStmt &n) final {
       add_line_info(n);
       n.expression->accept(*this);
-      add_instruction< PopInstruction >(&n);
+      add_instruction< PopInstruction >(n);
     }
     void visit(EmptyStmt &) final {
     }
@@ -514,15 +514,15 @@ namespace Pop {
       add_line_info(n);
       // int depth = current_continue_context().scope_depth;
       // for (int i = 0; i < depth; i++)
-      //  add_instruction< CloseEnvironmentInstruction >(&n);
-      add_instruction< JumpInstruction >(current_continue_context().name, &n);
+      //  add_instruction< CloseEnvironmentInstruction >(n);
+      add_instruction< JumpInstruction >(current_continue_context().name, n);
     }
     void visit(Break &n) final {
       add_line_info(n);
       int depth = current_break_context().scope_depth;
       for (int i = 0; i < depth; i++)
-        add_instruction< CloseEnvironmentInstruction >(&n);
-      add_instruction< JumpInstruction >(current_break_context().name, &n);
+        add_instruction< CloseEnvironmentInstruction >(n);
+      add_instruction< JumpInstruction >(current_break_context().name, n);
     }
     void visit(Return &n) final {
       add_line_info(n);
@@ -535,8 +535,8 @@ namespace Pop {
       }
       // int depth = current_return_context().scope_depth;
       // for (int i = 0; i < depth; i++)
-      //  add_instruction< CloseEnvironmentInstruction >(&n);
-      add_instruction< JumpInstruction >(current_return_context().name, &n);
+      //  add_instruction< CloseEnvironmentInstruction >(n);
+      add_instruction< JumpInstruction >(current_return_context().name, n);
     }
     void visit(Goto &) final {
       // TODO
@@ -545,13 +545,13 @@ namespace Pop {
       add_line_info(n);
       auto name = new_name("if");
       n.predicate->accept(*this);
-      add_instruction< JumpIfTrueInstruction >(name + "_cons", &n);
+      add_instruction< JumpIfTrueInstruction >(name + "_cons", n);
       if (n.alternative)
         n.alternative->accept(*this);
-      add_instruction< JumpInstruction >(name + "_end", &n);
-      add_instruction< LabelInstruction >(name + "_cons", &n);
+      add_instruction< JumpInstruction >(name + "_end", n);
+      add_instruction< LabelInstruction >(name + "_cons", n);
       n.consequence->accept(*this);
-      add_instruction< LabelInstruction >(name + "_end", &n);
+      add_instruction< LabelInstruction >(name + "_end", n);
     }
     void visit(Case &) final {
       // see visit(Switch&)
@@ -564,7 +564,7 @@ namespace Pop {
       add_constant(*switch_sym);
       node_unref(switch_sym);
       n.expression->accept(*this);
-      add_instruction< BindInstruction >(&n);
+      add_instruction< BindInstruction >(n);
       int cnt = 0;
       bool have_default = false;
       if (auto cases = dynamic_cast< NodeList * >(n.cases)) {
@@ -573,12 +573,12 @@ namespace Pop {
             add_line_info(*cse);
             if (cse->expression) {
               auto case_name = name + "_case_" + std::to_string(cnt);
-              add_instruction< LabelInstruction >(case_name, cse);
-              add_instruction< DuplicateTopInstruction >(cse);
+              add_instruction< LabelInstruction >(case_name, *cse);
+              add_instruction< DuplicateTopInstruction >(*cse);
               cse->expression->accept(*this);
-              add_instruction< EqualInstruction >(cse);
+              add_instruction< EqualInstruction >(*cse);
               add_instruction< JumpIfFalseInstruction >(
-                  name + "_case_" + std::to_string(cnt + 1), cse);
+                  name + "_case_" + std::to_string(cnt + 1), *cse);
               begin_scope(*cse);
               begin_break_context(case_name + "_break");
               cse->body->accept(*this);
@@ -586,13 +586,13 @@ namespace Pop {
               end_scope(*cse);
               add_instruction< JumpInstruction >(name + "_case_" +
                                                  std::to_string(cnt + 1));
-              add_instruction< LabelInstruction >(case_name + "_break", cse);
-              add_instruction< CloseEnvironmentInstruction >(cse);
-              add_instruction< JumpInstruction >(case_name + "_end", cse);
+              add_instruction< LabelInstruction >(case_name + "_break", *cse);
+              add_instruction< CloseEnvironmentInstruction >(*cse);
+              add_instruction< JumpInstruction >(case_name + "_end", *cse);
             } else {
               auto case_name = name + "_default_case";
               assert(!have_default);
-              add_instruction< LabelInstruction >(case_name, cse);
+              add_instruction< LabelInstruction >(case_name, *cse);
               begin_scope(*cse);
               begin_break_context(case_name + "_break");
               cse->body->accept(*this);
@@ -600,9 +600,9 @@ namespace Pop {
               end_scope(*cse);
               add_instruction< JumpInstruction >(name + "_case_" +
                                                  std::to_string(cnt + 1));
-              add_instruction< LabelInstruction >(case_name + "_break", cse);
-              add_instruction< CloseEnvironmentInstruction >(cse);
-              add_instruction< JumpInstruction >(case_name + "_end", cse);
+              add_instruction< LabelInstruction >(case_name + "_break", *cse);
+              add_instruction< CloseEnvironmentInstruction >(*cse);
+              add_instruction< JumpInstruction >(case_name + "_end", *cse);
               have_default = true;
             }
             cnt++;
@@ -610,39 +610,39 @@ namespace Pop {
         }
       }
       if (!have_default)
-        add_instruction< LabelInstruction >(name + "_default_case", &n);
+        add_instruction< LabelInstruction >(name + "_default_case", n);
       add_instruction< LabelInstruction >(name + "_case_" +
                                           std::to_string(cnt));
-      add_instruction< LabelInstruction >(name + "_end", &n);
-      add_instruction< PopInstruction >(&n);
+      add_instruction< LabelInstruction >(name + "_end", n);
+      add_instruction< PopInstruction >(n);
     }
     void visit(Do &n) final {
       add_line_info(n);
       auto name = new_name("do");
-      add_instruction< LabelInstruction >(name + "_continue", &n);
+      add_instruction< LabelInstruction >(name + "_continue", n);
       begin_continue_context(name + "_continue");
       begin_break_context(name + "_break");
       n.body->accept(*this);
       end_break_context(name + "_break");
       end_continue_context(name + "_continue");
       n.expression->accept(*this);
-      add_instruction< JumpIfFalseInstruction >(name + "_break", &n);
-      add_instruction< JumpInstruction >(name + "_continue", &n);
-      add_instruction< LabelInstruction >(name + "_break", &n);
+      add_instruction< JumpIfFalseInstruction >(name + "_break", n);
+      add_instruction< JumpInstruction >(name + "_continue", n);
+      add_instruction< LabelInstruction >(name + "_break", n);
     }
     void visit(While &n) final {
       add_line_info(n);
       auto name = new_name("while");
-      add_instruction< LabelInstruction >(name + "_continue", &n);
+      add_instruction< LabelInstruction >(name + "_continue", n);
       n.expression->accept(*this);
-      add_instruction< JumpIfFalseInstruction >(name + "_break", &n);
+      add_instruction< JumpIfFalseInstruction >(name + "_break", n);
       begin_continue_context(name + "_continue");
       begin_break_context(name + "_break");
       n.body->accept(*this);
       end_break_context(name + "_break");
       end_continue_context(name + "_continue");
-      add_instruction< JumpInstruction >(name + "_continue", &n);
-      add_instruction< LabelInstruction >(name + "_break", &n);
+      add_instruction< JumpInstruction >(name + "_continue", n);
+      add_instruction< LabelInstruction >(name + "_break", n);
     }
     void visit(For &) final {
       // TODO
@@ -662,7 +662,7 @@ namespace Pop {
         add_constant(*nul);
         node_unref(nul);
       }
-      add_instruction< BindInstruction >(&n);
+      add_instruction< BindInstruction >(n);
     }
     void visit(Class &) final {
       // TODO
@@ -678,7 +678,7 @@ namespace Pop {
     void visit(Program &n) final {
       n.modules->accept(*this);
       // TODO: main, jump to start, etc.
-      add_instruction< HaltInstruction >(&n);
+      add_instruction< HaltInstruction >(n);
     }
   };
 
