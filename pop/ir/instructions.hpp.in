@@ -57,7 +57,7 @@ namespace Pop {
         offset(-1),
         file_(file),
         line_(line),
-        column_(column_) {
+        column_(column) {
     }
 
   private:

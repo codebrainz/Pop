@@ -176,6 +176,7 @@ namespace Pop {
       break_stack.push(name);
     }
     void end_break_context(const std::string &name) {
+      assert(break_stack.top().name == name);
       break_stack.pop();
     }
     Context &current_break_context() {
@@ -189,6 +190,7 @@ namespace Pop {
       continue_stack.push(name);
     }
     void end_continue_context(const std::string &name) {
+      assert(break_stack.top().name == name);
       continue_stack.pop();
     }
     Context &current_continue_context() {
