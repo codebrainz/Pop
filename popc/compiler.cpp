@@ -32,6 +32,17 @@ namespace Pop {
     return Pop::parse_file(program, log, is, add_fn(fn));
   }
 
+  void Compiler::compile(bool line_directives) {
+    patch_locations(true);
+    link_parents(true);
+    define_symbols();
+    resolve_symbols();
+    validate();
+    compile_instructions(line_directives);
+    resolve_instructions();
+    optimize_instructions();
+  }
+
   void Compiler::link_parents(bool verify) {
     Pop::link_parents(program, log, verify);
   }
