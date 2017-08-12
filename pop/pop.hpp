@@ -3,6 +3,7 @@
 
 #define POP_INSIDE_MAIN_HEADER_
 
+#include <pop/backend.hpp>
 #include <pop/common.hpp>
 #include <pop/frontend.hpp>
 #include <pop/ir.hpp>

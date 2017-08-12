@@ -32,6 +32,7 @@ AC_CONFIG_FILES([
  docs/Makefile
  popc/Makefile
  pop/Makefile
+ pop/backend/Makefile
  pop/common/Makefile
  pop/frontend/Makefile
  pop/ir/Makefile
