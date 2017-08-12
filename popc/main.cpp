@@ -1,4 +1,5 @@
 #include <pop/pop.hpp>
+#include <popc/compiler.hpp>
 #include <popc/options.hpp>
 
 #include <fstream>

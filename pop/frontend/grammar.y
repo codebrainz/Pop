@@ -81,8 +81,8 @@ using namespace Pop;
 # include <pop/config.h>
 #endif
 
+#include <pop/common/logger.hpp>
 #include <pop/common/utils.hpp>
-#include <pop/frontend/compiler.hpp>
 #include <pop/ir/operators.hpp>
 
 extern int yylex(YYSTYPE *, YYLTYPE *, void*);
@@ -90,7 +90,7 @@ extern int yylex(YYSTYPE *, YYLTYPE *, void*);
 using namespace Pop;
 
 void yyerror(YYLTYPE *locp, ParseState *state, const char *err) {
-  state->cmp.log.error(state->file, locp->first_line, locp->first_column, err);
+  state->log.error(state->file, locp->first_line, locp->first_column, err);
 }
 
 #define scanner state->scanner
@@ -137,7 +137,7 @@ constant
 				$$ = mknode(Int, @1, val);
 				free($1);
 			} catch (...) {
-				state->cmp.log.error(state->file, @1.first_line, @1.first_column,
+				state->log.error(state->file, @1.first_line, @1.first_column,
 					"invalid integer literal '%'", $1);
 				free($1);
 			}
@@ -149,7 +149,7 @@ constant
 				$$ = mknode(Float, @1, val);
 				free($1);
 			} catch (...) {
-				state->cmp.log.error(state->file, @1.first_line, @1.first_column,
+				state->log.error(state->file, @1.first_line, @1.first_column,
 					"invalid floating-point literal '%s'", $1);
 				free($1);
 			}

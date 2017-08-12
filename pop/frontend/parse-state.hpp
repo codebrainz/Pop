@@ -10,16 +10,16 @@
 
 namespace Pop {
 
-  class Compiler;
+  class Logger;
   struct Node;
 
   struct ParseState {
     const char *file;
     std::istream &is;
-    Compiler &cmp;
+    Logger &log;
     Node *roots;
     void *scanner;
-    ParseState(const char *file, std::istream &is, Compiler &cmp);
+    ParseState(const char *file, std::istream &is, Logger &log);
     ~ParseState();
   };
 

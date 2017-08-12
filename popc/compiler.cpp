@@ -2,23 +2,7 @@
 #include <pop/config.h>
 #endif
 
-#include <pop/frontend/compiler.hpp>
-
-#include <pop/common/utils.hpp>
-#include <pop/frontend/define-symbols.hpp>
-#include <pop/frontend/dot.hpp>
-#include <pop/frontend/grammar.hpp>
-#include <pop/frontend/instruction-compiler.hpp>
-#include <pop/frontend/lexer.hpp>
-#include <pop/frontend/link-parents.hpp>
-#include <pop/frontend/location-patcher.hpp>
-#include <pop/frontend/parse-state.hpp>
-#include <pop/frontend/resolve-symbols.hpp>
-#include <pop/frontend/validate.hpp>
-#include <pop/ir/instruction-dumper.hpp>
-#include <pop/ir/instruction-optimizer.hpp>
-#include <pop/ir/instruction-resolver.hpp>
-#include <pop/ir/instructions.hpp>
+#include <popc/compiler.hpp>
 
 #include <cstdint>
 #include <cstdlib>
@@ -39,18 +23,13 @@ namespace Pop {
   }
 
   Node *Compiler::parse_file(const std::string &fn) {
-    std::ifstream f(fn);
-    return parse_file(fn, f);
+    if (fn.empty())
+      return nullptr;
+    return Pop::parse_file(program, log, add_fn(fn));
   }
 
   Node *Compiler::parse_file(const std::string &fn, std::istream &is) {
-    auto filename = add_fn(fn);
-    ParseState state(filename, is, *this);
-    yyparse(&state);
-    auto mod = new Module(filename, 0, 0, state.roots);
-    state.roots = nullptr;
-    dynamic_cast< NodeList * >(program->modules)->append_take(mod);
-    return mod;
+    return Pop::parse_file(program, log, is, add_fn(fn));
   }
 
   void Compiler::link_parents(bool verify) {

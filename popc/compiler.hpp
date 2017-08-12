@@ -1,14 +1,7 @@
-#if !defined(POP_INSIDE_MAIN_HEADER_) && !defined(POP_LIB_COMPILATION_)
-#error "Do not include this header directly, use '<pop/pop.hpp>' instead."
-#endif
-
 #ifndef POP_COMPILER_HPP
 #define POP_COMPILER_HPP
 
-#include <pop/common/logger.hpp>
-#include <pop/ir/ast.hpp>
-#include <pop/ir/constants-table.hpp>
-#include <pop/ir/instructions.hpp>
+#include <pop/pop.hpp>
 
 #include <ostream>
 #include <string>

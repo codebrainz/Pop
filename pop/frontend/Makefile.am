@@ -20,8 +20,6 @@ CODEGEN_SOURCES = \
 
 libpop_frontend_la_SOURCES = \
 	$(CODEGEN_SOURCES) \
-	compiler.cpp \
-	compiler.hpp \
 	define-symbols.hpp \
 	dot.hpp \
 	instruction-compiler.cpp \
@@ -30,6 +28,8 @@ libpop_frontend_la_SOURCES = \
 	location-patcher.hpp \
 	parse-state.cpp \
 	parse-state.hpp \
+	parser.cpp \
+	parser.hpp \
 	resolve-symbols.hpp \
 	symbol-table.cpp \
 	symbol-table.hpp \
@@ -57,12 +57,12 @@ EXTRA_DIST = \
 
 popfrontendincludedir = $(includedir)/pop/frontend
 popfrontendinclude_HEADERS = \
-	compiler.hpp \
 	define-symbols.hpp \
 	dot.hpp \
 	instruction-compiler.hpp \
 	link-parents.hpp \
 	location-patcher.hpp \
+	parser.hpp \
 	resolve-symbols.hpp \
 	symbol-table.hpp \
 	validate.hpp
