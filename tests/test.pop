@@ -1,11 +1,9 @@
-function make_adder(x) {
-  let x_ = x;
-  function adder(y) {
-    return x_ + y;
-  }
-  return adder;
+function fib(n) {
+  if (n == 0)
+    return 0;
+  else if (n == 1)
+    return 1;
+  else
+    return fib(n-1) + fib(n-2);
 }
-let adder = make_adder(1);
-adder(1); // 2
-adder(2); // 3
-adder(3); // 4
+print(fib(8));
