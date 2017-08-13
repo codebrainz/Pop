@@ -63,8 +63,7 @@ namespace Pop {
     Pop::validate(program, log);
   }
 
-  void Compiler::generate_dot(std::ostream &os,
-                              const std::string &indent_token) {
+  void Compiler::dump_dot(std::ostream &os, const std::string &indent_token) {
     Pop::generate_dot(program, os, indent_token);
   }
 
@@ -81,8 +80,12 @@ namespace Pop {
     Pop::optimize_instructions(instructions);
   }
 
-  void Compiler::dump_instructions(std::ostream &out) {
+  void Compiler::dump_asm(std::ostream &out) {
     Pop::dump_instructions(instructions, const_tab, out);
+  }
+
+  void Compiler::dump_bytecode(std::ostream &out) {
+    Pop::generate_bytecode(const_tab, instructions, out);
   }
 
   int Compiler::report_diagnostics(int max_errors) {

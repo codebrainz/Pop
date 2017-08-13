@@ -2,6 +2,7 @@
 #include <popc/compiler.hpp>
 #include <popc/options.hpp>
 
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -26,18 +27,27 @@ int main(int argc, char **argv) {
 
   if (opts.dump_ast_dot) {
     if (opts.output_filename == "-") {
-      cmp.generate_dot(std::cout);
+      cmp.dump_dot(std::cout);
     } else {
       std::ofstream f(opts.output_filename);
-      cmp.generate_dot(f);
+      cmp.dump_dot(f);
     }
   } else if (opts.dump_instructions) {
     if (opts.output_filename == "-") {
-      cmp.dump_instructions(std::cout);
+      cmp.dump_asm(std::cout);
     } else {
       std::ofstream f(opts.output_filename);
-      cmp.dump_instructions(f);
+      cmp.dump_asm(f);
     }
+  } else if (opts.dump_bytecode) {
+    if (opts.output_filename == "-") {
+      cmp.dump_bytecode(std::cout);
+    } else {
+      std::ofstream f(opts.output_filename, std::ios_base::binary);
+      cmp.dump_bytecode(f);
+    }
+  } else {
+    assert(false);
   }
 
   return cmp.report_diagnostics(std::cerr);

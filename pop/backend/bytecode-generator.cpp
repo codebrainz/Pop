@@ -3,6 +3,8 @@
 #include <pop/ir/instructions.hpp>
 #include <pop/common/crc32.hpp>
 
+#include <iostream>
+
 namespace Pop {
 
   struct ByteCodeGenerator final : public InstructionVisitor {
@@ -17,20 +19,25 @@ namespace Pop {
     u32 checksum;
 
     ByteCodeGenerator(const ConstantsTable &constants, std::ostream &output)
-        : constants(constants), output(output), checksum(0) {
+        : constants(constants), output(output), checksum(1) {
     }
 
     void put8(u8 v) {
       output.write(reinterpret_cast< const char * >(&v), sizeof(u8));
     }
 
+    template < class T >
+    void crc32(const T &v) {
+      checksum = Pop::crc32(checksum, v);
+    }
+
     void ser_u8(u8 v) {
-      crc32(checksum, v);
+      crc32(v);
       put8(v);
     }
 
     void ser_u32(u32 v) {
-      crc32(checksum, v);
+      crc32(v);
       put8(v >> 24);
       put8(v >> 16);
       put8(v >> 8);
@@ -38,7 +45,7 @@ namespace Pop {
     }
 
     void ser_u64(u64 v) {
-      crc32(checksum, v);
+      crc32(v);
       put8(v >> 56);
       put8(v >> 48);
       put8(v >> 40);
@@ -59,7 +66,7 @@ namespace Pop {
 
     void ser_str(const str &v) {
       ser_u32(v.size());
-      crc32(checksum, v);
+      crc32(v);
       for (const auto &ch : v)
         put8(ch);
     }

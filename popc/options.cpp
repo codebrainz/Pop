@@ -68,7 +68,7 @@ namespace Pop {
       exit_code = 1;
       return false;
     } else if (!dump_ast_dot && !dump_instructions) {
-      dump_instructions = true;
+      dump_bytecode = true;
     }
 
     if (output_filename.empty())

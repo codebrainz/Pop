@@ -19,8 +19,9 @@ namespace Pop {
     Node *parse_file(const std::string &fn);
     Node *parse_file(const std::string &fn, std::istream &is);
     void compile(bool line_directives = true);
-    void generate_dot(std::ostream &os, const std::string &indent_token = "  ");
-    void dump_instructions(std::ostream &out);
+    void dump_dot(std::ostream &os, const std::string &indent_token = "  ");
+    void dump_asm(std::ostream &out);
+    void dump_bytecode(std::ostream &out);
     int report_diagnostics(int max_errors = -1);
     int report_diagnostics(std::ostream &os, int max_errors = -1);
 
