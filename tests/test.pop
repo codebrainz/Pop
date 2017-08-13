@@ -1,7 +1,11 @@
-function addsub(a, b) {
-  if (a > b)
-    return a + b;
-  else
-    return a - b;
+function make_adder(x) {
+  let x_ = x;
+  function adder(y) {
+    return x_ + y;
+  }
+  return adder;
 }
-addsub(1, 2);
+let adder = make_adder(1);
+adder(1); // 2
+adder(2); // 3
+adder(3); // 4
