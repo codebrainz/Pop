@@ -9,6 +9,7 @@
 #include <pop/ir/instructions.hpp>
 #include <pop/ir/instruction-visitor.hpp>
 
+#include <cstring>
 #include <string>
 
 namespace Pop {
@@ -21,10 +22,19 @@ namespace Pop {
 
   struct InstructionDumper : public InstructionVisitor {
     std::ostream &os;
-    InstructionDumper(std::ostream &os) : os(os) {
+    bool show_offsets;
+    InstructionDumper(std::ostream &os) : os(os), show_offsets(true) {
+    }
+    std::string addr(Instruction &i) {
+      if (show_offsets) {
+        char buf[64] = { 0 };
+        std::snprintf(buf, 63, "  %8XH", i.offset);
+        return std::string(buf) + "    ";
+      }
+      return "    ";
     }
     void visit_default(Instruction &i) final {
-      os << '\t' << i.mnemonic() << '\n';
+      os << addr(i) << i.mnemonic() << '\n';
     }
     void visit(LabelInstruction &i) final {
       os << i.name << ":\n";
@@ -46,11 +56,17 @@ namespace Pop {
       os << '\n';
     }
     void visit(PushConstInstruction &i) final {
-      os << '\t' << i.mnemonic() << ' ' << i.const_id << '\n';
+      os << addr(i) << i.mnemonic() << ' ' << i.const_id << '\n';
     }
     template < class T >
     void visit_jump(T &i) {
-      os << '\t' << i.mnemonic() << ' ' << i.label << '\n';
+      if (!i.label.empty()) {
+        os << addr(i) << i.mnemonic() << ' ' << i.label << '\n';
+      } else {
+        char buf[64] = { 0 };
+        std::snprintf(buf, 63, "%XH", i.target);
+        os << addr(i) << i.mnemonic() << ' ' << buf << '\n';
+      }
     }
     void visit(JumpInstruction &i) final {
       visit_jump(i);
@@ -62,7 +78,13 @@ namespace Pop {
       visit_jump(i);
     }
     void visit(ClosureInstruction &i) final {
-      os << '\t' << i.mnemonic() << ' ' << i.name << '\n';
+      if (!i.name.empty()) {
+        os << addr(i) << i.mnemonic() << ' ' << i.name << '\n';
+      } else {
+        char buf[64] = { 0 };
+        std::snprintf(buf, 63, "%XH", i.target);
+        os << addr(i) << i.mnemonic() << ' ' << buf << '\n';
+      }
     }
   };
 

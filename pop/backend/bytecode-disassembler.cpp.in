@@ -4,6 +4,10 @@
 #include <pop/ir/constant.hpp>
 #include <pop/ir/instructions.hpp>
 
+#include <algorithm>
+#include <cassert>
+#include <sstream>
+
 namespace Pop {
 
   struct Deserializer {
@@ -98,11 +102,6 @@ namespace Pop {
       return static_cast< OpCode >(des_u8());
     }
 
-    void des_inst5(OpCode &code, u32 &i) {
-      code = des_opcode();
-      i = des_u32();
-    }
-
     void deserialize_constants() {
       auto n = des_u32();
       for (auto i = 0u; i < n; i++) {
@@ -130,33 +129,84 @@ namespace Pop {
       }
     }
 
-    void deserialize_instructions() {
+    size_t input_size() {
+      auto old = input.tellg();
+      input.seekg(0, std::ios_base::end);
+      size_t len = input.tellg();
+      input.seekg(old);
+      return len;
     }
 
-    bool verify_checksum() {
-      u32 v = 0;
-      v |= u32(get8()) << 24;
-      v |= u32(get8()) << 16;
-      v |= u32(get8()) << 8;
-      v |= u32(get8());
-      return (v == checksum);
+    void deserialize_instructions() {
+      const size_t inst_start = size_t(input.tellg());
+      bool done = false;
+      while (true) {
+        if (!input.good())
+          break;
+        size_t cur = input.tellg();
+        size_t start = cur - inst_start;
+        auto code = des_opcode();
+        switch (code) {
+{%- for instruction in instructions %}
+  {%- if instruction.name in ["PushConst",] %}
+          case OpCode::{{ instruction.mnemonic }}: {
+            auto inst = std::make_unique<{{ instruction.name }}Instruction>(des_u32());
+            inst->offset = start;
+            instructions.emplace_back(std::move(inst));
+            break;
+          }
+  {%- elif instruction.name in ["Closure", "Jump", "JumpIfTrue", "JumpIfFalse"] %}
+          case OpCode::{{ instruction.mnemonic }}: {
+            auto inst = std::make_unique<{{ instruction.name }}Instruction>("");
+            inst->offset = start;
+            inst->target = des_u32();
+            instructions.push_back(std::move(inst));
+            break;
+          }
+  {%- elif instruction.size == 0 %}
+          case OpCode::{{ instruction.mnemonic }}:
+            assert(false);
+            break;
+  {%- else %}
+          case OpCode::{{ instruction.mnemonic }}: {
+            auto inst = std::make_unique<{{ instruction.name }}Instruction>();
+            inst->offset = start;
+            instructions.emplace_back(std::move(inst));
+            break;
+          }
+  {%- endif %}
+{%- endfor %}
+        }
+      }
     }
 
     void deserialize() {
       deserialize_constants();
       deserialize_instructions();
-
-      if (!verify_checksum()) {
-        log.error(fn.c_str(), -1, -1,
-                  "CRC32 does not match, bytecode is corrupted");
-      }
     }
   };
 
   void disassemble_bytecode(Logger &log, std::istream &input,
                             const std::string &fn, ConstantsTable &constants,
                             InstructionList &instructions) {
-    Deserializer des(log, input, fn, constants, instructions);
+    std::stringstream ss;
+    std::copy(std::istreambuf_iterator< char >(input),
+              std::istreambuf_iterator< char >(),
+              std::ostreambuf_iterator< char >(ss));
+    auto s = ss.str();
+
+    std::uint32_t crc = 0;
+    crc |= std::uint32_t(s[s.size() - 4]) << 24;
+    crc |= std::uint32_t(s[s.size() - 3]) << 16;
+    crc |= std::uint32_t(s[s.size() - 2]) << 8;
+    crc |= std::uint32_t(s[s.size() - 1]);
+    s.resize(s.size()-5);
+
+    std::stringstream ss2;
+    ss2 << s;
+    ss2.seekg(0);
+
+    Deserializer des(log, ss2, fn, constants, instructions);
     des.deserialize();
   }
 

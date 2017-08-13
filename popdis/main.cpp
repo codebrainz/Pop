@@ -24,5 +24,12 @@ int main(int argc, char **argv) {
     }
   }
 
+  if (opts.output_filename == "-") {
+    dump_instructions(instructions, constants, std::cout);
+  } else {
+    std::ofstream f(opts.output_filename, std::ios_base::binary);
+    dump_instructions(instructions, constants, f);
+  }
+
   return log.report_messages(std::cerr);
 }

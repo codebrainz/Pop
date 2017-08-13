@@ -39,8 +39,8 @@ namespace Pop {
     resolve_symbols();
     validate();
     compile_instructions(line_directives);
-    resolve_instructions();
     optimize_instructions();
+    resolve_instructions();
   }
 
   void Compiler::link_parents(bool verify) {
