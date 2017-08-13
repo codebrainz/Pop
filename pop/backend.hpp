@@ -6,6 +6,7 @@
 
 #define POP_INSIDE_BACKEND_HEADER_
 
+#include <pop/backend/bytecode-disassembler.hpp>
 #include <pop/backend/bytecode-generator.hpp>
 
 #undef POP_INSIDE_BACKEND_HEADER_

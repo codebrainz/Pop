@@ -7,6 +7,8 @@ AM_CPPFLAGS = \
 lib_LTLIBRARIES = libpop-backend.la
 
 libpop_backend_la_SOURCES = \
+	bytecode-disassembler.cpp \
+	bytecode-disassembler.hpp \
 	bytecode-generator.cpp \
 	bytecode-generator.hpp
 
