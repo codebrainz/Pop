@@ -1,4 +1,5 @@
 #ifndef POPC_OPTIONS_HPP
+#define POPC_OPTIONS_HPP
 
 #include <string>
 #include <vector>
@@ -17,7 +18,10 @@ namespace Pop {
     int exit_code;
 
     Options()
-        : dump_ast_dot(false), dump_instructions(false), dump_bytecode(false) {
+        : dump_ast_dot(false),
+          dump_instructions(false),
+          dump_bytecode(false),
+          exit_code(0) {
     }
 
     bool parse(int argc, char **argv);

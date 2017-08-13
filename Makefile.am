@@ -1,4 +1,4 @@
-SUBDIRS = scripts pop popc tests docs
+SUBDIRS = scripts pop popc popdis tests docs
 
 doc_DATA = LICENSE
 EXTRA_DIST = .clang-format .gitignore LICENSE

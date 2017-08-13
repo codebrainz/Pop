@@ -31,6 +31,7 @@ AC_CONFIG_FILES([
  Makefile
  docs/Makefile
  popc/Makefile
+ popdis/Makefile
  pop/Makefile
  pop/backend/Makefile
  pop/common/Makefile
