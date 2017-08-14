@@ -111,6 +111,15 @@ def main(args):
           f.write(s.rstrip() + '\n')
         do_format(fn)
 
+  make_file = os.path.join(input_dir, 'op_sources.mk')
+  with open(make_file, 'w') as f:
+    f.write('popvm_op_sources = \\\n')
+    for i,instruction in enumerate(instructions):
+      f.write('\t$(top_srcdir)/popvm/ops/op_%s.c' % instruction.mnemonic.lower())
+      if i < (len(instructions) - 1):
+        f.write(' \\')
+      f.write('\n')
+
   return 0
 
 if __name__ == "__main__":

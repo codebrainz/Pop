@@ -8,4 +8,5 @@ popdis_LDADD = \
 
 popdis_SOURCES = \
 	main.cpp \
-	options.cpp
+	options.cpp \
+	options.hpp

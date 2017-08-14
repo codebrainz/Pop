@@ -11,7 +11,6 @@ popinclude_HEADERS = \
 EXTRA_DIST = \
 	backend.hpp \
 	common.hpp \
-	data.xml \
 	frontend.hpp \
 	ir.hpp \
 	pop.hpp
