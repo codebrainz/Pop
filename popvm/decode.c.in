@@ -11,6 +11,12 @@ static void *dispatch_table__[] = {
 };
 #endif
 
+#define QUIT__(ec)     \
+  do {                 \
+    exit_code = ec;    \
+    goto after_loop__; \
+  } while (0)
+
 #define FETCH__() code[pc++]
 
 #ifdef POP_COMPUTED_GOTO
@@ -37,16 +43,16 @@ while (1) {
 #include "ops/op_{{ instruction.mnemonic | lower }}.c"
       DISPATCH__();
   {%- if instruction.name == "Halt" %}
-#ifndef NDEBUG
       assert(0);
-#else
-      abort();
-#endif
+      QUIT__(1);
   {%- endif %}
     }
   {%- endif %}
 {%- endfor %}
   }
 }
+
+after_loop__:
+  ;
 
 #endif // DECODE_C_

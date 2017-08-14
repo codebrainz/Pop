@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   }
 
   register int pc = 0;
-  register op_t op = 0;
+  int exit_code = 0;
   size_t code_len = 0;
   char *code = read_file(argv[1], &code_len);
 
