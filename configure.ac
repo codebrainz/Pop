@@ -10,8 +10,12 @@ AM_MAINTAINER_MODE
 
 AM_PROG_AR
 LT_INIT
-LT_LANG([C++])
 
+LT_LANG([C])
+AC_PROG_CC
+AC_PROG_CC_C99
+
+LT_LANG([C++])
 AX_CXX_COMPILE_STDCXX_14([noext], [mandatory])
 
 AS_IF([test "x$enable_maintainer_mode" = "xyes"], [
@@ -32,6 +36,7 @@ AC_CONFIG_FILES([
  docs/Makefile
  popc/Makefile
  popdis/Makefile
+ popvm/Makefile
  pop/Makefile
  pop/backend/Makefile
  pop/common/Makefile

@@ -46,7 +46,8 @@ class Field:
     self.default = default
 
 class Instruction:
-  def __init__(self, name, mnemonic, fields=[], size=1):
+  def __init__(self, code, name, mnemonic, fields=[], size=1):
+    self.code = code
     self.name = name
     self.mnemonic = mnemonic
     self.fields = fields
@@ -97,6 +98,7 @@ def parse_nodes(root):
   return nodes
 
 def parse_instructions(root):
+  code = 0
   instructions = []
   for node_elem in root.iterfind('instructions/node'):
     name = node_elem.attrib['name']
@@ -110,7 +112,8 @@ def parse_instructions(root):
         True if field_elem.attrib.get('construct', "true") in [ "yes", "true" ] else False,
         field_elem.attrib.get('default', None)
       ))
-    instructions.append(Instruction(name, mnemonic, fields, size))
+    instructions.append(Instruction(code, name, mnemonic, fields, size))
+    code += 1
   return instructions
 
 def do_format(fn):

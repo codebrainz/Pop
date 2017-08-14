@@ -1,0 +1,50 @@
+#ifndef DECODE_C_
+#define DECODE_C_
+
+#ifdef POP_COMPUTED_GOTO
+static void *dispatch_table__[] = {
+{%- for instruction in instructions %}
+  {%- if instruction.size > 0 %}
+  [OP_{{ instruction.mnemonic | upper }}] = &&op_{{ instruction.mnemonic | lower }}__, // {{ '0x%02X' % instruction.code }}
+  {%- endif %}
+{%- endfor %}
+};
+#endif
+
+#ifdef POP_COMPUTED_GOTO
+#define OP_CASE__(name) name:
+#define DISPATCH__() goto *dispatch_table__[code[pc++]]
+#else
+#define OP_CASE__(name) case name:
+#define DISPATCH__() break
+#endif
+
+while (1) {
+#ifndef POP_COMPUTED_GOTO
+  switch (code[pc++])
+#else
+  DISPATCH__();
+#endif
+  {
+{%- for instruction in instructions %}
+  {%- if instruction.size > 0 %}
+    //
+    // {{ instruction.mnemonic | upper }} - 0x{{ '%02X' % instruction.code }}
+    //
+    OP_CASE__(op_{{ instruction.mnemonic | lower }}__) {
+#include "ops/op_{{ instruction.mnemonic | lower }}.c"
+      DISPATCH__();
+  {%- if instruction.name == "Halt" %}
+#ifndef NDEBUG
+      assert(0);
+#else
+      abort();
+#endif
+  {%- endif %}
+    }
+  {%- endif %}
+{%- endfor %}
+  }
+}
+
+#endif // DECODE_C_

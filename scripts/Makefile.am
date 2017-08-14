@@ -1,1 +1,1 @@
-EXTRA_DIST = codegen.py codegen-data.xml
+EXTRA_DIST = codegen.py opgen.py codegen-data.xml

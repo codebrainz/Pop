@@ -1,0 +1,12 @@
+#ifndef POP_OPCODES_H
+#define POP_OPCODES_H
+
+typedef enum op_t {
+{%- for instruction in instructions %}
+  {%- if instruction.size > 0 %}
+  OP_{{ instruction.mnemonic | upper }} = 0x{{ '%02X' % instruction.code }},
+  {%- endif %}
+{%- endfor %}
+} op_t;
+
+#endif // POP_OPCODES_H
