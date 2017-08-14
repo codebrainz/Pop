@@ -2,7 +2,9 @@ bin_PROGRAMS = popvm
 
 popvm_SOURCES = \
 	main.c \
-	ops.h
+	ops.h \
+	utils.c \
+	utils.h
 
 CODEGEN_DATA_FILE = $(top_srcdir)/scripts/codegen-data.xml
 CODEGEN_SCRIPT = $(top_srcdir)/scripts/codegen.py

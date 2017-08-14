@@ -11,9 +11,11 @@ static void *dispatch_table__[] = {
 };
 #endif
 
+#define FETCH__() code[pc++]
+
 #ifdef POP_COMPUTED_GOTO
 #define OP_CASE__(name) name:
-#define DISPATCH__() goto *dispatch_table__[code[pc++]]
+#define DISPATCH__() goto *dispatch_table__[FETCH__()]
 #else
 #define OP_CASE__(name) case name:
 #define DISPATCH__() break
@@ -21,7 +23,7 @@ static void *dispatch_table__[] = {
 
 while (1) {
 #ifndef POP_COMPUTED_GOTO
-  switch (code[pc++])
+  switch (FETCH__())
 #else
   DISPATCH__();
 #endif
